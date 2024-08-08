@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import BaseTable from "@/base/BaseTable.vue";
+import ProductForm from "@/components/ProductForm.vue";
 
 const tableData = [
   { date: "2023-01-01", name: "John Doe", address: "1234 Main St" },
@@ -7,39 +8,52 @@ const tableData = [
 ];
 
 const tableColumns = [
-  { prop: "date", label: "Date", width: "180" },
-  { prop: "name", label: "Name", width: "180" },
-  { prop: "address", label: "Address", width: "180" },
-  { prop: "age", label: "age", width: "180" }
+  { prop: "image", label: "Ảnh", width: "auto" },
+  { prop: "name", label: "Tên", width: "auto" },
+  { prop: "description", label: "Mô tả", width: "auto" },
+  { prop: "color", label: "Màu sắc", width: "auto" },
+  { prop: "oldPrice", label: "Giá cũ", width: "auto" },
+  { prop: "newPrice", label: "Giá mới", width: "auto" },
+  { prop: "sold", label: "Đã bán", width: "auto" },
+  { prop: "stock", label: "Tồn kho", width: "auto" }
 ];
 </script>
 
 <template>
-  <div class="product-featured">
-    <el-card></el-card>
-    <el-card></el-card>
-    <el-card></el-card>
-  </div>
-  <div class="product-list">
-    <el-input style="width: 240px; height: 40px" placeholder="Tìm kiếm sản phẩm..." />
-    <BaseTable :data="tableData" :columns="tableColumns" />
+  <div class="product-container">
+    <div class="product-featured">
+      <el-card></el-card>
+      <el-card></el-card>
+      <el-card></el-card>
+    </div>
+    <div class="product-list">
+      <BaseTable :data="tableData" :columns="tableColumns" />
+    </div>
+    <ProductForm />
   </div>
 </template>
 
 
 <style lang="scss" scoped>
+.product-container{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
   .product-featured{
     width: 100%;
     display: flex;
     align-items: center;
-
+  
     .el-card{
       height: 200px; 
       flex: 1; 
       margin: 20px;
     }
   }
-
+  
   .product-list{
     width: 100%;
     display: flex;
@@ -50,4 +64,6 @@ const tableColumns = [
       margin-bottom: 20px;
     }
   }
+}
+
 </style>

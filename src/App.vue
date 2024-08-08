@@ -2,7 +2,13 @@
 import { RouterView } from "vue-router";
 import Navbar from "./components/Navbar.vue";
 import Sidebar from "./components/Sidebar.vue";
+import Overlay from "./components/Overlay.vue";
+import { useAppStore } from "./stores/app";
+import { storeToRefs } from "pinia";
 
+const appStore =  useAppStore()
+
+const { isShowOverlay } = storeToRefs(appStore)
 
 </script>
 
@@ -14,6 +20,7 @@ import Sidebar from "./components/Sidebar.vue";
       <RouterView />
     </div>
   </div>
+  <Overlay v-if="isShowOverlay"/>
 </template>
 
 <style scoped lang="scss">
