@@ -5,3 +5,8 @@ export enum SCREEN_ENUM {
     COMMENT = 'comment',
     DASHBOARD = 'dashboard'
 }
+
+export enum ACTION_ENUM {
+    CREATE = 'create',
+    UPDATE = 'update'
+}

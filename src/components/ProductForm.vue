@@ -1,12 +1,15 @@
 <script lang="ts" setup>
+import { ACTION_ENUM } from '@/common/enum';
 import type { TColor } from '@/common/type';
 import { useAppStore } from '@/stores/app';
 import { storeToRefs } from 'pinia';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const appStore = useAppStore();
 
-const { isShowActionForm } = storeToRefs(appStore)
+const { isShowActionForm, actionType } = storeToRefs(appStore)
+
+const actionText = computed(()=> actionType.value === ACTION_ENUM.CREATE ? 'Tạo':'Cập nhật')
 
 const handleCloseForm = () => {
     appStore.setIsShowActionForm(false)
@@ -28,12 +31,17 @@ const colors = ref<TColor[]>([
     }
 ])
 
+const handleChooseImage = (event: Event)=>{
+    const target = event.target as HTMLInputElement
+
+    const file = target.files
+}
 </script>
 
 <template>
     <el-card class="product-form-container" v-if="isShowActionForm">
         <div class="top">
-            <h2>Tạo sản phẩm</h2>
+            <h2>{{ actionText }} sản phẩm</h2>
             <el-icon @click="handleCloseForm">
                 <CloseBold />
             </el-icon>
@@ -69,8 +77,8 @@ const colors = ref<TColor[]>([
                 <el-input placeholder="Nhập số lượng tồn kho" />
             </el-form-item>
 
-            <el-form-item label="Tên sản phẩm" label-position="top" prop="pass">
-                <el-input type="file" />
+            <el-form-item label="Ảnh sản phẩm" label-position="top">
+                <input type="file" @change="handleChooseImage"/>
             </el-form-item>
 
             <div class="bottom">

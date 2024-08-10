@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ACTION_ENUM } from '@/common/enum';
 import { useAppStore } from '@/stores/app';
 
 type TColumn = {
@@ -20,16 +21,17 @@ const props = defineProps({
 
 const appStore = useAppStore()
 
-const handleShowFormCreate = () => {
+const handleShowForm = (type: ACTION_ENUM) => {
   appStore.setIsShowActionForm(true)
   appStore.setIsShowOverlay(true)
+  appStore.setActionType(type)
 }
 </script>
 
 <template>
   <div class="table-top">
     <el-input style="width: 240px; height: 40px" placeholder="Tìm kiếm sản phẩm..." />
-    <el-button type="success" @click="handleShowFormCreate"> <Plus style="width: 1em; height: 1em; color: white"/> Thêm mới</el-button>
+    <el-button type="success" @click="handleShowForm(ACTION_ENUM.CREATE)"> <Plus style="width: 1em; height: 1em; color: white"/> Thêm mới</el-button>
   </div>
   <el-table :data="props.data" style="width: 100%">
     <el-table-column v-for="column in columns" :key="column.prop" :prop="column.prop" :label="column.label"
@@ -41,7 +43,7 @@ const handleShowFormCreate = () => {
             <Search style="width: 1em; height: 1em; color: green" />
           </span>
           <span class="icon">
-            <Edit style="width: 1em; height: 1em; color: blue" />
+            <Edit style="width: 1em; height: 1em; color: blue" @click="handleShowForm(ACTION_ENUM.UPDATE)"/>
           </span>
           <span class="icon">
             <Delete style="width: 1em; height: 1em; color: red" />
