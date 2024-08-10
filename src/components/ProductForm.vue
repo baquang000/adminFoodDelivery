@@ -4,12 +4,13 @@ import type { TColor } from '@/common/type';
 import { useAppStore } from '@/stores/app';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
+import BaseUpload from '@/base/BaseUpload.vue';
 
 const appStore = useAppStore();
 
 const { isShowActionForm, actionType } = storeToRefs(appStore)
 
-const actionText = computed(()=> actionType.value === ACTION_ENUM.CREATE ? 'Tạo':'Cập nhật')
+const actionText = computed(() => actionType.value === ACTION_ENUM.CREATE ? 'Tạo' : 'Cập nhật')
 
 const handleCloseForm = () => {
     appStore.setIsShowActionForm(false)
@@ -31,11 +32,10 @@ const colors = ref<TColor[]>([
     }
 ])
 
-const handleChooseImage = (event: Event)=>{
-    const target = event.target as HTMLInputElement
-
-    const file = target.files
+const handleChangeFile = (url: string) => {
+   
 }
+
 </script>
 
 <template>
@@ -78,7 +78,7 @@ const handleChooseImage = (event: Event)=>{
             </el-form-item>
 
             <el-form-item label="Ảnh sản phẩm" label-position="top">
-                <input type="file" @change="handleChooseImage"/>
+                <BaseUpload @change="handleChangeFile"/>
             </el-form-item>
 
             <div class="bottom">
@@ -92,8 +92,11 @@ const handleChooseImage = (event: Event)=>{
 <style scoped lang="scss">
 .product-form-container {
     width: 50vh;
+    height: 94vh;
     overflow-y: auto;
     position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
     z-index: 10;
 
 
@@ -141,6 +144,6 @@ const handleChooseImage = (event: Event)=>{
 }
 
 .product-form-container::-webkit-scrollbar-thumb {
-    background-color: #504d4d;
+    background-color: rgba(128, 128, 128, 0.562);
 }
 </style>
