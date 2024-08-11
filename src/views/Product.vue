@@ -1,11 +1,18 @@
 <script lang="ts" setup>
 import BaseTable from "@/base/BaseTable.vue";
 import ProductForm from "@/components/ProductForm.vue";
+import { useProduct } from "@/composables/useProduct";
+import { useProductStore } from "@/stores/product";
+import { storeToRefs } from "pinia";
+import { computed, onMounted } from "vue";
 
-const tableData = [
-  { date: "2023-01-01", name: "John Doe", address: "1234 Main St" },
-  { date: "2023-01-02", name: "Jane Doe", address: "5678 Main St" },
-];
+const { getProducts } = useProduct()
+
+const productStore = useProductStore()
+
+const { productList } = storeToRefs(productStore)
+
+const tableData = computed(() => productList.value)
 
 const tableColumns = [
   { prop: "image", label: "Ảnh", width: "auto" },
@@ -15,8 +22,11 @@ const tableColumns = [
   { prop: "oldPrice", label: "Giá cũ", width: "auto" },
   { prop: "newPrice", label: "Giá mới", width: "auto" },
   { prop: "sold", label: "Đã bán", width: "auto" },
-  { prop: "stock", label: "Tồn kho", width: "auto" }
+  { prop: "stock", label: "Tồn kho", width: "auto" },
+  { prop: "status", label: "Trạng thái", width: "auto" }
 ];
+
+onMounted(() => getProducts())
 </script>
 
 <template>
@@ -35,35 +45,35 @@ const tableColumns = [
 
 
 <style lang="scss" scoped>
-.product-container{
+.product-container {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  
-  .product-featured{
+
+  .product-featured {
     width: 100%;
     display: flex;
     align-items: center;
-  
-    .el-card{
-      height: 200px; 
-      flex: 1; 
+
+    .el-card {
+      height: 200px;
+      flex: 1;
       margin: 20px;
     }
   }
-  
-  .product-list{
+
+  .product-list {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     padding: 20px;
-    .el-input{
+
+    .el-input {
       margin-bottom: 20px;
     }
   }
 }
-
 </style>

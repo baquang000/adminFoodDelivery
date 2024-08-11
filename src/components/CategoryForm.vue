@@ -39,9 +39,9 @@ const handleChangeFile = (url: string) => {
 </script>
 
 <template>
-    <el-card class="product-form-container" v-if="isShowActionForm">
+    <el-card class="category-form-container" v-if="isShowActionForm">
         <div class="top">
-            <h2>{{ actionText }} sản phẩm</h2>
+            <h2>{{ actionText }} danh mục</h2>
             <el-icon @click="handleCloseForm">
                 <CloseBold />
             </el-icon>
@@ -90,7 +90,7 @@ const handleChangeFile = (url: string) => {
 </template>
 
 <style scoped lang="scss">
-.product-form-container {
+.category-form-container {
     width: 50vh;
     height: 95vh;
     position: absolute;
@@ -135,17 +135,17 @@ const handleChangeFile = (url: string) => {
     }
 }
 
-.product-form-container::-webkit-scrollbar-track {
+.category-form-container::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     background-color: #F5F5F5;
 }
 
-.product-form-container::-webkit-scrollbar {
+.category-form-container::-webkit-scrollbar {
     width: 6px;
     background-color: #F5F5F5;
 }
 
-.product-form-container::-webkit-scrollbar-thumb {
+.category-form-container::-webkit-scrollbar-thumb {
     background-color: rgba(128, 128, 128, 0.562);
 }
 </style>

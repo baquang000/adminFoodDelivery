@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
 const sidebarList = [
   {
@@ -29,22 +30,21 @@ const sidebarList = [
   },
 ];
 
+const router = useRouter()
+
 const defaultIndexActive = ref(0);
 
-const handleChangeSidebar = (index : number) => {
+const handleChangeSidebar = (index: number, path: string) => {
   defaultIndexActive.value = index;
+  router.replace(path);
 };
 </script>
 
 <template>
   <div class="sidebar-container">
     <div class="menu-list">
-      <div
-        :class="defaultIndexActive === index ? 'menu-item active' : 'menu-item'"
-        v-for="(item, index) in sidebarList"
-        :key="item.name"
-        @click="handleChangeSidebar(index)"
-      >
+      <div :class="defaultIndexActive === index ? 'menu-item active' : 'menu-item'" v-for="(item, index) in sidebarList"
+        :key="item.name" @click="handleChangeSidebar(index, item.route)">
         <i :class="'pi ' + item.icon"></i>
         &nbsp; &nbsp; &nbsp;
         <span>{{ item.name }}</span>
@@ -74,7 +74,7 @@ const handleChangeSidebar = (index : number) => {
       margin-bottom: 15px;
       cursor: pointer;
 
-      &.active{
+      &.active {
         background-color: #434A50;
       }
     }
