@@ -1,11 +1,23 @@
 <script lang="ts" setup>
 import BaseTable from "@/base/BaseTable.vue";
 import CategoryForm from "@/components/CategoryForm.vue";
+import { useCategory } from "@/composables/useCategory";
+import { useAppStore } from "@/stores/app";
+import { useCategoryStore } from "@/stores/category";
+import { storeToRefs } from "pinia";
+import { computed, onMounted, onUnmounted } from "vue";
 
-const tableData = [
-  { date: "2023-01-01", name: "John Doe", address: "1234 Main St" },
-  { date: "2023-01-02", name: "Jane Doe", address: "5678 Main St" },
-];
+const categoryStore = useCategoryStore();
+
+const appStore = useAppStore();
+
+const { isShowActionForm } = storeToRefs(appStore);
+
+const { categoryList } = storeToRefs(categoryStore);
+
+const tableData = computed(() => categoryList.value);
+
+const { getCategoryList, getSingleCategory, deleteCategory } = useCategory();
 
 const tableColumns = [
   { prop: "image", label: "Ảnh", width: "auto" },
@@ -13,6 +25,17 @@ const tableColumns = [
   { prop: "productNumber", label: "Số lượng sản phẩm", width: "auto" },
   { prop: "status", label: "Trạng thái", width: "auto" },
 ];
+
+const handleEditData = (id: number) => {
+  getSingleCategory(id);
+};
+
+const handleDelete = async (id: number) => {
+  await deleteCategory(id);
+  await getCategoryList();
+};
+
+onMounted(() => getCategoryList());
 </script>
 
 <template>
@@ -23,43 +46,47 @@ const tableColumns = [
       <el-card></el-card>
     </div>
     <div class="category-list">
-      <BaseTable :data="tableData" :columns="tableColumns" />
+      <BaseTable
+        :data="tableData"
+        :columns="tableColumns"
+        screen="danh mục"
+        @edit="handleEditData"
+        @delete="handleDelete"
+      />
     </div>
-    <CategoryForm />
+    <CategoryForm v-if="isShowActionForm" />
   </div>
 </template>
 
-
 <style lang="scss" scoped>
-.category-container{
+.category-container {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  
-  .category-featured{
+
+  .category-featured {
     width: 100%;
     display: flex;
     align-items: center;
-  
-    .el-card{
-      height: 200px; 
-      flex: 1; 
+
+    .el-card {
+      height: 200px;
+      flex: 1;
       margin: 20px;
     }
   }
-  
-  .category-list{
+
+  .category-list {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     padding: 20px;
-    .el-input{
+    .el-input {
       margin-bottom: 20px;
     }
   }
 }
-
 </style>

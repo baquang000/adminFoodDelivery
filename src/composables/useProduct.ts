@@ -14,6 +14,8 @@ export const useProduct = () => {
 
             const { data } = response.data as TResult
 
+            productStore.setSingleProduct(data)
+
             return data
         } catch (error) {
             if (error instanceof AxiosError) {
@@ -66,9 +68,29 @@ export const useProduct = () => {
         }
     }
 
+    const deleteProduct = async (id: number) => {
+        try {
+            const response = await request.delete(`/product/${id}`)
+
+            const { message } = response.data as TResult
+
+            ElMessage.success(message)
+
+            return true
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                const { message } = error.response?.data as TError
+
+                return ElMessage.error(message)
+            }
+
+            ElMessage.error('Có lỗi xảy ra !')
+        }
+    }
+
     const createProduct = async (payload: TProduct) => {
         try {
-            const response = await request.post('/product/', payload)
+            const response = await request.post('/product', payload)
 
             const { message } = response.data as TResult
 
@@ -87,5 +109,5 @@ export const useProduct = () => {
     }
 
 
-    return { getSingleProduct, getProducts, updateProduct, createProduct }
+    return { getSingleProduct, getProducts, updateProduct, createProduct, deleteProduct }
 }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ACTION_ENUM } from '@/common/enum';
-import { useAppStore } from '@/stores/app';
+import { ACTION_ENUM } from "@/common/enum";
+import { useAppStore } from "@/stores/app";
+import { computed } from "vue";
 
 type TColumn = {
   prop: string;
@@ -17,45 +18,77 @@ const props = defineProps({
     type: Array<TColumn>,
     required: true,
   },
+  screen: {
+    type: String,
+  },
 });
 
-const appStore = useAppStore()
+const emit = defineEmits(["edit", "delete"]);
 
-const handleShowForm = (type: ACTION_ENUM) => {
-  appStore.setIsShowActionForm(true)
-  appStore.setIsShowOverlay(true)
-  appStore.setActionType(type)
-}
+const appStore = useAppStore();
+
+const placeholderText = computed(() => "Tìm kiếm " + props.screen + "...");
+
+const handleShowForm = (type: ACTION_ENUM, id?: number) => {
+  appStore.setIsShowActionForm(true);
+  appStore.setIsShowOverlay(true);
+  appStore.setActionType(type);
+
+  if (type === ACTION_ENUM.UPDATE) {
+    emit("edit", id as number);
+  }
+};
+
+const handleDelete = (id: number) => {
+  emit("delete", id);
+};
 </script>
 
 <template>
   <div class="table-top">
-    <el-input style="width: 240px; height: 40px" placeholder="Tìm kiếm sản phẩm..." />
+    <el-input
+      style="width: 240px; height: 40px"
+      :placeholder="placeholderText"
+    />
     <el-button type="success" @click="handleShowForm(ACTION_ENUM.CREATE)">
       <Plus style="width: 1em; height: 1em; color: white" /> Thêm mới
     </el-button>
   </div>
   <el-table :data="props.data" style="width: 100%">
-    <el-table-column v-for="column in columns" :key="column.prop" :prop="column.prop" :label="column.label"
-      :width="column.width">
+    <el-table-column
+      v-for="column in columns"
+      :key="column.prop"
+      :prop="column.prop"
+      :label="column.label"
+      :width="column.width"
+    >
       <template v-slot="scope">
         <div v-if="column.prop === 'image'">
-          <img :src="scope.row[column.prop]" alt="image" style="width: 100px; height: auto;" />
+          <img
+            :src="scope.row[column.prop]"
+            alt="image"
+            style="width: 100px; height: auto"
+          />
         </div>
       </template>
     </el-table-column>
-    
     <el-table-column fixed="right" label="Thao tác">
-      <template #default>
+      <template #default="{ row }">
         <div class="icon-wrap">
           <span class="icon">
             <Search style="width: 1em; height: 1em; color: green" />
           </span>
           <span class="icon">
-            <Edit style="width: 1em; height: 1em; color: blue" @click="handleShowForm(ACTION_ENUM.UPDATE)" />
+            <Edit
+              style="width: 1em; height: 1em; color: blue"
+              @click="handleShowForm(ACTION_ENUM.UPDATE, row.id)"
+            />
           </span>
           <span class="icon">
-            <Delete style="width: 1em; height: 1em; color: red" />
+            <Delete
+              style="width: 1em; height: 1em; color: red"
+              @click="handleDelete(row.id)"
+            />
           </span>
         </div>
       </template>
