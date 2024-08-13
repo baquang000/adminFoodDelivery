@@ -14,9 +14,6 @@ importers:
       axios:
         specifier: ^1.7.3
         version: 1.7.3
-      echarts:
-        specifier: ^5.5.1
-        version: 5.5.1
       element-plus:
         specifier: ^2.7.8
         version: 2.7.8(vue@3.4.35(typescript@5.4.5))
@@ -29,9 +26,6 @@ importers:
       vue:
         specifier: ^3.4.29
         version: 3.4.35(typescript@5.4.5)
-      vue-echarts:
-        specifier: ^7.0.1
-        version: 7.0.1(@vue/runtime-core@3.4.35)(echarts@5.5.1)(vue@3.4.35(typescript@5.4.5))
       vue-router:
         specifier: ^4.3.3
         version: 4.4.2(vue@3.4.35(typescript@5.4.5))
@@ -664,9 +658,6 @@ packages:
     resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
     engines: {node: '>=0.4.0'}
 
-  echarts@5.5.1:
-    resolution: {integrity: sha512-Fce8upazaAXUVUVsjgV6mBnGuqgO+JNDlcgF79Dksy4+wgGpQB2lmYoO4TSweFg/mZITdpGHomw/cNBJZj1icA==}
-
   electron-to-chromium@1.5.4:
     resolution: {integrity: sha512-orzA81VqLyIGUEA77YkVA1D+N+nNfl2isJVjjmOyrlxuooZ19ynb+dOlaDTqd/idKRS9lDCSBmtzM+kyCsMnkA==}
 
@@ -949,9 +940,6 @@ packages:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
     engines: {node: '>=8.0'}
 
-  tslib@2.3.0:
-    resolution: {integrity: sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==}
-
   typescript@5.4.5:
     resolution: {integrity: sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==}
     engines: {node: '>=14.17'}
@@ -997,17 +985,6 @@ packages:
   vscode-uri@3.0.8:
     resolution: {integrity: sha512-AyFQ0EVmsOZOlAnxoFOGOq1SQDWAB7C6aqMGS23svWAllfOaxbuFvcT8D1i8z3Gyn8fraVeZNNmN6e9bxxXkKw==}
 
-  vue-demi@0.13.11:
-    resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==}
-    engines: {node: '>=12'}
-    hasBin: true
-    peerDependencies:
-      '@vue/composition-api': ^1.0.0-rc.1
-      vue: ^3.0.0-0 || ^2.6.0
-    peerDependenciesMeta:
-      '@vue/composition-api':
-        optional: true
-
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
     engines: {node: '>=12'}
@@ -1017,16 +994,6 @@ packages:
       vue: ^3.0.0-0 || ^2.6.0
     peerDependenciesMeta:
       '@vue/composition-api':
-        optional: true
-
-  vue-echarts@7.0.1:
-    resolution: {integrity: sha512-P+u6mwAtHuPKC3uDQ+sqIhwBBTvrvEFvgHYzV2Ba1/7+rSzRd6o3Dv/A8PuLP24hB1zPPNfu6BvNyD139X1qbg==}
-    peerDependencies:
-      '@vue/runtime-core': ^3.0.0
-      echarts: ^5.5.1
-      vue: ^2.7.0 || ^3.1.1
-    peerDependenciesMeta:
-      '@vue/runtime-core':
         optional: true
 
   vue-router@4.4.2:
@@ -1055,9 +1022,6 @@ packages:
 
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
-
-  zrender@5.6.0:
-    resolution: {integrity: sha512-uzgraf4njmmHAbEUxMJ8Oxg+P3fT04O+9p7gY+wJRVxo8Ge+KmYv0WJev945EH4wFuc4OY2NLXz46FZrWS9xJg==}
 
 snapshots:
 
@@ -1665,11 +1629,6 @@ snapshots:
 
   delayed-stream@1.0.0: {}
 
-  echarts@5.5.1:
-    dependencies:
-      tslib: 2.3.0
-      zrender: 5.6.0
-
   electron-to-chromium@1.5.4: {}
 
   element-plus@2.7.8(vue@3.4.35(typescript@5.4.5)):
@@ -1929,8 +1888,6 @@ snapshots:
     dependencies:
       is-number: 7.0.0
 
-  tslib@2.3.0: {}
-
   typescript@5.4.5: {}
 
   undici-types@5.26.5: {}
@@ -1953,23 +1910,9 @@ snapshots:
 
   vscode-uri@3.0.8: {}
 
-  vue-demi@0.13.11(vue@3.4.35(typescript@5.4.5)):
-    dependencies:
-      vue: 3.4.35(typescript@5.4.5)
-
   vue-demi@0.14.10(vue@3.4.35(typescript@5.4.5)):
     dependencies:
       vue: 3.4.35(typescript@5.4.5)
-
-  vue-echarts@7.0.1(@vue/runtime-core@3.4.35)(echarts@5.5.1)(vue@3.4.35(typescript@5.4.5)):
-    dependencies:
-      echarts: 5.5.1
-      vue: 3.4.35(typescript@5.4.5)
-      vue-demi: 0.13.11(vue@3.4.35(typescript@5.4.5))
-    optionalDependencies:
-      '@vue/runtime-core': 3.4.35
-    transitivePeerDependencies:
-      - '@vue/composition-api'
 
   vue-router@4.4.2(vue@3.4.35(typescript@5.4.5)):
     dependencies:
@@ -1998,7 +1941,3 @@ snapshots:
       isexe: 2.0.0
 
   yallist@3.1.1: {}
-
-  zrender@5.6.0:
-    dependencies:
-      tslib: 2.3.0

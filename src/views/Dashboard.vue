@@ -2,7 +2,6 @@
 import BaseTable from "@/base/BaseTable.vue";
 import { storeToRefs } from "pinia";
 import { computed, onMounted } from "vue";
-import PiceChart from "../components/charts/PiceChart.vue";
 import { useUserStore } from "@/stores/user";
 import { useUser } from "@/composables/userUser";
 
@@ -21,9 +20,7 @@ const tableColumns = [
   { prop: "status", label: "Trạng thái", width: "auto" },
 ];
 
-const handleEditData = (id: number) => {
-
-};
+const handleEditData = (id: number) => {};
 
 const handleDelete = async (id: number) => {
   await deleteUser(id);
@@ -36,18 +33,10 @@ onMounted(() => getUsers());
 <template>
   <div class="category-container">
     <div class="category-featured">
-      <el-card>
-        <PiceChart />
-      </el-card>
-      <el-card>
-        <PiceChart />
-      </el-card>
-      <el-card>
-        <PiceChart />
-      </el-card>
-      <el-card>
-        <PiceChart />
-      </el-card>
+      <el-card> </el-card>
+      <el-card> </el-card>
+      <el-card> </el-card>
+      <el-card> </el-card>
     </div>
     <div class="category-list">
       <BaseTable
