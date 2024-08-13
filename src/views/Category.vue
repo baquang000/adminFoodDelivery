@@ -44,6 +44,7 @@ onMounted(() => getCategoryList());
       <el-card></el-card>
       <el-card></el-card>
       <el-card></el-card>
+      <el-card></el-card>
     </div>
     <div class="category-list">
       <BaseTable

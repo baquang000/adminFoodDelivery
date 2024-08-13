@@ -54,6 +54,7 @@ onMounted(async () => {
       <el-card></el-card>
       <el-card></el-card>
       <el-card></el-card>
+      <el-card></el-card>
     </div>
     <div class="product-list">
       <BaseTable

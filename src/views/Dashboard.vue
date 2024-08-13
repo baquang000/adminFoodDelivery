@@ -1,69 +1,95 @@
 <script lang="ts" setup>
 import BaseTable from "@/base/BaseTable.vue";
-import ProductForm from "@/components/ProductForm.vue";
+import { storeToRefs } from "pinia";
+import { computed, onMounted } from "vue";
+import PiceChart from "../components/charts/PiceChart.vue";
+import { useUserStore } from "@/stores/user";
+import { useUser } from "@/composables/userUser";
 
-const tableData = [
-  { date: "2023-01-01", name: "John Doe", address: "1234 Main St" },
-  { date: "2023-01-02", name: "Jane Doe", address: "5678 Main St" },
-];
+const userStore = useUserStore();
+
+const { userList } = storeToRefs(userStore);
+
+const tableData = computed(() => userList.value);
+
+const { getUsers, deleteUser } = useUser();
 
 const tableColumns = [
-  { prop: "image", label: "Ảnh", width: "auto" },
-  { prop: "name", label: "Tên", width: "auto" },
-  { prop: "description", label: "Mô tả", width: "auto" },
-  { prop: "color", label: "Màu sắc", width: "auto" },
-  { prop: "oldPrice", label: "Giá cũ", width: "auto" },
-  { prop: "newPrice", label: "Giá mới", width: "auto" },
-  { prop: "sold", label: "Đã bán", width: "auto" },
-  { prop: "stock", label: "Tồn kho", width: "auto" }
+  { prop: "id", label: "ID người dùng", width: "auto" },
+  { prop: "userName", label: "Tên người dùng", width: "auto" },
+  { prop: "email", label: "Email", width: "auto" },
+  { prop: "status", label: "Trạng thái", width: "auto" },
 ];
+
+const handleEditData = (id: number) => {
+
+};
+
+const handleDelete = async (id: number) => {
+  await deleteUser(id);
+  await getUsers();
+};
+
+onMounted(() => getUsers());
 </script>
 
 <template>
-  <div class="product-container">
-    <div class="product-featured">
-      <el-card></el-card>
-      <el-card></el-card>
-      <el-card></el-card>
+  <div class="category-container">
+    <div class="category-featured">
+      <el-card>
+        <PiceChart />
+      </el-card>
+      <el-card>
+        <PiceChart />
+      </el-card>
+      <el-card>
+        <PiceChart />
+      </el-card>
+      <el-card>
+        <PiceChart />
+      </el-card>
     </div>
-    <div class="product-list">
-      <BaseTable :data="tableData" :columns="tableColumns" />
+    <div class="category-list">
+      <BaseTable
+        :data="tableData"
+        :columns="tableColumns"
+        screen="danh mục"
+        @edit="handleEditData"
+        @delete="handleDelete"
+      />
     </div>
-    <ProductForm />
   </div>
 </template>
 
-
 <style lang="scss" scoped>
-.product-container{
+.category-container {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  
-  .product-featured{
+
+  .category-featured {
     width: 100%;
     display: flex;
     align-items: center;
-  
-    .el-card{
-      height: 200px; 
-      flex: 1; 
+
+    .el-card {
+      height: 200px;
+      flex: 1;
       margin: 20px;
     }
   }
-  
-  .product-list{
+
+  .category-list {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     padding: 20px;
-    .el-input{
+    .el-input {
       margin-bottom: 20px;
     }
   }
 }
-
 </style>
