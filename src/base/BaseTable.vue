@@ -21,6 +21,9 @@ const props = defineProps({
   screen: {
     type: String,
   },
+  isHiddenComponent: {
+    type: Boolean,
+  },
 });
 
 const emit = defineEmits(["edit", "delete"]);
@@ -47,10 +50,15 @@ const handleDelete = (id: number) => {
 <template>
   <div class="table-top">
     <el-input
+      v-if="!isHiddenComponent"
       style="width: 240px; height: 40px"
       :placeholder="placeholderText"
     />
-    <el-button type="success" @click="handleShowForm(ACTION_ENUM.CREATE)">
+    <el-button
+      v-if="!isHiddenComponent"
+      type="success"
+      @click="handleShowForm(ACTION_ENUM.CREATE)"
+    >
       <Plus style="width: 1em; height: 1em; color: white" /> Thêm mới
     </el-button>
   </div>
@@ -70,12 +78,20 @@ const handleDelete = (id: number) => {
             style="width: 100px; height: auto"
           />
         </div>
+
+        <div v-if="column.prop === 'status'">
+          <div
+            :class="
+              scope.row[column.prop] === 'active' ? 'status on' : 'status off'
+            "
+          ></div>
+        </div>
       </template>
     </el-table-column>
     <el-table-column fixed="right" label="Thao tác">
       <template #default="{ row }">
         <div class="icon-wrap">
-          <span class="icon">
+          <span class="icon" v-if="!isHiddenComponent">
             <Search style="width: 1em; height: 1em; color: green" />
           </span>
           <span class="icon">
@@ -121,6 +137,21 @@ const handleDelete = (id: number) => {
     justify-content: center;
     border-radius: 5px;
     margin-left: 8px;
+  }
+}
+
+.status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-left: 25%;
+
+  &.on {
+    background-color: rgb(85, 209, 85);
+  }
+
+  &.off {
+    background-color: orange;
   }
 }
 </style>

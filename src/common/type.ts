@@ -76,7 +76,7 @@ export type TResult = {
   data: any;
 };
 
-export type TChartCount = {
+export type TPieChart = {
   labels?: string[];
   series?: number[];
 };
