@@ -61,14 +61,14 @@ const handleChangeFile = (url: string) => {
 const handleSubmit = async () => {
   actionType.value === ACTION_ENUM.CREATE
     ? await createProduct(product.value)
-    : updateProduct(product.value, singleProduct.value.id as number);
+    : await updateProduct(product.value, singleProduct.value.id as number);
 
   await getProducts();
 
   handleCloseForm();
 };
 
-watch(singleProduct.value, () => {
+watch(() => singleProduct.value, () => {
   product.value = { ...singleProduct.value };
 });
 
@@ -107,18 +107,8 @@ onUnmounted(() => {
       </el-form-item>
 
       <el-form-item label="Màu sắc" label-position="top">
-        <el-select
-          v-model="product.color"
-          placeholder="Select"
-          size="large"
-          style="width: 240px"
-        >
-          <el-option
-            v-for="item in colors"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
+        <el-select v-model="product.color" placeholder="Select" size="large" style="width: 240px">
+          <el-option v-for="item in colors" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
 
@@ -131,34 +121,16 @@ onUnmounted(() => {
       </el-form-item>
 
       <el-form-item label="Đã bán" label-position="top">
-        <el-input
-          type="number"
-          v-model.number="product.sold"
-          placeholder="Nhập số lượng đã bán"
-        />
+        <el-input type="number" v-model.number="product.sold" placeholder="Nhập số lượng đã bán" />
       </el-form-item>
 
       <el-form-item label="Tồn kho" label-position="top">
-        <el-input
-          type="number"
-          v-model.number="product.stock"
-          placeholder="Nhập số lượng tồn kho"
-        />
+        <el-input type="number" v-model.number="product.stock" placeholder="Nhập số lượng tồn kho" />
       </el-form-item>
 
       <el-form-item label="Danh mục" label-position="top">
-        <el-select
-          v-model="product.categoryId"
-          placeholder="Select"
-          size="large"
-          style="width: 240px"
-        >
-          <el-option
-            v-for="item in categoryList"
-            :key="item.name"
-            :label="item.name"
-            :value="item.id"
-          />
+        <el-select v-model="product.categoryId" placeholder="Select" size="large" style="width: 240px">
+          <el-option v-for="item in categoryList" :key="item.name" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
 
@@ -196,6 +168,7 @@ onUnmounted(() => {
     width: 100%;
     display: flex;
     justify-content: space-between;
+
     pos .el-icon {
       cursor: pointer;
       font-size: 25px;
@@ -205,6 +178,7 @@ onUnmounted(() => {
   .el-form {
     margin-top: 30px;
     position: relative;
+
     .el-input {
       height: 40px;
     }

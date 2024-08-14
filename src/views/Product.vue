@@ -60,6 +60,7 @@ onMounted(async () => {
       <BaseTable
         :data="tableData"
         :columns="tableColumns"
+        screen="sản phẩm"
         @edit="handleEditData"
         @delete="handleDelete"
       />

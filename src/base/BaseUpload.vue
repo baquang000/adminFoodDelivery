@@ -55,7 +55,7 @@ watch(props, () => (fileUrl.value = props.url as string));
     <div class="main" @click="handleOpenSelectFile">
       <img v-if="fileUrl" :src="fileUrl" alt="Ảnh ứng dụng" />
       <el-icon v-else="!fileUrl">
-        <Plus />
+        <el-icon><UploadFilled /></el-icon>
       </el-icon>
       <input ref="input" type="file" hidden @change="handleChooseImage" />
     </div>
