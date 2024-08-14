@@ -75,3 +75,8 @@ export type TResult = {
   message: string;
   data: any;
 };
+
+export type TChartCount = {
+  labels?: string[];
+  series?: number[];
+};

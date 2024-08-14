@@ -4,6 +4,9 @@ import { storeToRefs } from "pinia";
 import { computed, onMounted } from "vue";
 import { useUserStore } from "@/stores/user";
 import { useUser } from "@/composables/userUser";
+import PieChart from "@/components/charts/PieChart.vue";
+import { useChart } from "@/composables/useChart";
+import { useChartsStore } from "@/stores/useChart";
 
 const userStore = useUserStore();
 
@@ -12,6 +15,11 @@ const { userList } = storeToRefs(userStore);
 const tableData = computed(() => userList.value);
 
 const { getUsers, deleteUser } = useUser();
+const chartStore = useChartsStore()
+
+const { chartCount } = storeToRefs(chartStore)
+
+const { count } = useChart()
 
 const tableColumns = [
   { prop: "id", label: "ID người dùng", width: "auto" },
@@ -27,16 +35,19 @@ const handleDelete = async (id: number) => {
   await getUsers();
 };
 
-onMounted(() => getUsers());
+onMounted(() => {
+  getUsers()
+  count()
+});
 </script>
 
 <template>
   <div class="category-container">
     <div class="category-featured">
-      <el-card> </el-card>
-      <el-card> </el-card>
-      <el-card> </el-card>
-      <el-card> </el-card>
+      <el-card><PieChart :labels="chartCount.labels" :series="chartCount.series" /></el-card>
+      <el-card><PieChart /></el-card>
+      <el-card><PieChart /></el-card>
+      <el-card><PieChart /></el-card>
     </div>
     <div class="category-list">
       <BaseTable
