@@ -90,62 +90,64 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <el-card class="product-form-container">
-    <div class="top">
-      <h2>{{ actionText }} sản phẩm</h2>
-      <el-icon style="cursor: pointer" @click="handleCloseForm">
-        <CloseBold />
-      </el-icon>
-    </div>
-    <el-form>
-      <el-form-item label="Tên sản phẩm" label-position="top">
-        <el-input v-model="product.name" placeholder="Nhập tên sản phẩm" />
-      </el-form-item>
-
-      <el-form-item label="Mô tả" label-position="top">
-        <el-input v-model="product.description" placeholder="Nhập mô tả" />
-      </el-form-item>
-
-      <el-form-item label="Màu sắc" label-position="top">
-        <el-select v-model="product.color" placeholder="Select" size="large" style="width: 240px">
-          <el-option v-for="item in colors" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-      </el-form-item>
-
-      <el-form-item label="Giá cũ" label-position="top">
-        <el-input v-model="product.oldPrice" placeholder="Nhập giá cũ" />
-      </el-form-item>
-
-      <el-form-item label="Giá mới" label-position="top">
-        <el-input v-model="product.newPrice" placeholder="Nhập giá mới" />
-      </el-form-item>
-
-      <el-form-item label="Đã bán" label-position="top">
-        <el-input type="number" v-model.number="product.sold" placeholder="Nhập số lượng đã bán" />
-      </el-form-item>
-
-      <el-form-item label="Tồn kho" label-position="top">
-        <el-input type="number" v-model.number="product.stock" placeholder="Nhập số lượng tồn kho" />
-      </el-form-item>
-
-      <el-form-item label="Danh mục" label-position="top">
-        <el-select v-model="product.categoryId" placeholder="Select" size="large" style="width: 240px">
-          <el-option v-for="item in categoryList" :key="item.name" :label="item.name" :value="item.id" />
-        </el-select>
-      </el-form-item>
-
-      <el-form-item label="Ảnh sản phẩm" label-position="top">
-        <BaseUpload @change="handleChangeFile" :url="product.image" />
-      </el-form-item>
-
-      <div class="bottom">
-        <el-button type="info" @click="handleCloseForm">Hủy</el-button>
-        <el-button type="primary" @click="handleSubmit">{{
-          actionType === ACTION_ENUM.CREATE ? "Tạo" : "Sửa"
-        }}</el-button>
+  <div class="product-form-container">
+    <el-card class="main">
+      <div class="top">
+        <h2>{{ actionText }} sản phẩm</h2>
+        <el-icon style="cursor: pointer" @click="handleCloseForm">
+          <CloseBold />
+        </el-icon>
       </div>
-    </el-form>
-  </el-card>
+      <el-form>
+        <el-form-item label="Tên sản phẩm" label-position="top">
+          <el-input v-model="product.name" placeholder="Nhập tên sản phẩm" />
+        </el-form-item>
+
+        <el-form-item label="Mô tả" label-position="top">
+          <el-input v-model="product.description" placeholder="Nhập mô tả" />
+        </el-form-item>
+
+        <el-form-item label="Màu sắc" label-position="top">
+          <el-select v-model="product.color" placeholder="Select" size="large" style="width: 240px">
+            <el-option v-for="item in colors" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="Giá cũ" label-position="top">
+          <el-input v-model="product.oldPrice" placeholder="Nhập giá cũ" />
+        </el-form-item>
+
+        <el-form-item label="Giá mới" label-position="top">
+          <el-input v-model="product.newPrice" placeholder="Nhập giá mới" />
+        </el-form-item>
+
+        <el-form-item label="Đã bán" label-position="top">
+          <el-input type="number" v-model.number="product.sold" placeholder="Nhập số lượng đã bán" />
+        </el-form-item>
+
+        <el-form-item label="Tồn kho" label-position="top">
+          <el-input type="number" v-model.number="product.stock" placeholder="Nhập số lượng tồn kho" />
+        </el-form-item>
+
+        <el-form-item label="Danh mục" label-position="top">
+          <el-select v-model="product.categoryId" placeholder="Select" size="large" style="width: 240px">
+            <el-option v-for="item in categoryList" :key="item.name" :label="item.name" :value="item.id" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="Ảnh sản phẩm" label-position="top">
+          <BaseUpload @change="handleChangeFile" :url="product.image" />
+        </el-form-item>
+      </el-form>
+    </el-card>
+
+    <div class="bottom">
+      <el-button type="info" @click="handleCloseForm">Hủy</el-button>
+      <el-button type="success" @click="handleSubmit">{{
+        actionType === ACTION_ENUM.CREATE ? "Thêm" : "Sửa"
+      }}</el-button>
+    </div>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -153,59 +155,77 @@ onUnmounted(() => {
   width: 25vw;
   height: 85vh;
   position: absolute;
-  overflow-y: auto;
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
+  overflow: hidden;
+  
 
-  &::-webkit-scrollbar-track {
+  .main {
+    width: 100%;
+    height: 85vh;
+    position: relative;
+    overflow-y: auto;
+    padding-bottom: 60px;
+
+    .top {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+
+      .el-icon {
+        cursor: pointer;
+        font-size: 25px;
+      }
+    }
+
+    .el-form {
+      margin-top: 30px;
+      position: relative;
+
+      .el-input {
+        height: 40px;
+      }
+    }
+  }
+
+  .main::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     background-color: #f5f5f5;
   }
 
-  .top {
+  .main::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #f5f5f5;
+  }
+
+  .main::-webkit-scrollbar {
+    width: 6px;
+    background-color: #f5f5f5;
+  }
+
+  .main::-webkit-scrollbar-thumb {
+    background-color: rgba(128, 128, 128, 0.562);
+  }
+
+  .bottom {
+    background-color: #FFFFFF;
+    height: 90px;
     width: 100%;
     display: flex;
+    align-items: center;
     justify-content: space-between;
+    padding: 0 20px;
+    z-index: 10;
+    position: sticky;
+    bottom: 0;
+    border-top: 0.5px solid #eeeeeea2;
 
-    pos .el-icon {
-      cursor: pointer;
-      font-size: 25px;
+    .el-button {
+      width: 180px;
+      height: 50px;
     }
   }
-
-  .el-form {
-    margin-top: 30px;
-    position: relative;
-
-    .el-input {
-      height: 40px;
-    }
-
-    .bottom {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      position: absolute;
-      right: 0;
-      bottom: 5px;
-    }
-  }
-}
-
-.product-form-container::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  background-color: #f5f5f5;
-}
-
-.product-form-container::-webkit-scrollbar {
-  width: 6px;
-  background-color: #f5f5f5;
-}
-
-.product-form-container::-webkit-scrollbar-thumb {
-  background-color: rgba(128, 128, 128, 0.562);
 }
 </style>

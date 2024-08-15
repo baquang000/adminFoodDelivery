@@ -8,6 +8,8 @@ import PieChart from "@/components/charts/PieChart.vue";
 import { useChart } from "@/composables/useChart";
 import { useChartsStore } from "@/stores/charts";
 import LineChart from "@/components/charts/LineChart.vue";
+import AreaChart from "@/components/charts/AreaChart.vue";
+import BarChart from "@/components/charts/BarChart.vue";
 
 const userStore = useUserStore();
 
@@ -18,9 +20,9 @@ const tableData = computed(() => userList.value);
 const { getUsers, deleteUser } = useUser();
 const chartStore = useChartsStore();
 
-const { chartCount, chartUserStat, chartOrderStat } = storeToRefs(chartStore);
+const { chartCount, chartUserStat, chartOrderStat, chartRevenue } = storeToRefs(chartStore);
 
-const { getCount, getUserStat, getOrderStat } = useChart();
+const { getCount, getUserStat, getOrderStat, getRevenueStat } = useChart();
 
 const tableColumns = [
   { prop: "id", label: "ID", width: "auto" },
@@ -29,7 +31,7 @@ const tableColumns = [
   { prop: "status", label: "Trạng thái", width: "auto" },
 ];
 
-const handleEditData = (id: number) => {};
+const handleEditData = (id: number) => { };
 
 const handleDelete = async (id: number) => {
   await deleteUser(id);
@@ -41,46 +43,38 @@ onMounted(() => {
   getCount();
   getUserStat();
   getOrderStat();
+  getRevenueStat();
 });
 </script>
 
 <template>
   <div class="dashboard-container">
     <div class="dashboard-featured">
-      <el-card
-        ><PieChart
-          :labels="chartCount.labels"
-          :series="chartCount.series"
-          title="Thống kê số lượng thực thể"
-          type="donut"
-      /></el-card>
-      <el-card
-        ><PieChart
-          :labels="chartUserStat.labels"
-          :series="chartUserStat.series"
-          title="Thống kê số lượng người đăng ký"
-          type="polarArea"
-      /></el-card>
-      <el-card
-        ><LineChart
-          :labels="chartOrderStat.labels"
-          :series="chartOrderStat.series"
-          title="Thống kê số đơn hàng mỗi tháng"
-      /></el-card>
-      <el-card></el-card>
+      <el-card>
+        <PieChart :labels="chartCount.labels" :series="chartCount.series" title="Thống kê số lượng thực thể"
+          type="donut" />
+      </el-card>
+      <el-card>
+        <PieChart :labels="chartUserStat.labels" :series="chartUserStat.series" title="Thống kê số lượng người đăng ký"
+          type="polarArea" />
+      </el-card>
+      <el-card>
+        <LineChart :labels="chartOrderStat.labels" :series="chartOrderStat.series"
+          title="Thống kê số đơn hàng mỗi tháng" />
+      </el-card>
+      <el-card>
+        <AreaChart :labels="chartRevenue.labels" :series="chartRevenue.series" title="Thống kê danh thu theo tháng" />
+      </el-card>
     </div>
     <div class="dashboard-main">
-      <div class="table">
-        <BaseTable
-          style="width: 50%"
-          :data="tableData"
-          :columns="tableColumns"
-          :isHiddenComponent="true"
-          screen=""
-          @edit="handleEditData"
-          @delete="handleDelete"
-        />
-      </div>
+      <el-card class="table">
+        <BaseTable style="width: 50%;" :data="tableData" :columns="tableColumns" :isHiddenComponent="true" screen=""
+          @edit="handleEditData" @delete="handleDelete" />
+      </el-card>
+
+      <el-card class="table" style="margin-left: 35px;">
+        <BarChart />
+      </el-card>
     </div>
   </div>
 </template>
@@ -111,15 +105,17 @@ onMounted(() => {
   .dashboard-main {
     width: 100%;
     display: flex;
-    flex-direction: column;
     align-items: flex-start;
     padding: 20px;
+
     .el-input {
       margin-bottom: 20px;
     }
 
     .table {
       width: 50%;
+      height: auto;
+      min-height: 500px;
     }
   }
 }

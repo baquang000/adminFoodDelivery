@@ -49,13 +49,15 @@ watch(props, () => (fileUrl.value = props.url as string));
 
 <template>
   <div class="upload-container">
-    <el-icon v-if="fileUrl" class="close-icon" @click="handleRemoveImage">
+    <el-icon v-if ="fileUrl" class="close-icon" @click="handleRemoveImage">
       <CloseBold />
     </el-icon>
     <div class="main" @click="handleOpenSelectFile">
       <img v-if="fileUrl" :src="fileUrl" alt="Ảnh ứng dụng" />
       <el-icon v-else="!fileUrl">
-        <el-icon><UploadFilled /></el-icon>
+        <el-icon style="color:gray">
+          <UploadFilled />
+        </el-icon>
       </el-icon>
       <input ref="input" type="file" hidden @change="handleChooseImage" />
     </div>
@@ -80,7 +82,7 @@ watch(props, () => (fileUrl.value = props.url as string));
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    border: 1px dotted rgba(128, 128, 128, 0.507);
+    border: 2px dotted rgba(128, 128, 128, 0.507);
     position: relative;
 
     img {

@@ -92,7 +92,7 @@ onUnmounted(() => {
 
       <div class="bottom">
         <el-button type="info" @click="handleCloseForm">Hủy</el-button>
-        <el-button type="primary" @click="handleSubmit">{{
+        <el-button type="success" @click="handleSubmit">{{
           actionType === ACTION_ENUM.CREATE ? "Thêm" : "Sửa"
         }}</el-button>
       </div>
@@ -140,7 +140,12 @@ onUnmounted(() => {
       justify-content: flex-end;
       position: absolute;
       right: 0;
-      bottom: 5px;
+      bottom: 4px;
+
+      .el-button{
+        height: 50px;
+        width: 120px;
+      }
     }
   }
 }

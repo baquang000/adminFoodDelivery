@@ -67,5 +67,25 @@ export const useChart = () => {
     }
   };
 
-  return { getCount, getUserStat, getOrderStat };
+  const getRevenueStat = async () => {
+    try {
+      const response = await request.get(`/charts/revenue`);
+
+      const { data } = response.data as TResult;
+
+      chartsStore.setChartRevenue(data);
+
+      return data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const { message } = error.response?.data as TError;
+
+        return ElMessage.error(message);
+      }
+
+      ElMessage.error("Có lỗi xảy ra !");
+    }
+  };
+
+  return { getCount, getUserStat, getOrderStat, getRevenueStat };
 };

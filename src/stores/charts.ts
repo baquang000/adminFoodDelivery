@@ -1,23 +1,28 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import type { TPieChart } from "@/common/type";
+import type { TChart } from "@/common/type";
 
 export const useChartsStore = defineStore("chartsStore", () => {
-  const chartCount = ref<TPieChart>({});
-  const chartUserStat = ref<TPieChart>({});
-  const chartOrderStat = ref<TPieChart>({});
+  const chartCount = ref<TChart>({});
+  const chartUserStat = ref<TChart>({});
+  const chartOrderStat = ref<TChart>({});
+  const chartRevenue = ref<TChart>({});
 
-  const setChartCount = (payload: TPieChart) => {
+  const setChartCount = (payload: TChart) => {
     chartCount.value = payload;
   };
 
-  const setChartUserStat = (payload: TPieChart) => {
+  const setChartUserStat = (payload: TChart) => {
     chartUserStat.value = payload;
   };
 
-  const setChartOrderStat = (payload: TPieChart) => {
+  const setChartOrderStat = (payload: TChart) => {
     chartOrderStat.value = payload;
   };
+
+  const setChartRevenue = (payload: TChart) => {
+    chartRevenue.value = payload
+  }
 
   return {
     chartCount,
@@ -26,5 +31,7 @@ export const useChartsStore = defineStore("chartsStore", () => {
     setChartUserStat,
     chartOrderStat,
     setChartOrderStat,
+    chartRevenue,
+    setChartRevenue
   };
 });
