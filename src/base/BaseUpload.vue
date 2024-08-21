@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import { storage } from "../firebase/firebaseConfig";
+import {
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
 
 const emit = defineEmits(["change"]);
 
@@ -22,7 +28,7 @@ const handleRemoveImage = () => {
   input.value.value = "";
 };
 
-const handleChooseImage = (event: Event) => {
+const handleChooseImage = async (event: Event) => {
   const target = event.target as HTMLInputElement;
 
   if (!target.files) return;
@@ -30,17 +36,15 @@ const handleChooseImage = (event: Event) => {
   const file = target.files[0];
 
   if (file) {
-    const reader = new FileReader();
+    try {
+      const fileRef = storageRef(storage, `uploads/${file.name}`);
 
-    reader.onload = function (event: ProgressEvent<FileReader>) {
-      const base64String = event.target?.result;
+      await uploadBytes(fileRef, file);
 
-      fileUrl.value = base64String?.toString() || "";
-
+      fileUrl.value = await getDownloadURL(fileRef);
+      
       if (fileUrl.value) emit("change", fileUrl.value);
-    };
-
-    reader.readAsDataURL(file);
+    } catch (error) {}
   }
 };
 
@@ -49,13 +53,13 @@ watch(props, () => (fileUrl.value = props.url as string));
 
 <template>
   <div class="upload-container">
-    <el-icon v-if ="fileUrl" class="close-icon" @click="handleRemoveImage">
+    <el-icon v-if="fileUrl" class="close-icon" @click="handleRemoveImage">
       <CloseBold />
     </el-icon>
     <div class="main" @click="handleOpenSelectFile">
       <img v-if="fileUrl" :src="fileUrl" alt="Ảnh ứng dụng" />
       <el-icon v-else="!fileUrl">
-        <el-icon style="color:gray">
+        <el-icon style="color: gray">
           <UploadFilled />
         </el-icon>
       </el-icon>
