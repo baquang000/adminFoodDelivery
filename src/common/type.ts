@@ -21,6 +21,11 @@ export type TProduct = {
   deletedAt?: string;
 };
 
+export type TCart = {
+  product: TProduct;
+  quantity: number;
+};
+
 export type TCategory = {
   id?: number;
   name: string;
