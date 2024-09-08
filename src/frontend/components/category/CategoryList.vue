@@ -1,0 +1,28 @@
+<script setup lang="ts">
+import Category from './Category.vue';
+</script>
+
+<template>
+    <h2>Danh mục</h2>
+    <div class="category-list">
+       <Category/>
+       <Category/>
+       <Category/>
+       <Category/>
+       <Category/>   
+    </div>
+</template>
+
+
+<style lang="scss" scoped>
+    .category-list{
+        margin-top: 100px;
+        min-height: 200px;
+        height: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+</style>

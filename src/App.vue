@@ -6,7 +6,8 @@ import Overlay from "./components/Overlay.vue";
 import { useAppStore } from "./stores/app";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
-import Home from "./frontend/views/Home.vue";
+import NavbarWeb from './frontend/components/Navbar.vue'
+import Footer from './frontend/components/Footer.vue'
 
 const appStore = useAppStore();
 
@@ -26,7 +27,9 @@ const isWeb = computed(() => route.path.includes("web"));
     </div>
   </div>
   <div v-else class="web-container">
-     <Home/>
+    <NavbarWeb/>
+    <RouterView />
+    <Footer/>
   </div>
 
   <Overlay v-if="isShowOverlay" />

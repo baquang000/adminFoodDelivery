@@ -8,6 +8,10 @@ const router = createRouter({
       component: () => import("../frontend/views/Home.vue"),
     },
     {
+      path: "/web/category/:id",
+      component: () => import("../frontend/views/CategoryDetails.vue"),
+    },
+    {
       path: "/dashboard",
       component: () => import("../views/Dashboard.vue"),
     },
