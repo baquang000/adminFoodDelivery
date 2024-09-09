@@ -69,6 +69,11 @@
     margin: 20px;
     cursor: pointer;
 
+    &:hover {
+        transform: scale(1.1);
+        transition: all 0.5s ease;
+    }
+
     img {
         width: 100%;
         height: 50%;
@@ -95,7 +100,7 @@
                 justify-content: space-between;
             }
 
-            i{
+            i {
                 color: orange;
             }
         }

@@ -1,37 +1,17 @@
 <script setup lang="ts">
-import { RouterView, useRoute } from "vue-router";
-import Navbar from "./components/Navbar.vue";
-import Sidebar from "./components/Sidebar.vue";
+import { RouterView } from "vue-router";
 import Overlay from "./components/Overlay.vue";
 import { useAppStore } from "./stores/app";
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
-import NavbarWeb from './frontend/components/Navbar.vue'
-import Footer from './frontend/components/Footer.vue'
 
 const appStore = useAppStore();
 
 const { isShowOverlay } = storeToRefs(appStore);
-const route = useRoute();
-
-const isWeb = computed(() => route.path.includes("web"));
 
 </script>
 
 <template>
-  <div v-if="!isWeb" class="app-container">
-    <Sidebar />
-    <div class="main">
-      <Navbar />
-      <RouterView />
-    </div>
-  </div>
-  <div v-else class="web-container">
-    <NavbarWeb/>
-    <RouterView />
-    <Footer/>
-  </div>
-
+  <RouterView />
   <Overlay v-if="isShowOverlay" />
 </template>
 
@@ -49,7 +29,7 @@ const isWeb = computed(() => route.path.includes("web"));
   }
 }
 
-.web-container{
+.web-container {
   display: flex;
   flex-direction: column;
   align-items: center;

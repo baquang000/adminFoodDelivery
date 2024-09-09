@@ -3,7 +3,7 @@ import Category from './Category.vue';
 </script>
 
 <template>
-    <h2>Danh mục</h2>
+    <h2 style="margin-top: 50px;">Danh mục</h2>
     <div class="category-list">
        <Category/>
        <Category/>

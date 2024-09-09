@@ -29,7 +29,9 @@
         </div>
         <div class="item">
           <i class="pi pi-user"></i>&nbsp;
-          <span>Tài khoản</span>
+          <span> Đăng nhập</span>
+          <span>&nbsp;|&nbsp;</span>
+          <span>Đăng ký</span>
         </div>
       </div>
     </div>
@@ -138,11 +140,11 @@
       margin-top: 10px;
 
       li {
-        margin:0 50px;
+        margin: 0 50px;
         cursor: pointer;
         padding-bottom: 5px;
 
-        &.active{
+        &.active {
           border-bottom: 3px solid #3F51B5;
         }
       }

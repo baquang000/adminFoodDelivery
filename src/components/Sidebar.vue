@@ -5,27 +5,27 @@ import { useRouter } from "vue-router";
 const sidebarList = [
   {
     name: "Tổng quan",
-    route: "/",
+    route: "/admin/dashboard",
     icon: "pi-chart-line",
   },
   {
     name: "Danh mục",
-    route: "/category",
+    route: "/admin/category",
     icon: "pi-bars",
   },
   {
     name: "Sản phẩm",
-    route: "/product",
+    route: "/admin/product",
     icon: "pi-objects-column",
   },
   {
     name: "Đơn hàng",
-    route: "/order",
+    route: "/admin/order",
     icon: "pi-shopping-cart",
   },
   {
     name: "Bình luận",
-    route: "/comment",
+    route: "/admin/comment",
     icon: "pi-comments",
   },
 ];
