@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TProduct } from "@/common/type";
 import { computed } from "vue";
+import { formatCurrency } from "@/utils/format";
 
 const props = defineProps<{
   product: TProduct;
@@ -8,6 +9,7 @@ const props = defineProps<{
 
 const colors = computed(() => props.product.color.split(","));
 const sizes = computed(() => props.product.size.split(","));
+
 </script>
 
 <template>
@@ -23,8 +25,7 @@ const sizes = computed(() => props.product.size.split(","));
             <i class="pi pi-star"></i>&nbsp;
           </span>
         </div>
-        <span
-          style="
+        <span style="
             color: #333;
             display: block;
             font-weight: 500;
@@ -32,28 +33,21 @@ const sizes = computed(() => props.product.size.split(","));
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-          "
-          >{{ props.product.name }}</span
-        >
+          ">{{ props.product.name }}</span>
       </div>
 
       <div class="product-price">
         <span style="text-decoration: line-through">{{
-          props.product.oldPrice
+          formatCurrency(props.product.oldPrice)
         }}</span>
         <span style="font-weight: bold; color: red">{{
-          props.product.newPrice
+          formatCurrency(props.product.newPrice)
         }}</span>
       </div>
 
       <div class="bottom">
         <div class="color-list">
-          <div
-            v-for="color in colors"
-            :key="color"
-            class="color"
-            :style="`background-color: ${color}`"
-          ></div>
+          <div v-for="color in colors" :key="color" class="color" :style="`background-color: ${color}`"></div>
         </div>
         <div class="size-list">
           <div v-for="size in sizes" :key="size" class="size">{{ size }}</div>
@@ -67,7 +61,8 @@ const sizes = computed(() => props.product.size.split(","));
 .product-container {
   width: 20%;
   height: auto;
-  padding: 10px 0;
+  margin: 10px 0;
+  padding-bottom: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -84,7 +79,8 @@ const sizes = computed(() => props.product.size.split(","));
 
   img {
     width: 100%;
-    height: 50%;
+    height: 280px;
+    margin-bottom: 10px;
     object-fit: cover;
     border-radius: 5px;
   }

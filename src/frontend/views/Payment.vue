@@ -1,54 +1,9 @@
-<template>
-    <h2>Thanh toán</h2>
-    <div class="payment">
-        <div class="left">
-            <el-form ref="ruleFormRef" style="max-width: 600px" :model="ruleForm" :rules="rules" label-width="auto"
-                class="demo-ruleForm" :size="formSize">
-                <el-form-item label="Tên người nhận" prop="name">
-                    <el-input style="height: 40px;" />
-                </el-form-item>
-                <el-form-item label="Số điện thoại" prop="name">
-                    <el-input style="height: 40px;" />
-                </el-form-item>
-                <el-form-item label="Địa chỉ" prop="name">
-                    <el-input style="height: 40px;" />
-                </el-form-item>
-
-                <el-form-item label="Ghi chú cho người bán" >
-                    <el-input  type="textarea" />
-                </el-form-item>
-
-                <el-form-item label="Thanh toán online" prop="delivery">
-                    <el-switch v-model="ruleForm.delivery" />
-                </el-form-item>
-
-                <el-form-item style="margin-left: 515px;">
-                    <el-button style="height: 45px;" type="primary" @click="submitForm(ruleFormRef)">
-                        Đặt hàng
-                    </el-button>
-                </el-form-item>
-            </el-form>
-        </div>
-
-        <div class="cart-list">
-            <div class="cart-item">
-                <img width="90px" height="90px" style="border-radius: 5px;"
-                    src="https://maraviyainfotech.com/projects/carrot/carrot-v21/carrot-html/assets/img/product/3.jpg"
-                    alt="">
-                <div class="info">
-                    <span><b style="color: #333; font-weight: 500">Tên:</b> Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        </span>
-                    <span style="margin-top: 5px;"><b style="color: #333; font-weight: 500">Số lượng:</b> x 1</span>
-                    <span style="margin-top: 5px;"><b style="color: #333; font-weight: 500">Giá tiền:</b> <span style="color: red;">120.000 vnd</span></span>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
-
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
+import { useCartStore } from '@/stores/cart';
+import { storeToRefs } from 'pinia';
+import { formatCurrency } from '@/utils/format';
 
 interface RuleForm {
     name: string
@@ -78,7 +33,7 @@ const ruleForm = reactive<RuleForm>({
     desc: '',
 })
 
-const locationOptions = ['Home', 'Company', 'School']
+const { cartList, total } = storeToRefs(useCartStore())
 
 const rules = reactive<FormRules<RuleForm>>({
     name: [
@@ -152,17 +107,59 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         }
     })
 }
-
-const resetForm = (formEl: FormInstance | undefined) => {
-    if (!formEl) return
-    formEl.resetFields()
-}
-
-const options = Array.from({ length: 10000 }).map((_, idx) => ({
-    value: `${idx + 1}`,
-    label: `${idx + 1}`,
-}))
 </script>
+
+
+<template>
+    <h2>Thanh toán</h2>
+    <div class="payment">
+        <div class="left">
+            <el-form ref="ruleFormRef" style="max-width: 600px" :model="ruleForm" :rules="rules" label-width="auto"
+                class="demo-ruleForm" :size="formSize">
+                <el-form-item label="Tên người nhận" prop="name">
+                    <el-input style="height: 40px;" />
+                </el-form-item>
+                <el-form-item label="Số điện thoại" prop="name">
+                    <el-input style="height: 40px;" />
+                </el-form-item>
+                <el-form-item label="Địa chỉ" prop="name">
+                    <el-input style="height: 40px;" />
+                </el-form-item>
+
+                <el-form-item label="Ghi chú cho người bán">
+                    <el-input type="textarea" />
+                </el-form-item>
+
+                <el-form-item label="Thanh toán online" prop="delivery">
+                    <el-switch v-model="ruleForm.delivery" />
+                </el-form-item>
+
+                <el-form-item style="margin-left: 515px;">
+                    <el-button style="height: 45px;" type="primary" @click="submitForm(ruleFormRef)">
+                        Đặt hàng
+                    </el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+
+        <div class="cart-list">
+            <div v-for="(item, index) in cartList" :key="index" class="cart-item">
+                <img width="90px" height="90px" style="border-radius: 5px;" :src="item.product.image" alt="">
+                <div class="info">
+                    <span><b style="color: #333; font-weight: 500">Tên:</b> {{ item.product.description }}
+                    </span>
+                    <span style="margin-top: 5px;"><b style="color: #333; font-weight: 500">Số lượng:</b> x {{
+                        item.quantity }}</span>
+                    <span style="margin-top: 5px;"><b style="color: #333; font-weight: 500">Giá tiền:</b> <span
+                            style="color: red;">{{ formatCurrency(item.product.newPrice) }}</span></span>
+                </div>
+            </div>
+            <span style="margin-top: 10px;"><b>Tổng tiền: </b> <span style="color: red;">{{ cartList.length ?
+                formatCurrency(total) : formatCurrency(0) }}</span></span>
+        </div>
+    </div>
+</template>
+
 
 
 <style lang="scss" scoped>

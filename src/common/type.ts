@@ -51,18 +51,43 @@ export type TComment = {
 
 export type TUser = {
   id?: number;
-  userName: string;
-  email: string;
+  userName?: string;
+  avatar?: string;
+  address?: string;
+  phoneNumber?: string;
+  email?: string;
   status?: string;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
 };
 
+export type TRegister = {
+  userName: string,
+  email: string,
+  password: string
+}
+
+export type TLogin = {
+  email: string,
+  password: string
+}
+
 export type TOrder = {
   id?: number;
-  userId: number;
   totalMoney: string;
+  userNote: string;
+  orderStatus: string;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
+};
+
+export type TOrderDetails = {
+  id?: number;
+  orderId: number;
+  productId: number;
+  quantity: number;
   userNote: string;
   orderStatus: string;
   createdAt?: string;

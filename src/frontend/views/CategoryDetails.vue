@@ -198,7 +198,7 @@ onMounted(() => {
 
       span {
         font-size: 14px;
-        min-width: 50px;
+        min-width: 80px;
         width: auto;
 
         &:first-child {

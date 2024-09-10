@@ -18,14 +18,16 @@ import { RouterView } from "vue-router";
 <style lang="scss" scoped>
 .app-container {
     display: flex;
-
+    width: 100%;
+    overflow-y: hidden;
     .main {
         display: flex;
         flex-direction: column;
         align-items: center;
         flex: 1;
-        height: 100vh;
-        overflow-y: auto;
+        width: 100%;
+        height: 100%;
+        overflow-y: hidden;
     }
 }
 </style>

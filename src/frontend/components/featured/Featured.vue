@@ -10,35 +10,19 @@ import 'vue3-carousel/dist/carousel.css'
         <Carousel :autoplay="3000" :wrap-around="true">
             <Slide key="1">
                 <div class="carousel__item">
-                    <div class="left">
-                        <h1>FASHION FOR MEN</h1>
-                        <span>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolor quis quas vel
-                            reprehenderit earum? Cumque culpa ipsum ea, qui nostrum itaque illum tenetur, quisquam
-                            maiores amet dignissimos id dicta beatae.</span>
-                        <el-button style="height: 45px;" type="primary">SHOP NOW</el-button>
-                    </div>
-
-                    <div class="right">
-                        <img src="https://www.tranquilitymarketing.co.uk/wp-content/uploads/2023/03/e-commerce-girl.png"
-                            alt="">
-                    </div>
+                   <img width="100%" height="100%" src="https://cmsv2.yame.vn/uploads/7ca024af-e809-4915-a195-8c94f18053b8/BST_The_Seafarer.jpg?quality=80&w=0&h=0" alt="">
                 </div>
             </Slide>
 
             <Slide key="2">
                 <div class="carousel__item">
-                    <div class="right" style="margin-right: 100px">
-                        <img src="https://www.tranquilitymarketing.co.uk/wp-content/uploads/2023/06/man-laptop.png"
-                        alt="">
-                    </div>
+                   <img width="100%" height="100%" src="https://cmsv2.yame.vn/uploads/10114fd2-dc1f-455b-89dc-eee2737a7b1e/BST_Mi%e1%bb%81n_Gi%c3%b3_C%c3%a1t.jpg?quality=80&w=0&h=0" alt="">
+                </div>
+            </Slide>
 
-                    <div class="left">
-                        <h1>FASHION FOR MEN</h1>
-                        <span>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolor quis quas vel
-                            reprehenderit earum? Cumque culpa ipsum ea, qui nostrum itaque illum tenetur, quisquam
-                            maiores amet dignissimos id dicta beatae.</span>
-                        <el-button style="height: 45px;" type="primary">SHOP NOW</el-button>
-                    </div>
+            <Slide key="2">
+                <div class="carousel__item">
+                   <img width="100%" height="100%" src="https://cmsv2.yame.vn/uploads/00103d56-692d-4706-82c2-7bcdec247869/BST_The_Day's_Eye.jpg?quality=80&w=0&h=0" alt="">
                 </div>
             </Slide>
 
@@ -53,14 +37,17 @@ import 'vue3-carousel/dist/carousel.css'
 <style scoped lang="scss">
 .carousel__item {
     height: 80vh;
-    width: 100%;
+    width: 100vw;
     font-size: 20px;
     border-radius: 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 200px;
     background-color: #F3F3F3;
+
+    img{
+        object-fit: cover;
+    }
 
     h1{
         font-size: 50px;

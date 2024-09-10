@@ -1,8 +1,9 @@
-import type { TError, TResult, TUser } from "@/common/type"
+import type { TError, TLogin, TRegister, TResult, TUser } from "@/common/type"
 import { useUserStore } from "@/stores/user"
 import { request } from "@/utils/request"
 import { AxiosError } from "axios"
 import { ElMessage } from "element-plus"
+import { isArray } from "element-plus/es/utils/types.mjs"
 
 export const useUser = () => {
 
@@ -66,6 +67,26 @@ export const useUser = () => {
     }
   }
 
+  const updateUserInfo = async (payload: TUser, id: number) => {
+    try {
+      const response = await request.put(`/user/${id}`, payload)
+
+      const { message } = response.data as TResult
+
+      ElMessage.success(message)
+
+      return true
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const { message } = error.response?.data as TError
+
+        return ElMessage.error(message)
+      }
+
+      ElMessage.error('Có lỗi xảy ra !')
+    }
+  }
+
   const deleteUser = async (id: number) => {
     try {
       const response = await request.delete(`/user/${id}`)
@@ -106,6 +127,50 @@ export const useUser = () => {
     }
   }
 
+  const register = async (payload: TRegister) => {
+    try {
+      const response = await request.post('/auth/register', payload)
 
-  return { getSingleUser, getUsers, updateUser, createUser, deleteUser }
+      const { message } = response.data as TResult
+
+      ElMessage.success(message)
+
+      return true
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const { message } = error.response?.data as TError
+
+        if (isArray(message)) {
+          return ElMessage.error(message[0])
+        }
+
+        return ElMessage.error(message)
+      }
+
+      ElMessage.error('Có lỗi xảy ra !')
+    }
+  }
+
+  const login = async (payload: TLogin) => {
+    try {
+      const response = await request.post('/auth/login', payload)
+
+      const { message } = response.data as TResult
+
+      ElMessage.success(message)
+
+      return true
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const { message } = error.response?.data as TError
+
+        return ElMessage.error(message)
+      }
+
+      ElMessage.error('Có lỗi xảy ra !')
+    }
+  }
+
+
+  return { getSingleUser, getUsers, updateUser, createUser, deleteUser, updateUserInfo, register, login }
 }

@@ -24,6 +24,10 @@ const colors: TColor[] = [
   },
 ];
 
+const sizes = [
+  'S', 'M', 'L'
+]
+
 const appStore = useAppStore();
 const category = useCategoryStore();
 const productStore = useProductStore();
@@ -40,6 +44,7 @@ const product = ref<TProduct>({
   newPrice: "",
   oldPrice: "",
   sold: 0,
+  size: '',
   stock: 0,
   categoryId: null,
   color: colors[0].value,
@@ -80,6 +85,7 @@ onUnmounted(() => {
     newPrice: "",
     stock: 0,
     sold: 0,
+    size:'',
     description: "",
     color: "",
     categoryId: null,
@@ -110,6 +116,12 @@ onUnmounted(() => {
         <el-form-item label="Màu sắc" label-position="top">
           <el-select v-model="product.color" placeholder="Select" size="large" style="width: 240px">
             <el-option v-for="item in colors" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="Kích cỡ" label-position="top">
+          <el-select v-model="product.size" placeholder="Select" size="large" style="width: 240px">
+            <el-option v-for="item in sizes" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
 
@@ -159,7 +171,7 @@ onUnmounted(() => {
   transform: translateY(-50%);
   z-index: 10;
   overflow: hidden;
-  
+
 
   .main {
     width: 100%;

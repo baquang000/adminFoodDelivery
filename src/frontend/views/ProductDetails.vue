@@ -6,13 +6,13 @@ import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useProductStore } from "@/stores/product";
 import { useCartStore } from "@/stores/cart";
+import { formatCurrency } from "@/utils/format";
+
 const { getSingleProduct } = useProduct();
 
 const { singleProduct } = storeToRefs(useProductStore());
 
 const quantity = ref(1);
-const chooseSize = ref("");
-const chooseColor = ref("");
 
 const { addCart } = useCartStore();
 
@@ -22,6 +22,9 @@ const id = computed(() => parseInt(route.params.id as string));
 
 const colors = computed(() => singleProduct.value.color.split(","));
 const sizes = computed(() => singleProduct.value.size.split(","));
+
+const chooseSize = computed(()=> sizes.value[0] as string)
+const chooseColor = computed(()=> colors.value[0] as string);
 
 const handleAddToCart = () => {
   addCart(
@@ -43,10 +46,7 @@ onMounted(() => {
   <div class="product-details">
     <div class="top">
       <div class="left">
-        <img
-          src="https://i.pinimg.com/736x/2e/fa/da/2efadae2fb591c9369139698970593a8.jpg"
-          alt=""
-        />
+        <img :src="singleProduct.image" alt="" />
       </div>
       <div class="right">
         <h1>{{ singleProduct.name }}</h1>
@@ -66,30 +66,21 @@ onMounted(() => {
         </div>
         <div class="details-item">
           <span> Màu sắc: </span>
-          <div
-            class="color"
-            v-for="color in colors"
-            :key="color"
+          <div class="color" v-for="color in colors" :key="color"
             :style="`width: 25px;height: 25px; background-color:${color};border-radius: 5px; opacity: 0.5`"
-            @click="() => (chooseColor = color)"
-          ></div>
+            @click="() => (chooseColor = color)"></div>
         </div>
         <div class="details-item">
           <span> Kích cỡ: </span>
-          <div
-            v-for="size in sizes"
-            :key="size"
-            class="size"
-            @click="() => (chooseSize = size)"
-          >
+          <div v-for="size in sizes" :key="size" class="size" @click="() => (chooseSize = size)">
             {{ size }}
           </div>
         </div>
 
         <div class="details-price">
           <span> Giá tiền: </span>
-          <span>{{ singleProduct.newPrice }}</span>
-          <span>{{ singleProduct.oldPrice }}</span>
+          <span>{{ formatCurrency(singleProduct.newPrice) }}</span>
+          <span>{{ formatCurrency(singleProduct.oldPrice) }}</span>
         </div>
 
         <div class="details-item">
@@ -102,24 +93,20 @@ onMounted(() => {
         </div>
 
         <div class="details-quantity">
-          <el-button @click="quantity = quantity + 1">+</el-button>
+          <el-button @click="() => {
+            if (quantity > 1) {
+              quantity = quantity - 1;
+            }
+          }
+            ">-</el-button>
           <div>{{ quantity }}</div>
-          <el-button
-            @click="
-              () => {
-                if (quantity > 1) {
-                  quantity = quantity - 1;
-                }
-              }
-            "
-            >-</el-button
-          >
-          <el-button
-            @click="handleAddToCart"
-            type="primary"
-            style="width: max-content; height: 45px"
-            >Thêm vào giỏ hàng</el-button
-          >
+          <el-button @click="quantity = quantity + 1">+</el-button>
+
+          <router-link style="text-decoration: none; color: inherit;" to="/cart">
+          <el-button @click="handleAddToCart" type="primary" style="width: max-content; height: 45px; margin-left: 30px;">
+              Thêm vào giỏ hàng
+            </el-button>
+          </router-link>
         </div>
       </div>
     </div>
@@ -154,13 +141,8 @@ onMounted(() => {
       </div>
 
       <div>
-        <el-input
-          style="height: 45px; margin-top: 25px"
-          placeholder="Thêm bình luận của bạn..."
-        />
-        <el-button style="margin-top: 10px; height: 45px" type="primary"
-          >Bình luận</el-button
-        >
+        <el-input style="height: 45px; margin-top: 25px" placeholder="Thêm bình luận của bạn..." />
+        <el-button style="margin-top: 10px; height: 45px" type="primary">Bình luận</el-button>
       </div>
     </div>
 
@@ -200,7 +182,7 @@ onMounted(() => {
       img {
         width: 500px;
         height: 500px;
-        object-fit: cover;
+        object-fit: contain;
       }
     }
 
@@ -287,7 +269,7 @@ onMounted(() => {
         width: 100%;
         min-height: 70px;
         height: auto;
-        background-color: #eeeeee;
+        background-color: #eeeeee70;
         padding: 10px;
         border-radius: 5px;
       }

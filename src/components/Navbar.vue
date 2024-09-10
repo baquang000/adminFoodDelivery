@@ -23,11 +23,12 @@
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .navbar-container {
   display: flex;
   align-items: center;
   height: 60px;
+  position: relative;
   width: 100%;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
   padding: 0 20px;
@@ -40,7 +41,7 @@
     justify-content: flex-end;
 
     .el-dropdown-link {
-      font-size: 16;
+      font-size: 16px;
       display: flex;
       align-items: flex-end;
       outline: none;

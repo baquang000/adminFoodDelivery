@@ -13,7 +13,7 @@
                     <input type="password" class="form-control" placeholder="Mật khẩu">
                 </div>
                 <div>
-                    <span>Bạn chưa có tài khoản ? <a href="#">Đăng ký</a></span>
+                    <span>Bạn chưa có tài khoản ? <router-link to="/register">Đăng ký</router-link></span>
                 </div>
                 <button>
                     <span>Đăng nhập</span>

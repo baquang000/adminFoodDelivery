@@ -49,6 +49,8 @@ export const useCartStore = defineStore("cartStore", () => {
         ];
       }
     }
+
+    totalValue();
   };
 
   const removeCart = (id: number) => {

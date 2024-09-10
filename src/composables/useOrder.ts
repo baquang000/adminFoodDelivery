@@ -1,4 +1,4 @@
-import type { TError, TOrder, TResult } from "@/common/type"
+import type { TError, TOrder, TOrderDetails, TResult } from "@/common/type"
 import { useOrderStore } from "@/stores/order"
 import { request } from "@/utils/request"
 import { AxiosError } from "axios"
@@ -106,6 +106,26 @@ export const useOrder = () => {
         }
     }
 
+    const createOrderDetails = async (payload: TOrderDetails) => {
+        try {
+            const response = await request.post('/order-details', payload)
 
-    return { getSingleOrder, getOrders, updateOrder, createOrder, deleteOrder }
+            const { message } = response.data as TResult
+
+            ElMessage.success(message)
+
+            return true
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                const { message } = error.response?.data as TError
+
+                return ElMessage.error(message)
+            }
+
+            ElMessage.error('Có lỗi xảy ra !')
+        }
+    }
+
+
+    return { getSingleOrder, getOrders, updateOrder, createOrder, deleteOrder, createOrderDetails }
 }

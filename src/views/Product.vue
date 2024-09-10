@@ -72,7 +72,6 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .product-container {
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -91,6 +90,7 @@ onMounted(async () => {
 
   .product-list {
     width: 100%;
+    height: auto;
     display: flex;
     flex-direction: column;
     align-items: flex-start;

@@ -1,30 +1,46 @@
+<script setup lang="ts">
+import type { TRegister } from '@/common/type';
+import { useUser } from '@/composables/useUser';
+import { reactive } from 'vue';
+const form = reactive({
+    userName: '',
+    email: '',
+    password: '',
+    rePassword: ''
+})
+
+
+const { register } = useUser()
+
+const handleRegister = (e: Event) => {
+    e.preventDefault()
+
+    register({ userName: form.userName, email: form.email, password: form.password } as TRegister)
+}
+
+</script>
+
 <template>
     <div class="wrapper">
         <div class="inner">
-
             <form action="">
                 <h3>TẠO TÀI KHOẢN</h3>
                 <div class="form-holder">
                     <span class="lnr lnr-phone-handset"></span>
-                    <input type="text" class="form-control" placeholder="Tên người dùng">
+                    <input v-model="form.userName" type="text" class="form-control" placeholder="Tên người dùng">
                 </div>
                 <div class="form-holder">
                     <span class="lnr lnr-user"></span>
-                    <input type="text" class="form-control" placeholder="Email">
+                    <input v-model="form.email" type="text" class="form-control" placeholder="Email">
                 </div>
                 <div class="form-holder">
                     <span class="lnr lnr-lock"></span>
-                    <input type="password" class="form-control" placeholder="Mật khẩu">
+                    <input v-model="form.password" type="password" class="form-control" placeholder="Mật khẩu">
                 </div>
-                <div class="form-holder">
-                    <span class="lnr lnr-lock"></span>
-                    <input type="password" class="form-control" placeholder="Nhập lại mật khẩu">
-                </div>
-
                 <div>
-                    <span>Bạn đã có tài khoản ? <a href="#">Đăng nhập</a></span>
+                    <span>Bạn đã có tài khoản ? <router-link to="/login">Đăng nhập</router-link></span>
                 </div>
-                <button>
+                <button @click="handleRegister">
                     <span>Đăng ký</span>
                 </button>
             </form>

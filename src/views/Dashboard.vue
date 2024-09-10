@@ -3,7 +3,7 @@ import BaseTable from "@/base/BaseTable.vue";
 import { storeToRefs } from "pinia";
 import { computed, onMounted } from "vue";
 import { useUserStore } from "@/stores/user";
-import { useUser } from "@/composables/userUser";
+import { useUser } from "@/composables/useUser";
 import PieChart from "@/components/charts/PieChart.vue";
 import { useChart } from "@/composables/useChart";
 import { useChartsStore } from "@/stores/charts";

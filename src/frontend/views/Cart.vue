@@ -1,28 +1,22 @@
 <script lang="ts" setup>
 import { useCartStore } from "@/stores/cart";
 import { storeToRefs } from "pinia";
+import { formatCurrency } from "@/utils/format";
 
 const { addCart, removeCart, decrementCart } = useCartStore();
-const { cartList } = storeToRefs(useCartStore());
+const { cartList, total } = storeToRefs(useCartStore());
 </script>
+
 
 <template>
   <div class="cart">
-    <h2
-      style="
+    <h2 style="
         display: flex;
         align-items: center;
         text-align: center;
         margin-bottom: 30px;
-      "
-    >
+      ">
       Giỏ hàng
-      <img
-        width="45px"
-        height="45px"
-        src="https://cdn-icons-png.flaticon.com/512/3081/3081986.png"
-        alt=""
-      />
     </h2>
     <el-table :data="cartList" style="width: 100%">
       <el-table-column label="Ảnh sản phẩm" width="180">
@@ -36,31 +30,25 @@ const { cartList } = storeToRefs(useCartStore());
         <template #default="scope">
           <div style="display: flex; align-items: center">
             <div>
-              <span
-                >Màu sắc:
-                <div
-                  style="
+              <span>Màu sắc:
+                <div :style="`
                     width: 18px;
                     height: 18px;
-                    background-color: red;
+                    background-color: ${scope.row.product.color};
                     border-radius: 5px;
-                  "
-                ></div>
+                  `"></div>
               </span>
-              <span
-                >Kích cỡ:
-                <div
-                  style="
+              <span>Kích cỡ:
+                <div style="
                     width: 20px;
                     height: 20px;
                     background-color: #eeeeee;
                     text-align: center;
                     line-height: 20px;
-                  "
-                >
-                  S
-                </div></span
-              >
+                  ">
+                  {{ scope.row.product.size }}
+                </div>
+              </span>
             </div>
           </div>
         </template>
@@ -68,32 +56,29 @@ const { cartList } = storeToRefs(useCartStore());
       <el-table-column label="Giá" width="180">
         <template #default="scope">
           <div style="display: flex; align-items: center">
-            <span style="color: blue; font-weight: bold">200.000 VND</span>
+            <span style="color: blue; font-weight: bold">{{ scope.row.product.newPrice }}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="Số lượng" width="180">
         <template #default="scope">
-          <el-button>-</el-button>
-          <span style="margin: 0 15px">1</span>
-          <el-button>+</el-button>
+          <el-button @click="decrementCart(scope.row.product.id)">-</el-button>
+          <span style="margin: 0 15px">{{ scope.row.quantity }}</span>
+          <el-button @click="addCart(scope.row.product, 1)">+</el-button>
         </template>
       </el-table-column>
 
       <el-table-column label="Tổng tiền" width="180">
         <template #default="scope">
           <div style="display: flex; align-items: center">
-            <span style="color: red; font-weight: bold">1200.000 VND</span>
+            <span style="color: red; font-weight: bold">{{ formatCurrency(scope.row.product.newPrice *
+              scope.row.quantity) }}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="Thao tác">
         <template #default="scope">
-          <el-button
-            size="small"
-            type="danger"
-            @click="() => console.log('ok')"
-          >
+          <el-button size="small" type="danger" @click="() => console.log('ok')">
             <i class="pi pi-trash"></i>
           </el-button>
         </template>
@@ -104,65 +89,15 @@ const { cartList } = storeToRefs(useCartStore());
   <div class="bottom">
     <div style="margin-top: 20px">
       <span>Tổng tiền : &nbsp;</span>
-      <span style="color: red; font-weight: bold">1200.000 VND</span>
+      <span style="color: red; font-weight: bold">{{ cartList.length ? formatCurrency(total) : formatCurrency(0)
+        }}</span>
     </div>
-    <el-button type="primary" style="height: 45px; margin-top: 30px"
-      >Thanh toán</el-button
-    >
+
+    <router-link style="text-decoration: none; color: inherit;" to="/payment">
+      <el-button type="primary" style="height: 45px; margin-top: 30px">Thanh toán</el-button>
+    </router-link>
   </div>
 </template>
-
-<script lang="ts" setup>
-interface Cart {
-  image: string;
-  price: string;
-  info: string;
-  quantity: string;
-  total: string;
-}
-
-const handleEdit = (index: number, row: Cart) => {
-  console.log(index, row);
-};
-const handleDelete = (index: number, row: Cart) => {
-  console.log(index, row);
-};
-
-const tableData: Cart[] = [
-  {
-    image:
-      "https://maraviyainfotech.com/projects/carrot/carrot-v21/carrot-html/assets/img/product/1.jpg",
-    info: "",
-    price: "2016-05-03",
-    quantity: "Tom",
-    total: "No. 189, Grove St, Los Angeles",
-  },
-  {
-    image:
-      "https://maraviyainfotech.com/projects/carrot/carrot-v21/carrot-html/assets/img/product/1.jpg",
-    info: "",
-    price: "2016-05-03",
-    quantity: "Tom",
-    total: "No. 189, Grove St, Los Angeles",
-  },
-  {
-    image:
-      "https://maraviyainfotech.com/projects/carrot/carrot-v21/carrot-html/assets/img/product/1.jpg",
-    info: "",
-    price: "2016-05-03",
-    quantity: "Tom",
-    total: "No. 189, Grove St, Los Angeles",
-  },
-  {
-    image:
-      "https://maraviyainfotech.com/projects/carrot/carrot-v21/carrot-html/assets/img/product/1.jpg",
-    info: "",
-    price: "2016-05-03",
-    quantity: "Tom",
-    total: "No. 189, Grove St, Los Angeles",
-  },
-];
-</script>
 
 <style lang="scss" setup>
 .cart {
@@ -180,5 +115,6 @@ const tableData: Cart[] = [
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 50px;
 }
 </style>
