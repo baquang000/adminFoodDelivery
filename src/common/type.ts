@@ -9,6 +9,7 @@ export type TProduct = {
   description: string;
   image: string;
   color: string;
+  size: string;
   oldPrice: string;
   newPrice: string;
   sold: number;
@@ -84,4 +85,11 @@ export type TResult = {
 export type TChart = {
   labels?: string[];
   series?: number[];
+};
+
+export type TProductParams = {
+  size?: string | null;
+  color?: string | null;
+  price?: string | null;
+  categoryId?: string | null;
 };
