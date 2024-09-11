@@ -3,7 +3,10 @@ import { defineStore } from "pinia";
 import type { TCart, TProduct } from "@/common/type";
 
 export const useCartStore = defineStore("cartStore", () => {
-  const cartList = ref<TCart[]>([]);
+  const cartList = ref<TCart[]>(
+    JSON.parse(localStorage.getItem("cart") as string) || []
+  );
+
   const total = ref();
 
   const addCart = (payload: TProduct, quantity: number) => {
@@ -23,6 +26,8 @@ export const useCartStore = defineStore("cartStore", () => {
         ...cartList.value.slice(index + 1),
       ];
     }
+
+    localStorage.setItem('cart', JSON.stringify(cartList.value))
 
     totalValue();
   };
@@ -50,12 +55,14 @@ export const useCartStore = defineStore("cartStore", () => {
       }
     }
 
+    localStorage.setItem('cart', JSON.stringify(cartList.value))
+
     totalValue();
   };
 
   const removeCart = (id: number) => {
     cartList.value = cartList.value.filter((item) => item.product.id !== id);
-
+    
     totalValue();
   };
 

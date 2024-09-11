@@ -40,10 +40,12 @@ export type TCategory = {
 
 export type TComment = {
   id?: number;
-  productId: number;
-  userId: number;
-  content: string;
-  image: string;
+  user?: {
+    userName?: string;
+  };
+  productId?: number;
+  content?: string;
+  image?: string;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
@@ -52,32 +54,40 @@ export type TComment = {
 export type TUser = {
   id?: number;
   userName?: string;
-  avatar?: string;
-  address?: string;
-  phoneNumber?: string;
   email?: string;
   status?: string;
+  userInfo: {
+    avatar?: string;
+    address?: string;
+    phoneNumber?: string;
+  };
+  accessToken?: string;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
 };
 
 export type TRegister = {
-  userName: string,
-  email: string,
-  password: string
-}
+  userName: string;
+  email: string;
+  password: string;
+};
 
 export type TLogin = {
-  email: string,
-  password: string
-}
+  email: string;
+  password: string;
+};
 
 export type TOrder = {
   id?: number;
   totalMoney: string;
   userNote: string;
-  orderStatus: string;
+  orderDetails?:{
+    orderId?: number, 
+    product?: TProduct, 
+    quantity?: number
+  },
+  orderStatus?: string;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
@@ -88,8 +98,7 @@ export type TOrderDetails = {
   orderId: number;
   productId: number;
   quantity: number;
-  userNote: string;
-  orderStatus: string;
+  orderStatus?: string;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;

@@ -1,17 +1,23 @@
 <script setup lang="ts">
 import { useProduct } from "@/composables/useProduct";
 import ProductList from "../components/product/ProductList.vue";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useProductStore } from "@/stores/product";
 import { useCartStore } from "@/stores/cart";
 import { formatCurrency } from "@/utils/format";
+import { useComment } from "@/composables/useComment";
+import { ElMessage } from "element-plus";
+import { useCommentStore } from "@/stores/comment";
+import { useUserStore } from "@/stores/user";
 
 const { getSingleProduct } = useProduct();
+const { getComments } = useComment();
 
 const { singleProduct } = storeToRefs(useProductStore());
-
+const { commentList } = storeToRefs(useCommentStore());
+const { user } = storeToRefs(useUserStore());
 const quantity = ref(1);
 
 const { addCart } = useCartStore();
@@ -23,8 +29,13 @@ const id = computed(() => parseInt(route.params.id as string));
 const colors = computed(() => singleProduct.value.color.split(","));
 const sizes = computed(() => singleProduct.value.size.split(","));
 
-const chooseSize = computed(()=> sizes.value[0] as string)
-const chooseColor = computed(()=> colors.value[0] as string);
+const chooseSize = computed(() => sizes.value[0] as string);
+const chooseColor = computed(() => colors.value[0] as string);
+
+const form = reactive({
+  productId: id.value || null,
+  content: "",
+});
 
 const handleAddToCart = () => {
   addCart(
@@ -37,8 +48,23 @@ const handleAddToCart = () => {
   );
 };
 
+const { createComment } = useComment();
+
+const handleCreateComment = async () => {
+  if (!user.value && !localStorage.getItem("user"))
+    return ElMessage.error("Bạn cần đăng nhập để bình luận !");
+
+  const response = await createComment({
+    productId: form.productId as number,
+    content: form.content,
+  });
+
+  if (!response) return;
+};
+
 onMounted(() => {
   getSingleProduct(id.value);
+  getComments(id.value);
 });
 </script>
 
@@ -66,13 +92,22 @@ onMounted(() => {
         </div>
         <div class="details-item">
           <span> Màu sắc: </span>
-          <div class="color" v-for="color in colors" :key="color"
+          <div
+            class="color"
+            v-for="color in colors"
+            :key="color"
             :style="`width: 25px;height: 25px; background-color:${color};border-radius: 5px; opacity: 0.5`"
-            @click="() => (chooseColor = color)"></div>
+            @click="() => (chooseColor = color)"
+          ></div>
         </div>
         <div class="details-item">
           <span> Kích cỡ: </span>
-          <div v-for="size in sizes" :key="size" class="size" @click="() => (chooseSize = size)">
+          <div
+            v-for="size in sizes"
+            :key="size"
+            class="size"
+            @click="() => (chooseSize = size)"
+          >
             {{ size }}
           </div>
         </div>
@@ -93,17 +128,25 @@ onMounted(() => {
         </div>
 
         <div class="details-quantity">
-          <el-button @click="() => {
-            if (quantity > 1) {
-              quantity = quantity - 1;
-            }
-          }
-            ">-</el-button>
+          <el-button
+            @click="
+              () => {
+                if (quantity > 1) {
+                  quantity = quantity - 1;
+                }
+              }
+            "
+            >-</el-button
+          >
           <div>{{ quantity }}</div>
           <el-button @click="quantity = quantity + 1">+</el-button>
 
-          <router-link style="text-decoration: none; color: inherit;" to="/cart">
-          <el-button @click="handleAddToCart" type="primary" style="width: max-content; height: 45px; margin-left: 30px;">
+          <router-link style="text-decoration: none; color: inherit" to="/cart">
+            <el-button
+              @click="handleAddToCart"
+              type="primary"
+              style="width: max-content; height: 45px; margin-left: 30px"
+            >
               Thêm vào giỏ hàng
             </el-button>
           </router-link>
@@ -115,34 +158,28 @@ onMounted(() => {
       <h2>Bình luận & đánh giá</h2>
 
       <div class="comment-list">
-        <div class="item">
+        <div class="item" v-for="item in commentList" :key="item.id">
           <div style="color: #5e77c9; font-weight: 500">
-            Nguyễn Văn A |
-            <span style="color: gray; font-weight: normal">9 giờ trước</span>
+            {{ item.user?.userName }} |
+            <span style="color: gray; font-weight: normal">{{
+              item.createdAt
+            }}</span>
           </div>
-          <div style="color: #333; margin-top: 10px">Rất tốt</div>
-        </div>
-
-        <div class="item">
-          <div style="color: #5e77c9; font-weight: 500">
-            Nguyễn Văn A |
-            <span style="color: gray; font-weight: normal">9 giờ trước</span>
-          </div>
-          <div style="color: #333; margin-top: 10px">Rất tốt</div>
-        </div>
-
-        <div class="item">
-          <div style="color: #5e77c9; font-weight: 500">
-            Nguyễn Văn A |
-            <span style="color: gray; font-weight: normal">9 giờ trước</span>
-          </div>
-          <div style="color: #333; margin-top: 10px">Rất tốt</div>
+          <div style="color: #333; margin-top: 10px">{{ item.content }}</div>
         </div>
       </div>
-
       <div>
-        <el-input style="height: 45px; margin-top: 25px" placeholder="Thêm bình luận của bạn..." />
-        <el-button style="margin-top: 10px; height: 45px" type="primary">Bình luận</el-button>
+        <el-input
+          v-model="form.content"
+          style="height: 45px; margin-top: 25px"
+          placeholder="Thêm bình luận của bạn..."
+        />
+        <el-button
+          @click="handleCreateComment"
+          style="margin-top: 10px; height: 45px"
+          type="primary"
+          >Bình luận</el-button
+        >
       </div>
     </div>
 

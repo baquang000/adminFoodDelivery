@@ -72,7 +72,7 @@ onMounted(() => {
           @edit="handleEditData" @delete="handleDelete" />
       </el-card>
 
-      <el-card class="table" style="margin-left: 35px;">
+      <el-card class="table" style="margin-left: 35px; height: 562px">
         <BarChart />
       </el-card>
     </div>

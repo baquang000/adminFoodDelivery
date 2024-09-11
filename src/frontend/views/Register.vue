@@ -1,267 +1,292 @@
 <script setup lang="ts">
-import type { TRegister } from '@/common/type';
-import { useUser } from '@/composables/useUser';
-import { reactive } from 'vue';
+import type { TRegister } from "@/common/type";
+import { useUser } from "@/composables/useUser";
+import { ElMessage } from "element-plus";
+import { reactive } from "vue";
+import { useRouter } from "vue-router";
 const form = reactive({
-    userName: '',
-    email: '',
-    password: '',
-    rePassword: ''
-})
+  userName: "",
+  email: "",
+  password: "",
+  rePassword: "",
+});
 
+const { register } = useUser();
 
-const { register } = useUser()
+const router = useRouter();
 
-const handleRegister = (e: Event) => {
-    e.preventDefault()
+const handleRegister = async (e: Event) => {
+  e.preventDefault();
 
-    register({ userName: form.userName, email: form.email, password: form.password } as TRegister)
-}
+  const response = await register({
+    userName: form.userName,
+    email: form.email,
+    password: form.password,
+  } as TRegister);
 
+  if (!response) return;
+
+  router.replace("/login");
+};
 </script>
 
 <template>
-    <div class="wrapper">
-        <div class="inner">
-            <form action="">
-                <h3>TẠO TÀI KHOẢN</h3>
-                <div class="form-holder">
-                    <span class="lnr lnr-phone-handset"></span>
-                    <input v-model="form.userName" type="text" class="form-control" placeholder="Tên người dùng">
-                </div>
-                <div class="form-holder">
-                    <span class="lnr lnr-user"></span>
-                    <input v-model="form.email" type="text" class="form-control" placeholder="Email">
-                </div>
-                <div class="form-holder">
-                    <span class="lnr lnr-lock"></span>
-                    <input v-model="form.password" type="password" class="form-control" placeholder="Mật khẩu">
-                </div>
-                <div>
-                    <span>Bạn đã có tài khoản ? <router-link to="/login">Đăng nhập</router-link></span>
-                </div>
-                <button @click="handleRegister">
-                    <span>Đăng ký</span>
-                </button>
-            </form>
-
+  <div class="wrapper">
+    <div class="inner">
+      <form action="">
+        <h3>TẠO TÀI KHOẢN</h3>
+        <div class="form-holder">
+          <span class="lnr lnr-phone-handset"></span>
+          <input
+            v-model="form.userName"
+            type="text"
+            class="form-control"
+            placeholder="Tên người dùng"
+          />
         </div>
-
+        <div class="form-holder">
+          <span class="lnr lnr-user"></span>
+          <input
+            v-model="form.email"
+            type="text"
+            class="form-control"
+            placeholder="Email"
+          />
+        </div>
+        <div class="form-holder">
+          <span class="lnr lnr-lock"></span>
+          <input
+            v-model="form.password"
+            type="password"
+            class="form-control"
+            placeholder="Mật khẩu"
+          />
+        </div>
+        <div>
+          <span
+            >Bạn đã có tài khoản ?
+            <router-link to="/login">Đăng nhập</router-link></span
+          >
+        </div>
+        <button @click="handleRegister">
+          <span>Đăng ký</span>
+        </button>
+      </form>
     </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
 .wrapper {
-    margin-top: 50px;
+  margin-top: 50px;
 }
 
 img {
-    max-width: 100%;
+  max-width: 100%;
 }
 
 ul {
-    padding-left: 0;
-    margin-bottom: 0;
+  padding-left: 0;
+  margin-bottom: 0;
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 :focus {
-    outline: none;
+  outline: none;
 }
 
 .inner {
-    position: relative;
-    width: 435px;
+  position: relative;
+  width: 435px;
 }
 
 .image-1 {
-    position: absolute;
-    bottom: -12px;
-    left: -191px;
-    z-index: 99;
+  position: absolute;
+  bottom: -12px;
+  left: -191px;
+  z-index: 99;
 }
 
 .image-2 {
-    position: absolute;
-    bottom: 0;
-    right: -129px;
+  position: absolute;
+  bottom: 0;
+  right: -129px;
 }
 
 form {
-    width: 100%;
-    position: relative;
-    z-index: 9;
-    padding: 77px 61px 66px;
-    background: #fff;
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
-    -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
-    -ms-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
-    -o-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  position: relative;
+  z-index: 9;
+  padding: 77px 61px 66px;
+  background: #fff;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  -ms-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  -o-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
 }
 
 h3 {
-    text-transform: uppercase;
-    font-size: 25px;
-    color: #333;
-    letter-spacing: 3px;
-    text-align: center;
-    margin-bottom: 33px;
+  text-transform: uppercase;
+  font-size: 25px;
+  color: #333;
+  letter-spacing: 3px;
+  text-align: center;
+  margin-bottom: 33px;
 }
 
 .form-holder {
-    position: relative;
-    margin-bottom: 21px;
+  position: relative;
+  margin-bottom: 21px;
 
-    span {
-        position: absolute;
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 15px;
-        color: #333;
+  span {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    color: #333;
 
-        &.lnr-lock {
-            left: 2px;
-        }
+    &.lnr-lock {
+      left: 2px;
     }
+  }
 }
 
 .form-control {
-    border: none;
-    border-bottom: 1px solid #e6e6e6;
-    display: block;
-    width: 100%;
-    height: 38px;
-    background: none;
-    padding: 3px 42px 0px;
-    color: #666;
-    font-size: 16px;
+  border: none;
+  border-bottom: 1px solid #e6e6e6;
+  display: block;
+  width: 100%;
+  height: 38px;
+  background: none;
+  padding: 3px 42px 0px;
+  color: #666;
+  font-size: 16px;
 
-    &::-webkit-input-placeholder {
-        font-size: 14px;
-        font-family: "Muli-Regular";
-        color: #999;
-        transform: translateY(1px);
-    }
+  &::-webkit-input-placeholder {
+    font-size: 14px;
+    font-family: "Muli-Regular";
+    color: #999;
+    transform: translateY(1px);
+  }
 
-    &::-moz-placeholder {
-        font-size: 14px;
-        font-family: "Muli-Regular";
-        color: #999;
-        transform: translateY(1px);
-    }
+  &::-moz-placeholder {
+    font-size: 14px;
+    font-family: "Muli-Regular";
+    color: #999;
+    transform: translateY(1px);
+  }
 
-    &:-ms-input-placeholder {
-        font-size: 14px;
-        font-family: "Muli-Regular";
-        color: #999;
-        transform: translateY(1px);
-    }
+  &:-ms-input-placeholder {
+    font-size: 14px;
+    font-family: "Muli-Regular";
+    color: #999;
+    transform: translateY(1px);
+  }
 
-    &:-moz-placeholder {
-        font-size: 14px;
-        font-family: "Muli-Regular";
-        color: #999;
-        transform: translateY(1px);
-    }
+  &:-moz-placeholder {
+    font-size: 14px;
+    font-family: "Muli-Regular";
+    color: #999;
+    transform: translateY(1px);
+  }
 
-    &:focus {
-        border-bottom: 1px solid #accffe;
-    }
+  &:focus {
+    border-bottom: 1px solid #accffe;
+  }
 }
 
 button {
-    border: none;
-    width: 100%;
-    height: 49px;
-    margin-top: 50px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    background: #99ccff;
-    color: #fff;
-    text-transform: uppercase;
-    font-size: 15px;
-    letter-spacing: 2px;
-    transition: all 0.5s;
+  border: none;
+  width: 100%;
+  height: 49px;
+  margin-top: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: #99ccff;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 15px;
+  letter-spacing: 2px;
+  transition: all 0.5s;
+  position: relative;
+  overflow: hidden;
+
+  span {
     position: relative;
-    overflow: hidden;
+    z-index: 2;
+  }
 
-    span {
-        position: relative;
-        z-index: 2;
-    }
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background-color: rgba(52, 152, 253, 0.25);
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+    -webkit-transform: translate(-100%, 0);
+    transform: translate(-100%, 0);
+    -webkit-transition-timing-function: cubic-bezier(0.75, 0, 0.125, 1);
+    transition-timing-function: cubic-bezier(0.75, 0, 0.125, 1);
+  }
 
+  &:after {
+    -webkit-transition-delay: 0.2s;
+    transition-delay: 0.2s;
+  }
+
+  &:hover {
     &:before,
     &:after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-        background-color: rgba(52, 152, 253, 0.25);
-        -webkit-transition: all 0.3s;
-        -moz-transition: all 0.3s;
-        -o-transition: all 0.3s;
-        transition: all 0.3s;
-        -webkit-transform: translate(-100%, 0);
-        transform: translate(-100%, 0);
-        -webkit-transition-timing-function: cubic-bezier(0.75, 0, 0.125, 1);
-        transition-timing-function: cubic-bezier(0.75, 0, 0.125, 1);
+      -webkit-transform: translate(0, 0);
+      transform: translate(0, 0);
     }
-
-    &:after {
-        -webkit-transition-delay: 0.2s;
-        transition-delay: 0.2s;
-    }
-
-    &:hover {
-
-        &:before,
-        &:after {
-            -webkit-transform: translate(0, 0);
-            transform: translate(0, 0);
-        }
-    }
+  }
 }
 
 @media (max-width: 991px) {
-    .inner {
-        width: 400px;
-        left: 4%;
-    }
+  .inner {
+    width: 400px;
+    left: 4%;
+  }
 }
 
 @media (max-width: 767px) {
-    .inner {
-        width: 100%;
-        left: 0;
-    }
+  .inner {
+    width: 100%;
+    left: 0;
+  }
 
-    .image-1,
-    .image-2 {
-        display: none;
-    }
+  .image-1,
+  .image-2 {
+    display: none;
+  }
 
-    form {
-        padding: 35px;
-        box-shadow: none;
-        -webkit-box-shadow: none;
-        -moz-box-shadow: none;
-        -ms-box-shadow: none;
-        -o-box-shadow: none;
-    }
+  form {
+    padding: 35px;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    -ms-box-shadow: none;
+    -o-box-shadow: none;
+  }
 
-    .wrapper {
-        background: none;
-    }
+  .wrapper {
+    background: none;
+  }
 }
 </style>

@@ -41,10 +41,10 @@ onMounted(() => getCategoryList());
 <template>
   <div class="category-container">
     <div class="category-featured">
+      <!-- <el-card></el-card>
       <el-card></el-card>
       <el-card></el-card>
-      <el-card></el-card>
-      <el-card></el-card>
+      <el-card></el-card> -->
     </div>
     <div class="category-list">
       <BaseTable

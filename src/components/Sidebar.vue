@@ -30,7 +30,7 @@ const sidebarList = [
   },
 ];
 
-const router = useRouter()
+const router = useRouter();
 
 const defaultIndexActive = ref(0);
 
@@ -41,24 +41,38 @@ const handleChangeSidebar = (index: number, path: string) => {
 </script>
 
 <template>
-  <div class="sidebar-container">
+  <el-card class="sidebar-container">
     <div class="menu-list">
-      <div :class="defaultIndexActive === index ? 'menu-item active' : 'menu-item'" v-for="(item, index) in sidebarList"
-        :key="item.name" @click="handleChangeSidebar(index, item.route)">
-        <i :class="'pi ' + item.icon"></i>
+      <div
+        :class="defaultIndexActive === index ? 'menu-item active' : 'menu-item'"
+        v-for="(item, index) in sidebarList"
+        :key="item.name"
+        @click="handleChangeSidebar(index, item.route)"
+      >
+        <div
+          style="
+            border: 0.5px solid #e2e8f0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+          "
+        >
+          <i :class="'pi ' + item.icon"></i>
+        </div>
         &nbsp; &nbsp; &nbsp;
         <span>{{ item.name }}</span>
       </div>
     </div>
-  </div>
+  </el-card>
 </template>
 
 <style scoped lang="scss">
 .sidebar-container {
   width: 210px;
   height: 100vh;
-  background-color: #545c64;
-  color: #ffffff;
+  color: #333;
 
   .menu-list {
     width: 100%;
@@ -75,7 +89,8 @@ const handleChangeSidebar = (index: number, path: string) => {
       cursor: pointer;
 
       &.active {
-        background-color: #434A50;
+        background-color: #434a50;
+        color: white;
       }
     }
   }

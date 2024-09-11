@@ -57,6 +57,6 @@ const data = computed(() => {
 
 <template>
     <div id="chart">
-        <apexchart type="bar" height="350" :options="data.chartOptions" :series="data.series"></apexchart>
+        <apexchart type="bar" height="400px" :options="data.chartOptions" :series="data.series"></apexchart>
     </div>
 </template>

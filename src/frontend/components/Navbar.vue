@@ -1,10 +1,25 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useUserStore } from "@/stores/user";
+import { storeToRefs } from "pinia";
+
+const { setUser } = useUserStore();
+const { user } = storeToRefs(useUserStore());
+
+const handleLogout = () => {
+  localStorage.removeItem("user");
+  setUser(null);
+};
+</script>
 
 <template>
   <div class="navbar">
     <div class="top">
       <div class="top-item logo">
-        <img src="https://maraviyainfotech.com/projects/carrot-tailwind/assets/img/logo/logo.png" alt="" />
+        <router-link to="/">
+          <img
+            src="https://maraviyainfotech.com/projects/carrot-tailwind/assets/img/logo/logo.png"
+            alt=""
+        /></router-link>
       </div>
       <div class="top-item search">
         <input type="text" placeholder="Tìm sản phẩm bạn muốn..." />
@@ -25,20 +40,40 @@
         </div>
         <div class="item">
           <i class="pi pi-shopping-cart"></i>&nbsp;
-          <span>Giỏ hàng</span>
+          <router-link style="color: inherit; text-decoration: none" to="/cart"
+            ><span>Giỏ hàng</span></router-link
+          >
         </div>
-        <div class="item">
+        <div class="item" v-if="!user">
           <i class="pi pi-user"></i>&nbsp;
-          <span> Đăng nhập</span>
+          <router-link style="color: inherit; text-decoration: none" to="/login"
+            ><span>Đăng nhập</span></router-link
+          >
           <span>&nbsp;|&nbsp;</span>
-          <span>Đăng ký</span>
+          <router-link
+            style="color: inherit; text-decoration: none"
+            to="/register"
+            ><span>Đăng ký</span></router-link
+          >
+        </div>
+
+        <div v-if="user" class="item">
+          <i class="pi pi-user"></i>&nbsp;
+          <span> {{ user.userName }}</span>
+        </div>
+
+        <div v-if="user" class="item" @click="handleLogout">
+          <i class="pi pi-indian-rupee"></i>&nbsp;
+          <span>Thoát</span>
         </div>
       </div>
     </div>
 
-
     <div class="bottom">
-      <i style="margin-left: 65px; font-weight: bold; cursor: pointer;" class="pi pi-bars"></i>
+      <i
+        style="margin-left: 65px; font-weight: bold; cursor: pointer"
+        class="pi pi-bars"
+      ></i>
       <ul>
         <li class="active">Trang chủ</li>
         <li>Sản phẩm</li>
@@ -73,7 +108,7 @@
     }
 
     .search {
-      border: 1px solid #3F51B5;
+      border: 1px solid #3f51b5;
       border-radius: 5px;
       height: 45px;
       display: flex;
@@ -96,7 +131,7 @@
         justify-content: center;
         align-items: center;
         border: none;
-        background-color: #3F51B5;
+        background-color: #3f51b5;
         color: white;
         font-weight: bold;
         font-size: 20px;
@@ -145,7 +180,7 @@
         padding-bottom: 5px;
 
         &.active {
-          border-bottom: 3px solid #3F51B5;
+          border-bottom: 3px solid #3f51b5;
         }
       }
     }
