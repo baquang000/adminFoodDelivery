@@ -44,7 +44,8 @@ onMounted(() => getOrders());
       <BaseTable
         :data="tableData"
         :columns="tableColumns"
-        screen="Đơn hàng"
+        :isHiddenComponent="true"
+        screen="đơn hàng"
         @edit="handleEditData"
         @delete="handleDelete"
       />

@@ -6,26 +6,26 @@
     <div class="info-list">
         <div class="info">
             <i class="pi pi-dollar"></i>
-            <h2>Product Packing</h2>
-            <span>Lorem ipsum dolor sit amet, consectetur adipisicing.</span>
+            <h2>GIÁ CẢ ƯU ĐÃI</h2>
+            <span></span>
         </div>
 
         <div class="info">
             <i class="pi pi-box"></i>
-            <h2>Product Packing</h2>
-            <span>Lorem ipsum dolor sit amet, consectetur adipisicing.</span>
+            <h2>SẢN PHẨM KIỂM ĐỊNH</h2>
+            <span></span>
         </div>
 
         <div class="info">
             <i class="pi pi-whatsapp"></i>
-            <h2>Product Packing</h2>
-            <span>Lorem ipsum dolor sit amet, consectetur adipisicing.</span>
+            <h2>HỖ TRỢ 24 / 7</h2>
+            <span></span>
         </div>
 
         <div class="info">
             <i class="pi pi-truck"></i>
-            <h2>Product Packing</h2>
-            <span>Lorem ipsum dolor sit amet, consectetur adipisicing.</span>
+            <h2>GIAO HÀNG NHANH</h2>
+            <span></span>
         </div>
     </div>
 </template>

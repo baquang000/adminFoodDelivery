@@ -7,7 +7,7 @@ import "vue3-carousel/dist/carousel.css";
 
 <template>
   <div style="width: 100vw">
-    <Carousel>
+    <Carousel :autoplay="3000" :wrap-around="true">
       <Slide key="2">
         <div class="carousel__item">
           <img
@@ -49,7 +49,7 @@ import "vue3-carousel/dist/carousel.css";
 
 <style scoped lang="scss">
 .carousel__item {
-  height: 80vh;
+  height: 85vh;
   width: 100vw;
   font-size: 20px;
   border-radius: 15px;

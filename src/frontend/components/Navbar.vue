@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { useCartStore } from "@/stores/cart";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 
 const { setUser } = useUserStore();
 const { user } = storeToRefs(useUserStore());
+const { cartList } = storeToRefs(useCartStore())
 
 const handleLogout = () => {
   localStorage.removeItem("user");
@@ -16,10 +18,8 @@ const handleLogout = () => {
     <div class="top">
       <div class="top-item logo">
         <router-link to="/">
-          <img
-            src="https://maraviyainfotech.com/projects/carrot-tailwind/assets/img/logo/logo.png"
-            alt=""
-        /></router-link>
+          <img src="https://maraviyainfotech.com/projects/carrot-tailwind/assets/img/logo/logo.png"
+            alt="" /></router-link>
       </div>
       <div class="top-item search">
         <input type="text" placeholder="Tìm sản phẩm bạn muốn..." />
@@ -32,7 +32,9 @@ const handleLogout = () => {
       <div class="top-item action">
         <div class="item">
           <i class="pi pi-shopping-bag"></i>&nbsp;
-          <span>Đơn hàng</span>
+          <router-link style="color: inherit; text-decoration: none" to="/my-order">
+            <span>Đơn hàng</span>
+          </router-link>
         </div>
         <div class="item">
           <i class="pi pi-heart"></i>&nbsp;
@@ -40,40 +42,30 @@ const handleLogout = () => {
         </div>
         <div class="item">
           <i class="pi pi-shopping-cart"></i>&nbsp;
-          <router-link style="color: inherit; text-decoration: none" to="/cart"
-            ><span>Giỏ hàng</span></router-link
-          >
+          <router-link style="color: inherit; text-decoration: none" to="/cart"><span>Giỏ hàng (<b style="color: red;">{{
+                cartList.length }}</b>)</span></router-link>
         </div>
         <div class="item" v-if="!user">
           <i class="pi pi-user"></i>&nbsp;
-          <router-link style="color: inherit; text-decoration: none" to="/login"
-            ><span>Đăng nhập</span></router-link
-          >
+          <router-link style="color: inherit; text-decoration: none" to="/login"><span>Đăng nhập</span></router-link>
           <span>&nbsp;|&nbsp;</span>
-          <router-link
-            style="color: inherit; text-decoration: none"
-            to="/register"
-            ><span>Đăng ký</span></router-link
-          >
+          <router-link style="color: inherit; text-decoration: none" to="/register"><span>Đăng ký</span></router-link>
         </div>
 
         <div v-if="user" class="item">
           <i class="pi pi-user"></i>&nbsp;
-          <span> {{ user.userName }}</span>
+          <span> Xin chào: <b style="color: green; font-size: 20px;">{{ user.userName }} !</b></span>
         </div>
 
         <div v-if="user" class="item" @click="handleLogout">
-          <i class="pi pi-indian-rupee"></i>&nbsp;
+          <i class="pi pi-spin pi-cog"></i>
           <span>Thoát</span>
         </div>
       </div>
     </div>
 
-    <div class="bottom">
-      <i
-        style="margin-left: 65px; font-weight: bold; cursor: pointer"
-        class="pi pi-bars"
-      ></i>
+    <!-- <div class="bottom">
+      <i style="margin-left: 65px; font-weight: bold; cursor: pointer" class="pi pi-bars"></i>
       <ul>
         <li class="active">Trang chủ</li>
         <li>Sản phẩm</li>
@@ -81,7 +73,7 @@ const handleLogout = () => {
         <li>Bài viết</li>
         <li>Liên hệ</li>
       </ul>
-    </div>
+    </div> -->
   </div>
   <div class="hr"></div>
 </template>

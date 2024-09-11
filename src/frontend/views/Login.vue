@@ -12,8 +12,7 @@ const router = useRouter();
 
 const { login } = useUser();
 
-const handleLogin = async (e: Event) => {
-  e.preventDefault();
+const handleLogin = async () => {
   const response = await login(form);
 
   if(!response) return
@@ -25,7 +24,7 @@ const handleLogin = async (e: Event) => {
 <template>
   <div class="wrapper">
     <div class="inner">
-      <form action="">
+      <form @submit.prevent>
         <h3>ĐĂNG NHẬP</h3>
         <div class="form-holder">
           <span class="lnr lnr-user"></span>
@@ -51,7 +50,7 @@ const handleLogin = async (e: Event) => {
             <router-link to="/register">Đăng ký</router-link></span
           >
         </div>
-        <button @click="handleLogin">
+        <button type="submit" @click="handleLogin">
           <span>Đăng nhập</span>
         </button>
       </form>

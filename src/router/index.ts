@@ -38,6 +38,10 @@ const router = createRouter({
           path: "success",
           component: () => import("../frontend/views/Success.vue"),
         },
+        {
+          path: "my-order",
+          component: () => import("../frontend/views/MyOrder.vue"),
+        },
       ]
     },
 
@@ -68,6 +72,15 @@ const router = createRouter({
       ]
     }
   ],
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      // Nếu có vị trí cuộn được lưu (khi sử dụng nút quay lại/tiến)
+      return savedPosition;
+    } else {
+      // Mặc định cuộn về đầu trang
+      return { top: 0 };
+    }
+  }
 });
 
 export default router;

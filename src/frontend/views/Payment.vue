@@ -129,7 +129,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
               productId: item.product.id as number,
               orderId,
               quantity: item.quantity,
-            });
+            }, false);
           })
         );
       }
@@ -145,16 +145,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 <template>
   <h2>Thanh toán</h2>
   <div class="payment">
-    <div class="left">
-      <el-form
-        ref="ruleFormRef"
-        style="max-width: 600px"
-        :model="ruleForm"
-        :rules="rules"
-        label-width="auto"
-        class="demo-ruleForm"
-        :size="formSize"
-      >
+    <el-card class="left">
+      <el-form ref="ruleFormRef" style="max-width: 600px" :model="ruleForm" :rules="rules" label-width="auto"
+        class="demo-ruleForm" :size="formSize">
         <el-form-item label="Tên người nhận" prop="name">
           <el-input v-model="form.userName" style="height: 40px" />
         </el-form-item>
@@ -173,51 +166,34 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           <el-switch v-model="ruleForm.delivery" />
         </el-form-item>
 
-        <el-form-item style="margin-left: 515px">
-          <el-button
-            style="height: 45px"
-            type="primary"
-            @click="submitForm(ruleFormRef)"
-          >
+        <el-form-item>
+          <el-button style="height: 45px; width: 200px;" type="primary" @click="submitForm(ruleFormRef)">
             Đặt hàng
           </el-button>
         </el-form-item>
       </el-form>
-    </div>
+    </el-card>
 
-    <div class="cart-list">
+    <el-card class="cart-list">
       <div v-for="(item, index) in cartList" :key="index" class="cart-item">
-        <img
-          width="90px"
-          height="90px"
-          style="border-radius: 5px"
-          :src="item.product.image"
-          alt=""
-        />
+        <img width="90px" height="90px" style="border-radius: 5px" :src="item.product.image" alt="" />
         <div class="info">
-          <span
-            ><b style="color: #333; font-weight: 500">Tên:</b>
+          <span><b style="color: #333; font-weight: 500">Tên:</b>&nbsp;
             {{ item.product.description }}
           </span>
-          <span style="margin-top: 5px"
-            ><b style="color: #333; font-weight: 500">Số lượng:</b> x
-            {{ item.quantity }}</span
-          >
-          <span style="margin-top: 5px"
-            ><b style="color: #333; font-weight: 500">Giá tiền:</b>
+          <span style="margin-top: 5px"><b style="color: #333; font-weight: 500">Số lượng: </b>&nbsp; x
+           {{ item.quantity }}</span>
+          <span style="margin-top: 5px"><b style="color: #333; font-weight: 500">Giá tiền: </b>&nbsp;
             <span style="color: red">{{
               formatCurrency(item.product.newPrice)
-            }}</span></span
-          >
+            }}</span></span>
         </div>
       </div>
-      <span style="margin-top: 10px"
-        ><b>Tổng tiền: </b>
+      <span style="margin-top: 30px"><b style="margin-top: 20px; color: #333">Tổng tiền: </b>
         <span style="color: red">{{
           cartList.length ? formatCurrency(total) : formatCurrency(0)
-        }}</span></span
-      >
-    </div>
+        }}</span></span>
+    </el-card>
   </div>
 </template>
 
@@ -231,8 +207,11 @@ h2 {
   align-items: flex-start;
   justify-content: space-between;
   width: 100%;
-  padding: 0 200px;
+  padding: 20px 200px;
   margin-top: 50px;
+  border: 0.5px solid rgba(128, 128, 128, 0.26);
+  border-radius: 5px;
+  height: auto;
 
   .left {
     flex: 1;
@@ -248,7 +227,8 @@ h2 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 50px;
+    margin-top: 20px;
+    margin-left: 20px;
     color: gray;
     max-height: 500px;
     overflow-y: auto;
@@ -258,6 +238,7 @@ h2 {
       align-items: flex-start;
       border-bottom: 0.5px solid rgba(128, 128, 128, 0.301);
       margin-top: 15px;
+      margin-bottom: 30px;
 
       .info {
         display: flex;

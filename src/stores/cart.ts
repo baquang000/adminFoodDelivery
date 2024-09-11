@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import type { TCart, TProduct } from "@/common/type";
 
@@ -7,7 +7,14 @@ export const useCartStore = defineStore("cartStore", () => {
     JSON.parse(localStorage.getItem("cart") as string) || []
   );
 
-  const total = ref();
+  const total = computed(() => {
+    return cartList.value.reduce((currentValue, nextValue) => {
+      return (
+        currentValue +
+        parseFloat(nextValue.product.newPrice) * nextValue.quantity
+      );
+    }, 0);
+  })
 
   const addCart = (payload: TProduct, quantity: number) => {
     const index = cartList.value.findIndex(
@@ -29,7 +36,7 @@ export const useCartStore = defineStore("cartStore", () => {
 
     localStorage.setItem('cart', JSON.stringify(cartList.value))
 
-    totalValue();
+
   };
 
   const decrementCart = (productId: number) => {
@@ -57,22 +64,13 @@ export const useCartStore = defineStore("cartStore", () => {
 
     localStorage.setItem('cart', JSON.stringify(cartList.value))
 
-    totalValue();
+
   };
 
   const removeCart = (id: number) => {
     cartList.value = cartList.value.filter((item) => item.product.id !== id);
-    
-    totalValue();
-  };
 
-  const totalValue = () => {
-    total.value = cartList.value.reduce((currentValue, nextValue) => {
-      return (
-        currentValue +
-        parseFloat(nextValue.product.newPrice) * nextValue.quantity
-      );
-    }, 0);
+
   };
 
   return {

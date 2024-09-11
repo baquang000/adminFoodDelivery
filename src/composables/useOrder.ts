@@ -47,7 +47,7 @@ export const useOrder = () => {
 
   const getOrderByUser = async () => {
     try {
-      const response = await request.get("/by-user");
+      const response = await request.get("/order/by-user");
 
       const { data } = response.data as TResult;
 
@@ -131,13 +131,13 @@ export const useOrder = () => {
     }
   };
 
-  const createOrderDetails = async (payload: TOrderDetails) => {
+  const createOrderDetails = async (payload: TOrderDetails, isShowMsg = true) => {
     try {
       const response = await request.post("/order-details", payload);
 
       const { message, data } = response.data as TResult;
 
-      ElMessage.success(message);
+      if (isShowMsg) ElMessage.success(message);
 
       return data;
     } catch (error) {

@@ -60,6 +60,10 @@ const handleCreateComment = async () => {
   });
 
   if (!response) return;
+
+  form.content = ''
+
+  await getComments(id.value)
 };
 
 onMounted(() => {
@@ -71,10 +75,10 @@ onMounted(() => {
 <template>
   <div class="product-details">
     <div class="top">
-      <div class="left">
+      <el-card class="left">
         <img :src="singleProduct.image" alt="" />
-      </div>
-      <div class="right">
+      </el-card>
+      <el-card class="right">
         <h1>{{ singleProduct.name }}</h1>
         <span style="color: gray">{{ singleProduct.description }}</span>
         <hr style="margin-top: 10px" />
@@ -92,22 +96,13 @@ onMounted(() => {
         </div>
         <div class="details-item">
           <span> Màu sắc: </span>
-          <div
-            class="color"
-            v-for="color in colors"
-            :key="color"
+          <div class="color" v-for="color in colors" :key="color"
             :style="`width: 25px;height: 25px; background-color:${color};border-radius: 5px; opacity: 0.5`"
-            @click="() => (chooseColor = color)"
-          ></div>
+            @click="() => (chooseColor = color)"></div>
         </div>
         <div class="details-item">
           <span> Kích cỡ: </span>
-          <div
-            v-for="size in sizes"
-            :key="size"
-            class="size"
-            @click="() => (chooseSize = size)"
-          >
+          <div v-for="size in sizes" :key="size" class="size" @click="() => (chooseSize = size)">
             {{ size }}
           </div>
         </div>
@@ -128,60 +123,46 @@ onMounted(() => {
         </div>
 
         <div class="details-quantity">
-          <el-button
-            @click="
-              () => {
-                if (quantity > 1) {
-                  quantity = quantity - 1;
-                }
+          <el-button @click="() => {
+              if (quantity > 1) {
+                quantity = quantity - 1;
               }
-            "
-            >-</el-button
-          >
+            }
+            ">-</el-button>
           <div>{{ quantity }}</div>
           <el-button @click="quantity = quantity + 1">+</el-button>
 
           <router-link style="text-decoration: none; color: inherit" to="/cart">
-            <el-button
-              @click="handleAddToCart"
-              type="primary"
-              style="width: max-content; height: 45px; margin-left: 30px"
-            >
+            <el-button @click="handleAddToCart" type="primary"
+              style="width: max-content; height: 45px; margin-left: 30px">
               Thêm vào giỏ hàng
             </el-button>
           </router-link>
         </div>
-      </div>
+      </el-card>
     </div>
 
-    <div class="bottom">
+    <el-card class="bottom">
       <h2>Bình luận & đánh giá</h2>
 
       <div class="comment-list">
         <div class="item" v-for="item in commentList" :key="item.id">
-          <div style="color: #5e77c9; font-weight: 500">
+          <div style="color: #5e77c9; font-weight: bold">
             {{ item.user?.userName }} |
             <span style="color: gray; font-weight: normal">{{
               item.createdAt
             }}</span>
           </div>
-          <div style="color: #333; margin-top: 10px">{{ item.content }}</div>
+          <div style="color: #333; margin-top: 10px; font-weight: 500;">{{ item.content }}</div>
         </div>
       </div>
       <div>
-        <el-input
-          v-model="form.content"
-          style="height: 45px; margin-top: 25px"
-          placeholder="Thêm bình luận của bạn..."
-        />
-        <el-button
-          @click="handleCreateComment"
-          style="margin-top: 10px; height: 45px"
-          type="primary"
-          >Bình luận</el-button
-        >
+        <el-input v-model="form.content" style="height: 45px; margin-top: 25px"
+          placeholder="Thêm bình luận của bạn..." />
+        <el-button @click="handleCreateComment" style="margin-top: 10px; height: 45px" type="primary">Bình
+          luận</el-button>
       </div>
-    </div>
+    </el-card>
 
     <div class="product-list">
       <h2>Sản phẩm liên quan</h2>
@@ -204,22 +185,24 @@ onMounted(() => {
   }
 
   .top {
+    width: 100%;
     display: flex;
+    justify-content: space-between;
     align-items: flex-start;
 
     .left {
       flex: 1;
-      border: 0.5px solid rgba(128, 128, 128, 0.301);
       border-radius: 5px;
       margin-right: 50px;
       display: flex;
       justify-content: center;
       align-items: center;
+      padding: 20px;
 
       img {
-        width: 500px;
-        height: 500px;
-        object-fit: contain;
+        width: 450px;
+        height: 450px;
+        object-fit: cover;
       }
     }
 

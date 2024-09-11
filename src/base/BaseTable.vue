@@ -24,6 +24,9 @@ const props = defineProps({
   isHiddenComponent: {
     type: Boolean,
   },
+  isHiddenUpdate:{
+    type: Boolean
+  }
 });
 
 const emit = defineEmits(["edit", "delete"]);
@@ -50,7 +53,7 @@ const handleDelete = (id: number) => {
 <template>
   <div class="table-top">
     <el-input
-    v-if="!isHiddenComponent"
+   
     style="width: 240px; height: 40px"
     :placeholder="placeholderText"
       />
@@ -73,7 +76,7 @@ const handleDelete = (id: number) => {
       >
         <template v-slot="scope">
           <div v-if="column.prop === 'image'">
-            <img
+            <img v-if="scope.row[column.prop]"
               :src="scope.row[column.prop]"
               alt="image"
               style="width: 100px; height: auto"
@@ -95,7 +98,7 @@ const handleDelete = (id: number) => {
             <span class="icon" v-if="!isHiddenComponent">
               <Search style="width: 1em; height: 1em; color: green" />
             </span>
-            <span class="icon">
+            <span class="icon" v-if="!props.isHiddenUpdate">
               <Edit
                 style="width: 1em; height: 1em; color: blue"
                 @click="handleShowForm(ACTION_ENUM.UPDATE, row.id)"

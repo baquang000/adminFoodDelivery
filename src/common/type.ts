@@ -42,6 +42,7 @@ export type TComment = {
   id?: number;
   user?: {
     userName?: string;
+    email?: string
   };
   productId?: number;
   content?: string;
@@ -82,11 +83,13 @@ export type TOrder = {
   id?: number;
   totalMoney: string;
   userNote: string;
-  orderDetails?:{
-    orderId?: number, 
-    product?: TProduct, 
-    quantity?: number
-  },
+  orderDetails?: [
+    {
+      orderId?: number,
+      product?: TProduct,
+      quantity?: number,
+    }
+  ],
   orderStatus?: string;
   createdAt?: string;
   updatedAt?: string;

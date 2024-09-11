@@ -22,13 +22,7 @@ onMounted(() => {
 <template>
   <h2 v-if="!props.hiddenTitle">Sản phẩm nổi bật</h2>
   <div class="product-list" :style="props.isSetCss && 'padding: 0 200px'">
-    <router-link
-      :to="`/product/${item.id}`"
-      v-for="item in productList"
-      :key="item.id"
-    >
-      <Product :product="item" />
-    </router-link>
+    <Product v-for="item in productList" :key="item.id" :product="item" />
   </div>
 </template>
 

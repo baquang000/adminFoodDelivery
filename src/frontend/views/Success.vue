@@ -18,12 +18,14 @@
     <p>
       Chúng tôi sẽ sớm kiểm tra đơn hàng và phản hồi qua email cho bạn.<br />
     </p>
-    <router-link to="/"
-      ><el-button class="primary">Trang chủ</el-button></router-link
+    <div style="display: flex; align-items: center; margin-top: 20px;">
+      <router-link to="/"
+      ><el-button type="primary" style="margin-right: 20px; height: 45px;" class="primary">Trang chủ</el-button></router-link
     >
     <router-link to="my-order"
-      ><el-button class="primary">Đơn hàng đã đặt</el-button></router-link
+      ><el-button type="primary" style="height: 45px;" class="primary">Đơn hàng đã đặt</el-button></router-link
     >
+    </div>
   </div>
 </template>
 

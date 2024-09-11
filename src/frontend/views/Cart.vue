@@ -9,12 +9,13 @@ const { cartList, total } = storeToRefs(useCartStore());
 
 
 <template>
-  <div class="cart">
+  <el-card class="cart">
     <h2 style="
         display: flex;
         align-items: center;
         text-align: center;
         margin-bottom: 30px;
+        margin-left: 10px;
       ">
       Giỏ hàng
     </h2>
@@ -84,7 +85,7 @@ const { cartList, total } = storeToRefs(useCartStore());
         </template>
       </el-table-column>
     </el-table>
-  </div>
+  </el-card>
 
   <div class="bottom">
     <div style="margin-top: 20px">
@@ -101,11 +102,12 @@ const { cartList, total } = storeToRefs(useCartStore());
 
 <style lang="scss" setup>
 .cart {
-  width: 80%;
+  width: 70%;
   padding: 0 200px;
   margin-top: 100px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
 }
 

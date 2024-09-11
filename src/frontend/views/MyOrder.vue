@@ -2,103 +2,200 @@
 import { useOrder } from "@/composables/useOrder";
 import { useOrderStore } from "@/stores/order";
 import { storeToRefs } from "pinia";
-import { onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { formatCurrency } from "@/utils/format";
-
+import type { TOrder, TProduct } from "@/common/type";
+import { MoreFilled } from "@element-plus/icons-vue";
 const { getOrderByUser } = useOrder();
+
+export type TOrderData = {
+  product?: TProduct,
+  quantity?: number,
+  totalMoney?: string;
+  userNote?: string;
+  createdAt?: string;
+  orderStatus?: string
+}
 
 const { orderList } = storeToRefs(useOrderStore());
 
+
+const data = computed(() => {
+  const order = [] as TOrderData[]
+
+  orderList.value.forEach(item => {
+    item.orderDetails?.forEach(details => {
+      order.push({
+        product: details.product,
+        quantity: details.quantity,
+        totalMoney: item.totalMoney,
+        userNote: item.userNote,
+        createdAt: item.createdAt,
+        orderStatus: item.orderStatus
+      })
+    })
+  })
+
+  return order
+})
+
 onMounted(() => getOrderByUser());
+
+const activities = [
+  {
+    content: 'Chờ duyệt',
+    timestamp: '2018-04-03 20:46',
+    color: 'gray',
+  },
+  {
+    content: 'Đang vận chuyển',
+    timestamp: '2018-04-03 20:46',
+    color: 'orange',
+  },
+  {
+    content: 'Hoàn tất',
+    timestamp: '2018-04-03 20:46',
+    color: 'green'
+  },
+  {
+    content: 'Huỷ đơn',
+    timestamp: '2018-04-03 20:46',
+    color: 'red'
+  },
+]
 </script>
 
 <template>
+  <h2 style="margin-top: 50px;">Đơn hàng của tôi</h2>
   <div class="order-list">
-    <el-table :data="orderList" style="width: 100%">
-      <el-table-column label="Ảnh sản phẩm" width="180">
-        <template #default="scope">
-          <div style="display: flex; align-items: center">
-            <img
-              width="90px"
-              height="90px"
-              :src="scope.row.product.image"
-              alt=""
-            />
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="Chi tiết" width="180">
-        <template #default="scope">
-          <div style="display: flex; align-items: center">
-            <div>
-              <span
-                >Màu sắc:
-                <div
-                  :style="`
-                    width: 18px;
-                    height: 18px;
-                    background-color: ${scope.row.product.color};
-                    border-radius: 5px;
-                  `"
-                ></div>
-              </span>
-              <span
-                >Kích cỡ:
-                <div
-                  style="
-                    width: 20px;
-                    height: 20px;
-                    background-color: #eeeeee;
-                    text-align: center;
-                    line-height: 20px;
-                  "
-                >
-                  {{ scope.row.product.size }}
-                </div>
-              </span>
+    <el-timeline style="max-width: 600px">
+      <el-timeline-item v-for="(activity, index) in activities" :key="index" :color="activity.color">
+        {{ activity.content }}
+      </el-timeline-item>
+    </el-timeline>
+    <el-card>
+      <el-table :data="data" style="width: 100%">
+        <el-table-column label="Ảnh sản phẩm" width="180">
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              <img width="90px" height="90px" :src="scope.row.product.image" alt="" />
             </div>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="Giá" width="180">
-        <template #default="scope">
-          <div style="display: flex; align-items: center">
-            <span style="color: blue; font-weight: bold">{{
-              scope.row.product.newPrice
-            }}</span>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="Số lượng" width="180">
-        <template #default="scope">
-          <el-button>-</el-button>
-          <span style="margin: 0 15px">{{ scope.row.quantity }}</span>
-          <el-button>+</el-button>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="Tổng tiền" width="180">
-        <template #default="scope">
-          <div style="display: flex; align-items: center">
-            <span style="color: red; font-weight: bold">{{
-              formatCurrency(scope.row.product.newPrice * scope.row.quantity)
-            }}</span>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="Thao tác">
-        <template #default="scope">
-          <el-button
-            size="small"
-            type="danger"
-            @click="() => console.log('ok')"
-          >
-            <i class="pi pi-trash"></i>
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+          </template>
+        </el-table-column>
+        <el-table-column label="Chi tiết" width="180">
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+  
+              <div>
+                <div>Tên:
+                  <b>{{ scope.row.product.name }}</b>
+                </div>
+                <span>Màu sắc:
+                  <div :style="`
+                      width: 18px;
+                      height: 18px;
+                      background-color: ${scope.row.product.color};
+                      border-radius: 5px;
+                    `"></div>
+                </span>
+                <span>Kích cỡ:
+                  <div style="
+                      width: 20px;
+                      height: 20px;
+                      background-color: #eeeeee;
+                      text-align: center;
+                      line-height: 20px;
+                    ">
+                    {{ scope.row.product.size }}
+                  </div>
+                </span>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="Giá" width="180">
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              <span style="color: blue; font-weight: bold">{{
+                formatCurrency(scope.row.product.newPrice)
+              }}</span>
+            </div>
+          </template>
+        </el-table-column>
+  
+        <el-table-column label="Số lượng" width="180">
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              <span> x {{
+                scope.row.quantity
+              }}</span>
+            </div>
+          </template>
+        </el-table-column>
+  
+        <el-table-column label="Tổng tiền" width="180">
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              <span style="color: red; font-weight: bold">{{
+                formatCurrency(scope.row.product.newPrice * scope.row.quantity)
+              }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="Ngày đặt" width="180">
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              <span>{{
+                scope.row.createdAt
+              }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="Ghi chú" width="180">
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              <span>{{
+                scope.row.userNote
+              }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="Trạng thái" width="180">
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              <div v-if="scope.row.orderStatus === 'pending'"
+                style="width: 15px; height: 15px; border-radius: 50%; background-color: gray"></div>
+              <div v-if="scope.row.orderStatus === 'delivery'"
+                style="width: 15px; height: 15px; border-radius: 50%; background-color: orange"></div>
+              <div v-if="scope.row.orderStatus === 'success'"
+                style="width: 15px; height: 15px; border-radius: 50%; background-color: green"></div>
+              <div v-if="scope.row.orderStatus === 'cancel'"
+                style="width: 15px; height: 15px; border-radius: 50%; background-color: red"></div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="Thao tác">
+          <template #default="scope">
+            <el-button style="height: 45px;" size="small" type="danger" @click="() => console.log('ok')">
+              Huỷ đơn
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.order-list {
+  width: 100%;
+  padding: 0 190px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-items: center;
+  margin-top: 50px;
+
+  .el-timeline {}
+}
+</style>

@@ -13,17 +13,16 @@ axios.interceptors.request.use((request) => {
 
 axios.interceptors.response.use(
   (response) => {
+    // Xử lý phản hồi thành công
     return response;
   },
-  async (error) => {
-    if (error.response) {
-      if (error.response.status === 401) {
-        return (window.location.href = "/");
-      }
-
-      return Promise.reject(error.response.data);
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      // Xử lý lỗi 401, có thể chuyển hướng đến trang login hoặc thông báo lỗi
+      console.error('Unauthorized - Redirecting to login');
+      // Chuyển hướng hoặc hiển thị thông báo mà không tải lại trang
+      // window.location.href = '/login'; // Nếu muốn chuyển hướng
     }
-
     return Promise.reject(error);
   }
 );

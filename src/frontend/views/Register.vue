@@ -33,7 +33,7 @@ const handleRegister = async (e: Event) => {
 <template>
   <div class="wrapper">
     <div class="inner">
-      <form action="">
+      <form  @submit.prevent>
         <h3>TẠO TÀI KHOẢN</h3>
         <div class="form-holder">
           <span class="lnr lnr-phone-handset"></span>

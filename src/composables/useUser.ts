@@ -140,7 +140,9 @@ export const useUser = () => {
         const { message } = error.response?.data as TError;
 
         if (isArray(message)) {
-          return ElMessage.error(message[0]);
+          ElMessage.error(message[0]);
+
+          return false
         }
 
         ElMessage.error(message);
@@ -161,6 +163,7 @@ export const useUser = () => {
       const { message, data } = response.data as TResult;
 
       localStorage.setItem("user", JSON.stringify(data));
+      
       userStore.setUser(data);
 
       ElMessage.success(message);
@@ -169,6 +172,12 @@ export const useUser = () => {
     } catch (error) {
       if (error instanceof AxiosError) {
         const { message } = error.response?.data as TError;
+
+        if (isArray(message)) {
+          ElMessage.error(message[0])
+
+          return false;
+        }
 
         ElMessage.error(message);
 

@@ -9,18 +9,26 @@ const commentStore = useCommentStore();
 
 const { commentList } = storeToRefs(commentStore);
 
-const tableData = computed(() => commentList.value);
+const tableData = computed(() => commentList.value.map(item => {
+  return {
+    id: item.id,
+    productId: item.productId,
+    email: item.user?.email,
+    content: item.content,
+    image: item.image
+  }
+}));
 
 const { getComments, deleteComment } = useComment();
 
 const tableColumns = [
+
   { prop: "productId", label: "ID sản phẩm", width: "auto" },
-  { prop: "userId", label: "ID người dùng", width: "auto" },
+  { prop: "email", label: "Email người dùng", width: "auto" },
   { prop: "content", label: "Nội dung", width: "auto" },
   { prop: "image", label: "Ảnh", width: "auto" },
 ];
 
-const handleEditData = (id: number) => {};
 
 const handleDelete = async (id: number) => {
   await deleteComment(id);
@@ -32,20 +40,9 @@ onMounted(() => getComments());
 
 <template>
   <div class="comment-container">
-    <div class="comment-featured">
-      <el-card></el-card>
-      <el-card></el-card>
-      <el-card></el-card>
-      <el-card></el-card>
-    </div>
     <div class="comment-list">
-      <BaseTable
-        :data="tableData"
-        :columns="tableColumns"
-        screen="danh mục"
-        @edit="handleEditData"
-        @delete="handleDelete"
-      />
+      <BaseTable :data="tableData" :columns="tableColumns" :isHiddenComponent="true" :isHiddenUpdate="true" screen="bình luận"
+       @delete="handleDelete" />
     </div>
   </div>
 </template>
@@ -76,6 +73,7 @@ onMounted(() => getComments());
     flex-direction: column;
     align-items: flex-start;
     padding: 20px;
+
     .el-input {
       margin-bottom: 20px;
     }

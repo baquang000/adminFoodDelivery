@@ -84,7 +84,7 @@ onMounted(() => {
 <template>
   <h2 style="margin-top: 50px">Sản phẩm theo danh mục</h2>
   <div class="category-details">
-    <div class="left">
+    <el-card class="left">
       <div class="filter-item">
         <span>Giá</span>
         <div class="hr"></div>
@@ -161,7 +161,7 @@ onMounted(() => {
           <span>{{ size }}</span>
         </div>
       </div>
-    </div>
+    </el-card>
 
     <div class="right">
       <ProductList :hiddenTitle="true" />
@@ -177,20 +177,20 @@ onMounted(() => {
   align-items: flex-start;
   height: auto;
   justify-content: space-between;
-  margin-top: 100px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 
   .left {
-    background-color: #f7f7f8;
     border-radius: 5px;
     width: 20%;
     padding: 20px;
     color: gray;
-    margin-top: 65px;
+    margin-top: 25px;
 
     .filter-item {
       width: 100%;
       height: auto;
-      min-height: 120px;
+      min-height: 100px;
       margin-bottom: 20px;
       display: flex;
       flex-direction: column;

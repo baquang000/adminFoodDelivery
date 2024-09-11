@@ -7,16 +7,15 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="category-container">
+  <router-link style="text-decoration: none;" class="category-container" :to="`/category/${props.category.id}`">
     <div class="category-img">
       <img :src="props.category.image" alt="" />
     </div>
-
     <span style="margin-top: 50px; font-weight: bold">{{
       props.category.name
     }}</span>
     <span>({{ props.category.productNumber }}) sản phẩm</span>
-  </div>
+  </router-link>
 </template>
 
 <style lang="scss" scoped>

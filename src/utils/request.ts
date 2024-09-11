@@ -4,18 +4,19 @@ const BASE_URL = "http://localhost:5000/api/v1";
 
 export const request = axios.create({
   baseURL: BASE_URL,
-  headers: {
-    Authorization: "bearer",
-  },
 });
 
 request.interceptors.request.use(
   (config) => {
-    const token = JSON.parse(
-      localStorage.getItem("user") as string
-    ).accessToken; // Example: Fetch token from localStorage
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    try {
+      const token = JSON.parse(
+        localStorage.getItem("user") as string
+      )?.accessToken; // Example: Fetch token from localStorage
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch (error) {
+
     }
     return config;
   },
