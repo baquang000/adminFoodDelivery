@@ -5,7 +5,7 @@ import { useCategory } from "@/composables/useCategory";
 import { useAppStore } from "@/stores/app";
 import { useCategoryStore } from "@/stores/category";
 import { storeToRefs } from "pinia";
-import { computed, onMounted, onUnmounted } from "vue";
+import { computed, onMounted } from "vue";
 
 const categoryStore = useCategoryStore();
 
@@ -20,9 +20,9 @@ const tableData = computed(() => categoryList.value);
 const { getCategoryList, getSingleCategory, deleteCategory } = useCategory();
 
 const tableColumns = [
+{ prop: "id", label: "#ID", width: "auto" },
   { prop: "image", label: "Ảnh", width: "auto" },
   { prop: "name", label: "Tên", width: "auto" },
-  { prop: "productNumber", label: "Số lượng sản phẩm", width: "auto" },
   { prop: "status", label: "Trạng thái", width: "auto" },
 ];
 
@@ -40,12 +40,6 @@ onMounted(() => getCategoryList());
 
 <template>
   <div class="category-container">
-    <div class="category-featured">
-      <el-card></el-card>
-      <el-card></el-card>
-      <el-card></el-card>
-      <el-card></el-card>
-    </div>
     <div class="category-list">
       <BaseTable
         :data="tableData"

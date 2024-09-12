@@ -14,7 +14,7 @@ const props = defineProps<{
     <span style="margin-top: 50px; font-weight: bold">{{
       props.category.name
     }}</span>
-    <span>({{ props.category.productNumber }}) sản phẩm</span>
+    <span>({{ props.category.products?.length }}) sản phẩm</span>
   </router-link>
 </template>
 

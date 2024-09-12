@@ -216,7 +216,7 @@ const handleCancelOrder = async (id: number) => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="Thao tác">
+        <!-- <el-table-column label="Thao tác">
           <template #default="scope">
             <el-button
               style="height: 45px"
@@ -227,7 +227,7 @@ const handleCancelOrder = async (id: number) => {
               Huỷ đơn
             </el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
     </el-card>
   </div>

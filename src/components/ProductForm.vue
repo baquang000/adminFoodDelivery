@@ -9,18 +9,46 @@ import { useProduct } from "@/composables/useProduct";
 import { useCategoryStore } from "@/stores/category";
 import { useProductStore } from "@/stores/product";
 
-const colors: TColor[] = [
+const colors = [
   {
     label: "Trắng",
     value: "white",
   },
   {
-    label: "Đỏ",
-    value: " red",
+    label: "Đen",
+    value: "black",
   },
   {
-    label: "Đen",
-    value: " black",
+    label: "Đỏ",
+    value: "red",
+  },
+  {
+    label: "Xanh lam",
+    value: "blue",
+  },
+  {
+    label: "Xanh lục",
+    value: "green",
+  },
+  {
+    label: "Vàng",
+    value: "yellow",
+  },
+  {
+    label: "Cam",
+    value: "orange",
+  },
+  {
+    label: "Xám",
+    value: "gray",
+  },
+  {
+    label: "Hồng",
+    value: "pink",
+  },
+  {
+    label: "Tím",
+    value: "Violet",
   },
 ];
 
@@ -35,6 +63,10 @@ const { actionType } = storeToRefs(appStore);
 const { singleProduct } = storeToRefs(productStore);
 const { categoryList } = storeToRefs(category);
 
+const chooseColor = ref<string[]>([])
+const chooseSize = ref<string[]>([])
+
+
 const { createProduct, getProducts, updateProduct } = useProduct();
 
 const product = ref<TProduct>({
@@ -47,7 +79,7 @@ const product = ref<TProduct>({
   size: '',
   stock: 0,
   categoryId: null,
-  color: colors[0].value,
+  color: '',
 });
 
 const actionText = computed(() =>
@@ -77,6 +109,15 @@ watch(() => singleProduct.value, () => {
   product.value = { ...singleProduct.value };
 });
 
+
+watch(() => chooseColor.value, () => {
+  product.value.color = chooseColor.value.join(',')
+})
+
+watch(() => chooseSize.value, () => {
+  product.value.size = chooseSize.value.join(',')
+})
+
 onUnmounted(() => {
   productStore.setSingleProduct({
     name: "",
@@ -85,7 +126,7 @@ onUnmounted(() => {
     newPrice: "",
     stock: 0,
     sold: 0,
-    size:'',
+    size: '',
     description: "",
     color: "",
     categoryId: null,
@@ -114,13 +155,13 @@ onUnmounted(() => {
         </el-form-item>
 
         <el-form-item label="Màu sắc" label-position="top">
-          <el-select v-model="product.color" placeholder="Select" size="large" style="width: 240px">
+          <el-select multiple v-model="chooseColor" placeholder="Select" size="large" style="width: 240px">
             <el-option v-for="item in colors" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
 
         <el-form-item label="Kích cỡ" label-position="top">
-          <el-select v-model="product.size" placeholder="Select" size="large" style="width: 240px">
+          <el-select multiple v-model="chooseSize" placeholder="Select" size="large" style="width: 240px">
             <el-option v-for="item in sizes" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>

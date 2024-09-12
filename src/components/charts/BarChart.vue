@@ -11,7 +11,7 @@ const data = computed(() => {
     return {
 
         series: [{
-            data: [21, 22, 10, 28, 16, 21, 13, 30]
+            data: props.series
         }],
         chartOptions: {
             chart: {
@@ -34,16 +34,7 @@ const data = computed(() => {
                 show: false
             },
             xaxis: {
-                categories: [
-                    ['John', 'Doe'],
-                    ['Joe', 'Smith'],
-                    ['Jake', 'Williams'],
-                    'Amber',
-                    ['Peter', 'Brown'],
-                    ['Mary', 'Evans'],
-                    ['David', 'Wilson'],
-                    ['Lily', 'Roberts'],
-                ],
+                categories: props.labels,
                 labels: {
                     style: {
                         fontSize: '12px'

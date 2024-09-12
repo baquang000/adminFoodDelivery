@@ -231,6 +231,7 @@ onMounted(() => {
         border-radius: 5px;
         margin-left: 50px;
         border: 0.5px solid rgba(128, 128, 128, 0.199);
+        opacity: 0.5;
       }
     }
   }

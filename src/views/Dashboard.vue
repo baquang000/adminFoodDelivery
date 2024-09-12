@@ -66,14 +66,14 @@ onMounted(() => {
         <AreaChart :labels="chartRevenue.labels" :series="chartRevenue.series" title="Thống kê danh thu theo tháng" />
       </el-card>
     </div>
-    <div class="dashboard-main">
-      <el-card class="table">
-        <BaseTable style="width: 50%;" :data="tableData" :columns="tableColumns" :isHiddenComponent="true" screen=""
+    <div class="dashboard-main" style="height: 400px;">
+      <el-card class="table" style="height:562px">
+        <BaseTable style="width: 50%;" :data="tableData" :columns="tableColumns" :isHiddenComponent="true" :isHiddenUpdate="true" screen="người dùng"
           @edit="handleEditData" @delete="handleDelete" />
       </el-card>
 
-      <el-card class="table" style="margin-left: 35px; height: 562px">
-        <BarChart />
+      <el-card class="table" style="margin-left: 35px; height: 562px;">
+        <BarChart :labels="chartCount.labels" :series="chartCount.series" />
       </el-card>
     </div>
   </div>
@@ -82,10 +82,11 @@ onMounted(() => {
 <style lang="scss" scoped>
 .dashboard-container {
   width: 100%;
-  height: 100%;
+  height: 95vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 120px;
 
   .dashboard-featured {
     width: 100%;

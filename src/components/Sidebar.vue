@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { onMounted, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 const sidebarList = [
   {
@@ -9,14 +9,14 @@ const sidebarList = [
     icon: "pi-chart-line",
   },
   {
-    name: "Danh mục",
-    route: "/admin/category",
-    icon: "pi-bars",
-  },
-  {
     name: "Sản phẩm",
     route: "/admin/product",
     icon: "pi-objects-column",
+  },
+  {
+    name: "Danh mục",
+    route: "/admin/category",
+    icon: "pi-bars",
   },
   {
     name: "Đơn hàng",
@@ -28,9 +28,21 @@ const sidebarList = [
     route: "/admin/comment",
     icon: "pi-comments",
   },
+  {
+    name: "Trang chủ",
+    route: "/",
+    icon: "pi-home",
+  },
+  {
+    name: "Thoát",
+    route: "/",
+    icon: "pi-sign-out",
+  },
 ];
 
 const router = useRouter();
+
+const route = useRoute();
 
 const defaultIndexActive = ref(0);
 
@@ -38,27 +50,26 @@ const handleChangeSidebar = (index: number, path: string) => {
   defaultIndexActive.value = index;
   router.replace(path);
 };
+
+
+onMounted(() => {
+  defaultIndexActive.value = sidebarList.findIndex(item => item.route === route.path)
+})
 </script>
 
 <template>
   <el-card class="sidebar-container">
     <div class="menu-list">
-      <div
-        :class="defaultIndexActive === index ? 'menu-item active' : 'menu-item'"
-        v-for="(item, index) in sidebarList"
-        :key="item.name"
-        @click="handleChangeSidebar(index, item.route)"
-      >
-        <div
-          style="
+      <div :class="defaultIndexActive === index ? 'menu-item active' : 'menu-item'" v-for="(item, index) in sidebarList"
+        :key="item.name" @click="handleChangeSidebar(index, item.route)">
+        <div style="
             border: 0.5px solid #e2e8f0;
             border-radius: 5px;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 5px;
-          "
-        >
+          ">
           <i :class="'pi ' + item.icon"></i>
         </div>
         &nbsp; &nbsp; &nbsp;

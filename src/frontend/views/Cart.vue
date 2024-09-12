@@ -5,8 +5,12 @@ import { formatCurrency } from "@/utils/format";
 
 const { addCart, removeCart, decrementCart } = useCartStore();
 const { cartList, total } = storeToRefs(useCartStore());
-</script>
 
+const handleRemoveCart = (id: number) =>{
+  console.log(id)
+  removeCart(id)
+}
+</script>
 
 <template>
   <el-card class="cart">
@@ -37,6 +41,7 @@ const { cartList, total } = storeToRefs(useCartStore());
                     height: 18px;
                     background-color: ${scope.row.product.color};
                     border-radius: 5px;
+                    opacity: 0.5
                   `"></div>
               </span>
               <span>Kích cỡ:
@@ -79,7 +84,7 @@ const { cartList, total } = storeToRefs(useCartStore());
       </el-table-column>
       <el-table-column label="Thao tác">
         <template #default="scope">
-          <el-button size="small" type="danger" @click="() => removeCart(scope.row.id)">
+          <el-button size="small" type="danger" @click="() => handleRemoveCart(scope.row.product.id)">
             <i class="pi pi-trash"></i>
           </el-button>
         </template>

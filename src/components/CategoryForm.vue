@@ -78,14 +78,6 @@ onUnmounted(() => {
         <el-input v-model="category.name" placeholder="Nhập tên danh mục" />
       </el-form-item>
 
-      <el-form-item label="Số lượng sản phẩm" label-position="top">
-        <el-input
-          v-model="category.productNumber"
-          type="number"
-          placeholder="Nhập số lượng sản phẩm"
-        />
-      </el-form-item>
-
       <el-form-item label="Ảnh danh mục" label-position="top">
         <BaseUpload @change="handleChangeFile" :url="category.image" />
       </el-form-item>
@@ -103,7 +95,7 @@ onUnmounted(() => {
 <style scoped lang="scss">
 .category-form-container {
   width: 25vw;
-  height: 50vh;
+  height: 40vh;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);

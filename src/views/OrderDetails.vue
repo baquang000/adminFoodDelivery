@@ -2,6 +2,7 @@
 import BaseTable from "@/base/BaseTable.vue";
 import { useOrder } from "@/composables/useOrder";
 import { useOrderStore } from "@/stores/order";
+import { formatDate } from "@/utils/format";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
@@ -88,7 +89,7 @@ onMounted(async () => {
       totalMoney: Math.ceil(
         parseFloat(item.product?.newPrice as string) * (item?.quantity || 1)
       ),
-      createdAt: item.createdAt,
+      createdAt: formatDate(item.createdAt as string),
     } as TOrderDetails;
   }) as TOrderDetails[];
 });

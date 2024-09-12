@@ -2,11 +2,10 @@
 
 <template>
   <div class="navbar-container">
-    <el-input style="width: 360px" placeholder="Nhập từ khóa tìm kiếm ..." />
-    <el-dropdown>
+    <!-- <img width="30" height="30" src="https://i.pinimg.com/originals/57/3e/f8/573ef8a82f3be88831bb4d22cc5eae29.gif" alt="">
+    <b>Admin</b> -->
+    <!-- <el-dropdown>
       <span class="el-dropdown-link">
-        <img width="30" height="30" src="https://i.pinimg.com/originals/57/3e/f8/573ef8a82f3be88831bb4d22cc5eae29.gif" alt="">
-        Admin
         <el-icon class="el-icon--right">
           <arrow-down />
         </el-icon>
@@ -17,9 +16,9 @@
           <el-dropdown-item>Đánh giá mới (15)</el-dropdown-item>
           <el-dropdown-item>Hoạt động (10)</el-dropdown-item>
           <el-dropdown-item divided>Thoát</el-dropdown-item>
-        </el-dropdown-menu>
+      </el-dropdown-menu>
       </template>
-    </el-dropdown>
+    </el-dropdown> -->
   </div>
 </template>
 

@@ -2,6 +2,7 @@
 import BaseTable from "@/base/BaseTable.vue";
 import { useComment } from "@/composables/useComment";
 import { useCommentStore } from "@/stores/comment";
+import { formatDate } from "@/utils/format";
 import { storeToRefs } from "pinia";
 import { computed, onMounted } from "vue";
 
@@ -15,7 +16,8 @@ const tableData = computed(() => commentList.value.map(item => {
     productId: item.productId,
     email: item.user?.email,
     content: item.content,
-    image: item.image
+    image: item.image,
+    createdAt: formatDate(item.createdAt as string)
   }
 }));
 
@@ -26,7 +28,9 @@ const tableColumns = [
   { prop: "productId", label: "ID sản phẩm", width: "auto" },
   { prop: "email", label: "Email người dùng", width: "auto" },
   { prop: "content", label: "Nội dung", width: "auto" },
-  { prop: "image", label: "Ảnh", width: "auto" },
+  { prop: "image", label: "Ảnh", width: "auto" },  
+  { prop: "createdAt", label: "Thời gian", width: "auto" },
+
 ];
 
 

@@ -1,3 +1,5 @@
+import type { ORDER_STATUS } from "./enum";
+
 export type TColor = {
   label: string;
   value: string;
@@ -36,6 +38,7 @@ export type TCategory = {
   id?: number;
   name: string;
   productNumber: number;
+  products?: TProduct[]
   image: string;
   status?: string;
   createdAt?: string;
@@ -62,6 +65,7 @@ export type TUser = {
   userName?: string;
   email?: string;
   status?: string;
+  userRoles?: any[];
   userInfo: {
     avatar?: string;
     address?: string;
@@ -114,6 +118,11 @@ export type TOrder = {
   updatedAt?: string;
   deletedAt?: string;
 };
+
+
+export type TParamsOrder = {
+  orderStatus: ORDER_STATUS
+}
 
 export type TOrderDetails = {
   id?: number;

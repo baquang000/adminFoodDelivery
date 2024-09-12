@@ -2,15 +2,21 @@
 import { useCartStore } from "@/stores/cart";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
+import { computed } from "vue";
 
 const { setUser } = useUserStore();
 const { user } = storeToRefs(useUserStore());
 const { cartList } = storeToRefs(useCartStore())
+const cartStore = useCartStore()
 
 const handleLogout = () => {
   localStorage.removeItem("user");
   setUser(null);
+  cartStore.$reset()
 };
+
+const isAdmin = computed(() => user?.value?.userRoles?.find(item => item.role.roleName === "super_admin"))
+
 </script>
 
 <template>
@@ -30,6 +36,12 @@ const handleLogout = () => {
         </button>
       </div>
       <div class="top-item action">
+        <div v-if="isAdmin" class="item">
+          <i class="pi pi-building-columns"></i>&nbsp;
+          <router-link style="color: inherit; text-decoration: none" to="/admin/dashboard">
+            <span>Trang quản trị</span>
+          </router-link>
+        </div>
         <div class="item">
           <i class="pi pi-shopping-bag"></i>&nbsp;
           <router-link style="color: inherit; text-decoration: none" to="/my-order">
@@ -42,8 +54,9 @@ const handleLogout = () => {
         </div>
         <div class="item">
           <i class="pi pi-shopping-cart"></i>&nbsp;
-          <router-link style="color: inherit; text-decoration: none" to="/cart"><span>Giỏ hàng (<b style="color: red;">{{
-                cartList.length }}</b>)</span></router-link>
+          <router-link style="color: inherit; text-decoration: none" to="/cart"><span>Giỏ hàng (<b
+                style="color: red;">{{
+                  cartList.length }}</b>)</span></router-link>
         </div>
         <div class="item" v-if="!user">
           <i class="pi pi-user"></i>&nbsp;
@@ -54,7 +67,7 @@ const handleLogout = () => {
 
         <div v-if="user" class="item">
           <i class="pi pi-user"></i>&nbsp;
-          <span> Xin chào: <b style="color: green; font-size: 20px;">{{ user.userName }} !</b></span>
+          <span><b style="color: green; font-size: 20px;">{{ user.userName }}</b></span>
         </div>
 
         <div v-if="user" class="item" @click="handleLogout">

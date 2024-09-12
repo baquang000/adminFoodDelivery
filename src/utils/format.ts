@@ -5,3 +5,8 @@ export const formatCurrency = (amount: any) => {
         minimumFractionDigits: 0
     }).format(amount);
 }
+
+
+export const formatDate = (date: string) => {
+    return date.split('T')[0].split('-').reverse().join('/')
+}

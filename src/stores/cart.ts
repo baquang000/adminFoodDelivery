@@ -65,9 +65,11 @@ export const useCartStore = defineStore("cartStore", () => {
 
   const removeCart = (id: number) => {
     cartList.value = cartList.value.filter((item) => item.product.id !== id);
+    localStorage.setItem("cart", JSON.stringify(cartList.value));
   };
 
   const updatePropsCart = (id: number, payload: TPropsCart) => {
+
     const index = cartList.value.findIndex((item) => item.product.id === id);
 
     cartList.value = [
@@ -82,6 +84,8 @@ export const useCartStore = defineStore("cartStore", () => {
       },
       ...cartList.value.slice(index + 1),
     ];
+
+    localStorage.setItem("cart", JSON.stringify(cartList.value));
   };
 
   return {

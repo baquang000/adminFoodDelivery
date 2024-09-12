@@ -42,8 +42,10 @@ const appStore = useAppStore();
 const placeholderText = computed(() => "Tìm kiếm " + props.screen + "...");
 
 const handleShowForm = (type: ACTION_ENUM, id?: number) => {
-  appStore.setIsShowActionForm(true);
-  appStore.setIsShowOverlay(true);
+  if(props.screen !== 'đơn hàng'){
+    appStore.setIsShowActionForm(true);
+    appStore.setIsShowOverlay(true);
+  }
   appStore.setActionType(type);
 
   if (type === ACTION_ENUM.UPDATE) {
@@ -107,14 +109,17 @@ const handleDelete = (id: number) => {
           <div class="icon-wrap">
             <span class="icon" v-if="props.screen === 'đơn hàng'">
               <router-link :to="`/admin/order-details/${row.id}`"
-                ><Search style="width: 1em; height: 1em; color: green"
+                ><Search style="width: 1em; height: 1em; color: blue"
               /></router-link>
             </span>
             <span class="icon" v-if="!props.isHiddenUpdate">
               <Edit
+                v-if="screen !== 'đơn hàng'"
                 style="width: 1em; height: 1em; color: blue"
                 @click="handleShowForm(ACTION_ENUM.UPDATE, row.id)"
               />
+
+              <i  @click="handleShowForm(ACTION_ENUM.UPDATE, row.id)" v-if="screen === 'đơn hàng'" style="color: green" class="pi pi-check-square"></i>
             </span>
             <span class="icon">
               <Delete

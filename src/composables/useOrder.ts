@@ -1,4 +1,4 @@
-import type { TError, TOrder, TOrderDetails, TResult, TStatus } from "@/common/type";
+import type { TError, TOrder, TOrderDetails, TParamsOrder, TResult, TStatus } from "@/common/type";
 import { useOrderStore } from "@/stores/order";
 import { request } from "@/utils/request";
 import { AxiosError } from "axios";
@@ -27,9 +27,11 @@ export const useOrder = () => {
     }
   };
 
-  const getOrders = async () => {
+  const getOrders = async (params?: TParamsOrder) => {
     try {
-      const response = await request.get("/order");
+      const response = await request.get("/order", {
+        params
+      });
 
       const { data } = response.data as TResult;
 

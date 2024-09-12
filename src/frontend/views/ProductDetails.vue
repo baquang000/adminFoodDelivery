@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useProduct } from "@/composables/useProduct";
 import ProductList from "../components/product/ProductList.vue";
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useProductStore } from "@/stores/product";
@@ -26,11 +26,24 @@ const route = useRoute();
 
 const id = computed(() => parseInt(route.params.id as string));
 
-const colors = computed(() => singleProduct.value.color.split(","));
+const colors = computed(() => {
+  return singleProduct.value.color.split(",")
+});
 const sizes = computed(() => singleProduct.value.size.split(","));
 
-const chooseSize = computed(() => sizes.value[0] as string);
-const chooseColor = computed(() => colors.value[0] as string);
+const color = ref(colors.value[0] as string || "")
+const size = ref(sizes.value[0] as string || "")
+
+const chooseSize = ref(colors.value[0] as string || "");
+const chooseColor = ref(sizes.value[0] as string || "");
+
+watch(() => colors.value, () => {
+  chooseColor.value = colors.value[0] as string || ""
+})
+
+watch(() => sizes.value, () => {
+  chooseSize.value = sizes.value[0] as string || ""
+})
 
 const form = reactive({
   productId: id.value || null,
@@ -66,10 +79,25 @@ const handleCreateComment = async () => {
   await getComments(id.value);
 };
 
-onMounted(() => {
-  getSingleProduct(id.value);
-  getComments(id.value);
+onMounted(async () => {
+  await getSingleProduct(id.value);
+
+  await getComments(id.value);
 });
+
+
+const handleChooseColor = (payload: string) => {
+
+  chooseColor.value = payload
+
+  updatePropsCart(id.value, { color: chooseColor.value, size: chooseSize.value });
+}
+
+const handleChooseSize = (payload: string) => {
+  chooseSize.value = payload
+
+  updatePropsCart(id.value, { size: chooseSize.value, color: chooseColor.value });
+}
 </script>
 
 <template>
@@ -96,32 +124,15 @@ onMounted(() => {
         </div>
         <div class="details-item">
           <span> Màu sắc: </span>
-          <div
-            class="color"
-            v-for="color in colors"
-            :key="color"
-            :style="`width: 25px;height: 25px; background-color:${color};border-radius: 5px; opacity: 0.5`"
-            @click="
-              () => {
-                chooseColor = color;
-                updatePropsCart(id, { color: chooseColor });
-              }
-            "
-          ></div>
+          <div :class="chooseColor === color ? 'color active' : 'color'" v-for="color in colors" :key="color"
+            :style="`width: 25px;height: 25px; background-color:${color};border-radius: 5px; opacity: 0.5`" @click="
+              handleChooseColor(color,)
+              "></div>
         </div>
         <div class="details-item">
           <span> Kích cỡ: </span>
-          <div
-            v-for="size in sizes"
-            :key="size"
-            class="size"
-            @click="
-              () => {
-                chooseSize = size;
-                updatePropsCart(id, { size: chooseSize });
-              }
-            "
-          >
+          <div v-for="size in sizes" :key="size" :class="chooseSize === size ? 'size active' : 'size'"
+            @click="handleChooseSize(size)">
             {{ size }}
           </div>
         </div>
@@ -142,25 +153,18 @@ onMounted(() => {
         </div>
 
         <div class="details-quantity">
-          <el-button
-            @click="
-              () => {
-                if (quantity > 1) {
-                  quantity = quantity - 1;
-                }
-              }
-            "
-            >-</el-button
-          >
+          <el-button @click="() => {
+            if (quantity > 1) {
+              quantity = quantity - 1;
+            }
+          }
+            ">-</el-button>
           <div>{{ quantity }}</div>
           <el-button @click="quantity = quantity + 1">+</el-button>
 
           <router-link style="text-decoration: none; color: inherit" to="/cart">
-            <el-button
-              @click="handleAddToCart"
-              type="primary"
-              style="width: max-content; height: 45px; margin-left: 30px"
-            >
+            <el-button @click="handleAddToCart" type="primary"
+              style="width: max-content; height: 45px; margin-left: 30px">
               Thêm vào giỏ hàng
             </el-button>
           </router-link>
@@ -185,17 +189,10 @@ onMounted(() => {
         </div>
       </div>
       <div>
-        <el-input
-          v-model="form.content"
-          style="height: 45px; margin-top: 25px"
-          placeholder="Thêm bình luận của bạn..."
-        />
-        <el-button
-          @click="handleCreateComment"
-          style="margin-top: 10px; height: 45px"
-          type="primary"
-          >Bình luận</el-button
-        >
+        <el-input v-model="form.content" style="height: 45px; margin-top: 25px"
+          placeholder="Thêm bình luận của bạn..." />
+        <el-button @click="handleCreateComment" style="margin-top: 10px; height: 45px" type="primary">Bình
+          luận</el-button>
       </div>
     </el-card>
 
@@ -277,12 +274,19 @@ onMounted(() => {
           line-height: 25px;
           margin: 0 10px;
           cursor: pointer;
-          cursor: pointer;
+
+          &.active {
+            border: 2px solid blue;
+          }
         }
 
         .color {
           margin: 0 10px;
           cursor: pointer;
+
+          &.active {
+            border: 2px solid blue;
+          }
         }
 
         .pi-star {

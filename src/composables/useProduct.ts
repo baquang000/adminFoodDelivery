@@ -63,8 +63,6 @@ export const useProduct = () => {
         params,
       });
 
-      console.log(response)
-
       const { data } = response.data as TResult;
 
       productStore.setProductList(data);
