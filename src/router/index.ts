@@ -69,15 +69,17 @@ const router = createRouter({
           path: "comment",
           component: () => import("../views/Comment.vue"),
         },
+        {
+          path: "order-details/:id",
+          component: () => import("../views/OrderDetails.vue"),
+        },
       ]
     }
   ],
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
-      // Nếu có vị trí cuộn được lưu (khi sử dụng nút quay lại/tiến)
       return savedPosition;
     } else {
-      // Mặc định cuộn về đầu trang
       return { top: 0 };
     }
   }

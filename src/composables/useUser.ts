@@ -1,4 +1,4 @@
-import type { TError, TLogin, TRegister, TResult, TUser } from "@/common/type";
+import type { TError, TLogin, TRegister, TResult, TUser, TUserInfo } from "@/common/type";
 import { useUserStore } from "@/stores/user";
 import { request } from "@/utils/request";
 import { AxiosError } from "axios";
@@ -66,9 +66,9 @@ export const useUser = () => {
     }
   };
 
-  const updateUserInfo = async (payload: TUser, id: number) => {
+  const updateUserInfo = async (payload: TUserInfo) => {
     try {
-      const response = await request.put(`/user/${id}`, payload);
+      const response = await request.put(`/user`, payload);
 
       const { message } = response.data as TResult;
 

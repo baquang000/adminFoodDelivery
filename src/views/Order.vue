@@ -9,20 +9,36 @@ const orderStore = useOrderStore();
 
 const { orderList } = storeToRefs(orderStore);
 
-const tableData = computed(() => orderList.value);
+const tableData = computed(() =>
+  orderList.value?.map((item) => {
+    return {
+      id: item.id,
+      userId: item.user?.id,
+      totalMoney: item.totalMoney,
+      userNote: item.userNote,
+      orderStatus: item.orderStatus,
+      email: item.user?.email,
+      userName: item.user?.userName,
+      phoneNumber: item.user?.userInfo?.phoneNumber,
+      address: item.user?.userInfo?.address,
+    };
+  })
+);
 
 const { getOrders, deleteOrder } = useOrder();
 
 const tableColumns = [
   { prop: "userId", label: "ID người dùng", width: "auto" },
-  { prop: "totalMoney", label: "tổng tiền", width: "auto" },
+  { prop: "email", label: "Email", width: "auto" },
+  { prop: "phoneNumber", label: "Số điện thoại", width: "auto" },
+  { prop: "address", label: "Địa chỉ", width: "auto" },
+  { prop: "userName", label: "Tên người dùng", width: "auto" },
+  { prop: "totalMoney", label: "Tổng tiền", width: "auto" },
   { prop: "userNote", label: "Ghi chú của người dùng", width: "auto" },
-  { prop: "status", label: "Trạng thái", width: "auto" },
+  { prop: "orderStatus", label: "Trạng thái", width: "auto" },
 ];
 
-const handleEditData = (id: number) => {
-  
-};
+const handleEditData = (id: number) => {};
 
 const handleDelete = async (id: number) => {
   await deleteOrder(id);

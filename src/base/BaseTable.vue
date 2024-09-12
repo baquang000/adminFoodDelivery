@@ -24,9 +24,15 @@ const props = defineProps({
   isHiddenComponent: {
     type: Boolean,
   },
-  isHiddenUpdate:{
-    type: Boolean
-  }
+  isHiddenUpdate: {
+    type: Boolean,
+  },
+  isHiddenSearch: {
+    type: Boolean,
+  },
+  isHiddenAction: {
+    type: Boolean,
+  },
 });
 
 const emit = defineEmits(["edit", "delete"]);
@@ -53,19 +59,18 @@ const handleDelete = (id: number) => {
 <template>
   <div class="table-top">
     <el-input
-   
-    style="width: 240px; height: 40px"
-    :placeholder="placeholderText"
-      />
-      <el-button
-        v-if="!isHiddenComponent"
-        type="success"
-        @click="handleShowForm(ACTION_ENUM.CREATE)"
-        >
-        <Plus style="width: 1em; height: 1em; color: white" /> Thêm mới
-      </el-button>
-    </div>
-    <div class="base-table">
+      style="width: 240px; height: 40px"
+      :placeholder="placeholderText"
+    />
+    <el-button
+      v-if="!isHiddenComponent"
+      type="success"
+      @click="handleShowForm(ACTION_ENUM.CREATE)"
+    >
+      <Plus style="width: 1em; height: 1em; color: white" /> Thêm mới
+    </el-button>
+  </div>
+  <div class="base-table">
     <el-table :data="props.data" style="width: 100%">
       <el-table-column
         v-for="column in columns"
@@ -76,13 +81,14 @@ const handleDelete = (id: number) => {
       >
         <template v-slot="scope">
           <div v-if="column.prop === 'image'">
-            <img v-if="scope.row[column.prop]"
+            <img
+              v-if="scope.row[column.prop]"
               :src="scope.row[column.prop]"
               alt="image"
               style="width: 100px; height: auto"
             />
           </div>
-  
+
           <div v-if="column.prop === 'status'">
             <div
               :class="
@@ -92,11 +98,17 @@ const handleDelete = (id: number) => {
           </div>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="Thao tác">
+      <el-table-column
+        fixed="right"
+        label="Thao tác"
+        v-if="!props.isHiddenAction"
+      >
         <template #default="{ row }">
           <div class="icon-wrap">
-            <span class="icon" v-if="!isHiddenComponent">
-              <Search style="width: 1em; height: 1em; color: green" />
+            <span class="icon" v-if="props.screen === 'đơn hàng'">
+              <router-link :to="`/admin/order-details/${row.id}`"
+                ><Search style="width: 1em; height: 1em; color: green"
+              /></router-link>
             </span>
             <span class="icon" v-if="!props.isHiddenUpdate">
               <Edit
@@ -118,11 +130,10 @@ const handleDelete = (id: number) => {
 </template>
 
 <style scoped lang="scss">
-
-.base-table{
+.base-table {
   width: 100%;
   position: relative;
-  height: 500px; 
+  height: 500px;
   overflow-y: auto;
   margin-top: 20px;
 }
@@ -140,7 +151,6 @@ const handleDelete = (id: number) => {
 .base-table::-webkit-scrollbar-thumb {
   background-color: rgba(128, 128, 128, 0.562);
 }
-
 
 .table-top {
   width: 100%;

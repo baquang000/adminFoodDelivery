@@ -20,9 +20,11 @@ const sizes = computed(() => props.product.size.split(","));
           <div style="margin-bottom: 10px">
             <span>Kids</span>
             <span>
-              <i class="pi pi-star"></i>&nbsp; <i class="pi pi-star"></i>&nbsp;
-              <i class="pi pi-star"></i>&nbsp; <i class="pi pi-star"></i>&nbsp;
-              <i class="pi pi-star"></i>&nbsp;
+              <i class="pi pi-spin pi-star"></i>&nbsp;
+              <i class="pi pi-spin pi-star"></i>&nbsp;
+              <i class="pi pi-spin pi-star"></i>&nbsp;
+              <i class="pi pi-spin pi-star"></i>&nbsp;
+              <i class="pi pi-spin pi-star"></i>&nbsp;
             </span>
           </div>
           <span style="

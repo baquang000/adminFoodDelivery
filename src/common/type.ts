@@ -27,6 +27,11 @@ export type TCart = {
   quantity: number;
 };
 
+export type TPropsCart = {
+  size?: string;
+  color?: string;
+};
+
 export type TCategory = {
   id?: number;
   name: string;
@@ -42,7 +47,7 @@ export type TComment = {
   id?: number;
   user?: {
     userName?: string;
-    email?: string
+    email?: string;
   };
   productId?: number;
   content?: string;
@@ -83,13 +88,27 @@ export type TOrder = {
   id?: number;
   totalMoney: string;
   userNote: string;
+
   orderDetails?: [
     {
-      orderId?: number,
-      product?: TProduct,
-      quantity?: number,
+      orderId?: number;
+      product?: TProduct;
+      quantity?: number;
+      color?: string;
+      size?: string;
+      createdAt?: string;
     }
-  ],
+  ];
+  user?: {
+    email?: string;
+    userName?: string;
+    id?: string;
+    userInfo?: {
+      address?: string;
+      phoneNumber?: string;
+      avatar?: string;
+    };
+  };
   orderStatus?: string;
   createdAt?: string;
   updatedAt?: string;
@@ -101,6 +120,8 @@ export type TOrderDetails = {
   orderId: number;
   productId: number;
   quantity: number;
+  color: string;
+  size: string;
   orderStatus?: string;
   createdAt?: string;
   updatedAt?: string;
@@ -129,4 +150,14 @@ export type TProductParams = {
   color?: string | null;
   price?: string | null;
   categoryId?: string | null;
+};
+
+export type TUserInfo = {
+  userName?: string;
+  address?: string;
+  phoneNumber?: string;
+};
+
+export type TStatus = {
+  orderStatus: string;
 };

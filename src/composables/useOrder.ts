@@ -1,4 +1,4 @@
-import type { TError, TOrder, TOrderDetails, TResult } from "@/common/type";
+import type { TError, TOrder, TOrderDetails, TResult, TStatus } from "@/common/type";
 import { useOrderStore } from "@/stores/order";
 import { request } from "@/utils/request";
 import { AxiosError } from "axios";
@@ -12,6 +12,8 @@ export const useOrder = () => {
       const response = await request.get(`/order/${id}`);
 
       const { data } = response.data as TResult;
+
+      orderStore.setSingleOrder(data);
 
       return data;
     } catch (error) {
@@ -65,7 +67,7 @@ export const useOrder = () => {
     }
   };
 
-  const updateOrder = async (payload: TOrder, id: number) => {
+  const updateOrder = async (payload: TStatus, id: number) => {
     try {
       const response = await request.put(`/order/${id}`, payload);
 
@@ -109,8 +111,6 @@ export const useOrder = () => {
     try {
       const response = await request.post("/order", payload);
 
-      console.log(1234, response);
-
       const { message, data } = response.data as TResult;
 
       ElMessage.success(message);
@@ -131,7 +131,10 @@ export const useOrder = () => {
     }
   };
 
-  const createOrderDetails = async (payload: TOrderDetails, isShowMsg = true) => {
+  const createOrderDetails = async (
+    payload: TOrderDetails,
+    isShowMsg = true
+  ) => {
     try {
       const response = await request.post("/order-details", payload);
 
@@ -158,6 +161,6 @@ export const useOrder = () => {
     createOrder,
     deleteOrder,
     createOrderDetails,
-    getOrderByUser
+    getOrderByUser,
   };
 };

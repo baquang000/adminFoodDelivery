@@ -59,6 +59,7 @@ const handleLogout = () => {
 
         <div v-if="user" class="item" @click="handleLogout">
           <i class="pi pi-spin pi-cog"></i>
+
           <span>Thoát</span>
         </div>
       </div>

@@ -20,7 +20,7 @@ const { commentList } = storeToRefs(useCommentStore());
 const { user } = storeToRefs(useUserStore());
 const quantity = ref(1);
 
-const { addCart } = useCartStore();
+const { addCart, updatePropsCart } = useCartStore();
 
 const route = useRoute();
 
@@ -61,9 +61,9 @@ const handleCreateComment = async () => {
 
   if (!response) return;
 
-  form.content = ''
+  form.content = "";
 
-  await getComments(id.value)
+  await getComments(id.value);
 };
 
 onMounted(() => {
@@ -96,13 +96,32 @@ onMounted(() => {
         </div>
         <div class="details-item">
           <span> Màu sắc: </span>
-          <div class="color" v-for="color in colors" :key="color"
+          <div
+            class="color"
+            v-for="color in colors"
+            :key="color"
             :style="`width: 25px;height: 25px; background-color:${color};border-radius: 5px; opacity: 0.5`"
-            @click="() => (chooseColor = color)"></div>
+            @click="
+              () => {
+                chooseColor = color;
+                updatePropsCart(id, { color: chooseColor });
+              }
+            "
+          ></div>
         </div>
         <div class="details-item">
           <span> Kích cỡ: </span>
-          <div v-for="size in sizes" :key="size" class="size" @click="() => (chooseSize = size)">
+          <div
+            v-for="size in sizes"
+            :key="size"
+            class="size"
+            @click="
+              () => {
+                chooseSize = size;
+                updatePropsCart(id, { size: chooseSize });
+              }
+            "
+          >
             {{ size }}
           </div>
         </div>
@@ -123,18 +142,25 @@ onMounted(() => {
         </div>
 
         <div class="details-quantity">
-          <el-button @click="() => {
-              if (quantity > 1) {
-                quantity = quantity - 1;
+          <el-button
+            @click="
+              () => {
+                if (quantity > 1) {
+                  quantity = quantity - 1;
+                }
               }
-            }
-            ">-</el-button>
+            "
+            >-</el-button
+          >
           <div>{{ quantity }}</div>
           <el-button @click="quantity = quantity + 1">+</el-button>
 
           <router-link style="text-decoration: none; color: inherit" to="/cart">
-            <el-button @click="handleAddToCart" type="primary"
-              style="width: max-content; height: 45px; margin-left: 30px">
+            <el-button
+              @click="handleAddToCart"
+              type="primary"
+              style="width: max-content; height: 45px; margin-left: 30px"
+            >
               Thêm vào giỏ hàng
             </el-button>
           </router-link>
@@ -153,14 +179,23 @@ onMounted(() => {
               item.createdAt
             }}</span>
           </div>
-          <div style="color: #333; margin-top: 10px; font-weight: 500;">{{ item.content }}</div>
+          <div style="color: #333; margin-top: 10px; font-weight: 500">
+            {{ item.content }}
+          </div>
         </div>
       </div>
       <div>
-        <el-input v-model="form.content" style="height: 45px; margin-top: 25px"
-          placeholder="Thêm bình luận của bạn..." />
-        <el-button @click="handleCreateComment" style="margin-top: 10px; height: 45px" type="primary">Bình
-          luận</el-button>
+        <el-input
+          v-model="form.content"
+          style="height: 45px; margin-top: 25px"
+          placeholder="Thêm bình luận của bạn..."
+        />
+        <el-button
+          @click="handleCreateComment"
+          style="margin-top: 10px; height: 45px"
+          type="primary"
+          >Bình luận</el-button
+        >
       </div>
     </el-card>
 

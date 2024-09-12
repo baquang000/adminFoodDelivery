@@ -79,7 +79,7 @@ const { cartList, total } = storeToRefs(useCartStore());
       </el-table-column>
       <el-table-column label="Thao tác">
         <template #default="scope">
-          <el-button size="small" type="danger" @click="() => console.log('ok')">
+          <el-button size="small" type="danger" @click="() => removeCart(scope.row.id)">
             <i class="pi pi-trash"></i>
           </el-button>
         </template>

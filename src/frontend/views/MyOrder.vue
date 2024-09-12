@@ -4,72 +4,81 @@ import { useOrderStore } from "@/stores/order";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
 import { formatCurrency } from "@/utils/format";
-import type { TOrder, TProduct } from "@/common/type";
-import { MoreFilled } from "@element-plus/icons-vue";
-const { getOrderByUser } = useOrder();
+import type { TProduct } from "@/common/type";
+import { ORDER_STATUS } from "@/common/enum";
+
+const { getOrderByUser, updateOrder } = useOrder();
 
 export type TOrderData = {
-  product?: TProduct,
-  quantity?: number,
+  product?: TProduct;
+  quantity?: number;
   totalMoney?: string;
   userNote?: string;
   createdAt?: string;
-  orderStatus?: string
-}
+  orderStatus?: string;
+};
 
 const { orderList } = storeToRefs(useOrderStore());
 
-
 const data = computed(() => {
-  const order = [] as TOrderData[]
+  const order = [] as TOrderData[];
 
-  orderList.value.forEach(item => {
-    item.orderDetails?.forEach(details => {
+  orderList.value.forEach((item) => {
+    item.orderDetails?.forEach((details) => {
       order.push({
         product: details.product,
         quantity: details.quantity,
         totalMoney: item.totalMoney,
         userNote: item.userNote,
         createdAt: item.createdAt,
-        orderStatus: item.orderStatus
-      })
-    })
-  })
+        orderStatus: item.orderStatus,
+      });
+    });
+  });
 
-  return order
-})
+  return order;
+});
 
 onMounted(() => getOrderByUser());
 
 const activities = [
   {
-    content: 'Chờ duyệt',
-    timestamp: '2018-04-03 20:46',
-    color: 'gray',
+    content: "Chờ duyệt",
+    timestamp: "2018-04-03 20:46",
+    color: "gray",
   },
   {
-    content: 'Đang vận chuyển',
-    timestamp: '2018-04-03 20:46',
-    color: 'orange',
+    content: "Đang vận chuyển",
+    timestamp: "2018-04-03 20:46",
+    color: "orange",
   },
   {
-    content: 'Hoàn tất',
-    timestamp: '2018-04-03 20:46',
-    color: 'green'
+    content: "Hoàn tất",
+    timestamp: "2018-04-03 20:46",
+    color: "green",
   },
   {
-    content: 'Huỷ đơn',
-    timestamp: '2018-04-03 20:46',
-    color: 'red'
+    content: "Huỷ đơn",
+    timestamp: "2018-04-03 20:46",
+    color: "red",
   },
-]
+];
+
+const handleCancelOrder = async (id: number) => {
+  await updateOrder({ orderStatus: ORDER_STATUS.CANCEL }, id);
+  await getOrderByUser();
+};
 </script>
 
 <template>
-  <h2 style="margin-top: 50px;">Đơn hàng của tôi</h2>
+  <h2 style="margin-top: 50px">Đơn hàng của tôi</h2>
   <div class="order-list">
     <el-timeline style="max-width: 600px">
-      <el-timeline-item v-for="(activity, index) in activities" :key="index" :color="activity.color">
+      <el-timeline-item
+        v-for="(activity, index) in activities"
+        :key="index"
+        :color="activity.color"
+      >
         {{ activity.content }}
       </el-timeline-item>
     </el-timeline>
@@ -78,34 +87,45 @@ const activities = [
         <el-table-column label="Ảnh sản phẩm" width="180">
           <template #default="scope">
             <div style="display: flex; align-items: center">
-              <img width="90px" height="90px" :src="scope.row.product.image" alt="" />
+              <img
+                width="90px"
+                height="90px"
+                :src="scope.row.product.image"
+                alt=""
+              />
             </div>
           </template>
         </el-table-column>
         <el-table-column label="Chi tiết" width="180">
           <template #default="scope">
             <div style="display: flex; align-items: center">
-  
               <div>
-                <div>Tên:
+                <div>
+                  Tên:
                   <b>{{ scope.row.product.name }}</b>
                 </div>
-                <span>Màu sắc:
-                  <div :style="`
+                <span
+                  >Màu sắc:
+                  <div
+                    :style="`
                       width: 18px;
                       height: 18px;
                       background-color: ${scope.row.product.color};
                       border-radius: 5px;
-                    `"></div>
+                    `"
+                  ></div>
                 </span>
-                <span>Kích cỡ:
-                  <div style="
+                <span
+                  >Kích cỡ:
+                  <div
+                    style="
                       width: 20px;
                       height: 20px;
                       background-color: #eeeeee;
                       text-align: center;
                       line-height: 20px;
-                    ">
+                    "
+                  >
                     {{ scope.row.product.size }}
                   </div>
                 </span>
@@ -122,17 +142,15 @@ const activities = [
             </div>
           </template>
         </el-table-column>
-  
+
         <el-table-column label="Số lượng" width="180">
           <template #default="scope">
             <div style="display: flex; align-items: center">
-              <span> x {{
-                scope.row.quantity
-              }}</span>
+              <span> x {{ scope.row.quantity }}</span>
             </div>
           </template>
         </el-table-column>
-  
+
         <el-table-column label="Tổng tiền" width="180">
           <template #default="scope">
             <div style="display: flex; align-items: center">
@@ -145,38 +163,67 @@ const activities = [
         <el-table-column label="Ngày đặt" width="180">
           <template #default="scope">
             <div style="display: flex; align-items: center">
-              <span>{{
-                scope.row.createdAt
-              }}</span>
+              <span>{{ scope.row.createdAt }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="Ghi chú" width="180">
           <template #default="scope">
             <div style="display: flex; align-items: center">
-              <span>{{
-                scope.row.userNote
-              }}</span>
+              <span>{{ scope.row.userNote }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="Trạng thái" width="180">
           <template #default="scope">
             <div style="display: flex; align-items: center">
-              <div v-if="scope.row.orderStatus === 'pending'"
-                style="width: 15px; height: 15px; border-radius: 50%; background-color: gray"></div>
-              <div v-if="scope.row.orderStatus === 'delivery'"
-                style="width: 15px; height: 15px; border-radius: 50%; background-color: orange"></div>
-              <div v-if="scope.row.orderStatus === 'success'"
-                style="width: 15px; height: 15px; border-radius: 50%; background-color: green"></div>
-              <div v-if="scope.row.orderStatus === 'cancel'"
-                style="width: 15px; height: 15px; border-radius: 50%; background-color: red"></div>
+              <div
+                v-if="scope.row.orderStatus === 'pending'"
+                style="
+                  width: 15px;
+                  height: 15px;
+                  border-radius: 50%;
+                  background-color: gray;
+                "
+              ></div>
+              <div
+                v-if="scope.row.orderStatus === 'delivery'"
+                style="
+                  width: 15px;
+                  height: 15px;
+                  border-radius: 50%;
+                  background-color: orange;
+                "
+              ></div>
+              <div
+                v-if="scope.row.orderStatus === 'success'"
+                style="
+                  width: 15px;
+                  height: 15px;
+                  border-radius: 50%;
+                  background-color: green;
+                "
+              ></div>
+              <div
+                v-if="scope.row.orderStatus === 'cancel'"
+                style="
+                  width: 15px;
+                  height: 15px;
+                  border-radius: 50%;
+                  background-color: red;
+                "
+              ></div>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="Thao tác">
           <template #default="scope">
-            <el-button style="height: 45px;" size="small" type="danger" @click="() => console.log('ok')">
+            <el-button
+              style="height: 45px"
+              size="small"
+              type="danger"
+              @click="() => handleCancelOrder(scope.row.id)"
+            >
               Huỷ đơn
             </el-button>
           </template>
@@ -196,6 +243,7 @@ const activities = [
   align-items: center;
   margin-top: 50px;
 
-  .el-timeline {}
+  .el-timeline {
+  }
 }
 </style>
