@@ -12,24 +12,25 @@ import { formatCurrency } from "@/utils/format";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 
-const { getProducts, deleteProduct, getSingleProduct } = useProduct();
+const { getProducts, deleteProduct, getSingleProduct, getProductSellTheMost } =
+  useProduct();
 
 const appStore = useAppStore();
-const { isShowActionForm } = storeToRefs(appStore)
+const { isShowActionForm } = storeToRefs(appStore);
 
 const { getCategoryList } = useCategory();
-const { getOrders } = useOrder()
+const { getOrders } = useOrder();
 
 const productStore = useProductStore();
 
-const { orderList } = storeToRefs(useOrderStore())
+const { orderList } = storeToRefs(useOrderStore());
 
-const { productList } = storeToRefs(productStore);
+const { productList, productSellTheMost } = storeToRefs(productStore);
 
 const tableData = computed(() => productList.value);
 
 const tableColumns = [
-{ prop: "id", label: "#ID", width: "auto" },
+  { prop: "id", label: "#ID", width: "auto" },
   { prop: "image", label: "Ảnh", width: "auto" },
   { prop: "name", label: "Tên", width: "auto" },
   { prop: "description", label: "Mô tả", width: "auto" },
@@ -43,75 +44,127 @@ const tableColumns = [
 ];
 
 const handleEditData = (id: number) => {
-  getSingleProduct(id)
+  getSingleProduct(id);
 };
 
 const handleDelete = async (id: number) => {
-  await deleteProduct(id)
-  await getProducts()
-}
+  await deleteProduct(id);
+  await getProducts();
+};
 
-const selled = ref(0)
-const revenua = ref(0)
-const sellTotal = ref(0)
+const selled = ref(0);
+const revenua = ref(0);
+const sellTotal = ref(0);
 
-watch(() => productList.value, () => {
-  sellTotal.value += productList.value.reduce((x, y) => {
-    return x + parseFloat(y.oldPrice)
-  }, 0)
-})
+watch(
+  () => productList.value,
+  () => {
+    sellTotal.value += productList.value.reduce((x, y) => {
+      return x + parseFloat(y.oldPrice);
+    }, 0);
+  }
+);
 
-
-watch(() => orderList.value, () => {
-  selled.value = orderList.value.reduce((initValue, nextValue) => {
-    if (nextValue.orderStatus === ORDER_STATUS.SUCCESS) {
-      const orderSuccessNum = nextValue.orderDetails?.length || 0
-      revenua.value = revenua.value + parseFloat(nextValue.totalMoney)
-      return Number(initValue) + orderSuccessNum
-    } else {
-      return initValue
-    }
-  }, 0)
-})
+watch(
+  () => orderList.value,
+  () => {
+    selled.value = orderList.value.reduce((initValue, nextValue) => {
+      if (nextValue.orderStatus === ORDER_STATUS.SUCCESS) {
+        const orderSuccessNum = nextValue.orderDetails?.length || 0;
+        revenua.value = revenua.value + parseFloat(nextValue.totalMoney);
+        return Number(initValue) + orderSuccessNum;
+      } else {
+        return initValue;
+      }
+    }, 0);
+  }
+);
 
 onMounted(async () => {
   getProducts();
   getCategoryList();
-  getOrders()
+  getOrders();
+  getProductSellTheMost();
 });
 </script>
 
 <template>
   <div class="product-container">
     <div class="product-featured">
-      <el-card style="display: flex; align-items: center; justify-content: center"><span>Số lượng: <b
-            style="font-size: 25px;">{{
-              productList.length }}</b></span></el-card>
-      <el-card style="display: flex; align-items: center; justify-content: center"><span>Đã bán: <b
-            style="font-size: 25px;">{{
-              selled }}</b></span></el-card>
-      <el-card style="display: flex; align-items: center; justify-content: center"><span>Tổng doanh thu: <b style="font-size: 25px;
-           color: red">{{ formatCurrency(revenua
-          ) }}</b></span><br>
+      <el-card
+        style="display: flex; align-items: center; justify-content: center"
+        ><span
+          >Số lượng:
+          <b style="font-size: 25px">{{ productList.length }}</b></span
+        ></el-card
+      >
+      <el-card
+        style="display: flex; align-items: center; justify-content: center"
+        ><span
+          >Đã bán: <b style="font-size: 25px">{{ selled }}</b></span
+        ></el-card
+      >
+      <el-card
+        style="display: flex; align-items: center; justify-content: center"
+        ><span
+          >Tổng doanh thu:
+          <b style="font-size: 25px; color: red">{{
+            formatCurrency(revenua)
+          }}</b></span
+        ><br />
       </el-card>
-      <el-card style="display: flex; align-items: center; justify-content: center"><span>
-          Sản phẩm bán chạy nhất:
-        </span><br>
-        <div style="display: flex; margin-top: 10px; cursor: pointer;box-shadow: 2px 2px 25px 0px rgba(45,103,191,0.75);
--webkit-box-shadow: 2px 2px 25px 0px rgba(45,103,191,0.75);
--moz-box-shadow: 2px 2px 25px 0px rgba(45,103,191,0.75); padding: 10px; border-radius: 5px">
-          <img width="90x" height="90px" style="object-fit: cover" :src="productList[0]?.image" alt="">
+      <el-card
+        style="display: flex; align-items: center; justify-content: center"
+        ><span> Sản phẩm bán chạy nhất: </span><br />
+        <div
+          style="
+            display: flex;
+            margin-top: 10px;
+            cursor: pointer;
+            box-shadow: 2px 2px 25px 0px rgba(45, 103, 191, 0.75);
+            -webkit-box-shadow: 2px 2px 25px 0px rgba(45, 103, 191, 0.75);
+            -moz-box-shadow: 2px 2px 25px 0px rgba(45, 103, 191, 0.75);
+            padding: 10px;
+            border-radius: 5px;
+          "
+        >
+          <img
+            width="90x"
+            height="90px"
+            style="object-fit: cover"
+            :src="productList[0]?.image"
+            alt=""
+          />
           <div
-            style="display: flex; flex-direction: column; align-items: flex-start; margin-left: 10px; border-radius: 5px;">
-            <span>#ID: <b>{{ productList[0]?.id }}</b></span>
-            <span>Giá : <b style="color: blue;"> {{ formatCurrency(productList[0]?.newPrice) }}</b></span>
+            style="
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
+              margin-left: 10px;
+              border-radius: 5px;
+            "
+          >
+            <span
+              >#ID: <b>{{ productSellTheMost?.id }}</b></span
+            >
+            <span
+              >Giá :
+              <b style="color: blue">
+                {{ formatCurrency(productSellTheMost?.newPrice) }}</b
+              ></span
+            >
           </div>
         </div>
       </el-card>
     </div>
     <div class="product-list">
-      <BaseTable :data="tableData" :columns="tableColumns" screen="sản phẩm" @edit="handleEditData"
-        @delete="handleDelete" />
+      <BaseTable
+        :data="tableData"
+        :columns="tableColumns"
+        screen="sản phẩm"
+        @edit="handleEditData"
+        @delete="handleDelete"
+      />
     </div>
     <ProductForm v-if="isShowActionForm" />
   </div>

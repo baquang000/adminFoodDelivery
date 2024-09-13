@@ -16,6 +16,7 @@ export type TOrderData = {
   userNote?: string;
   createdAt?: string;
   orderStatus?: string;
+  orderId?: number
 };
 
 const { orderList } = storeToRefs(useOrderStore());
@@ -26,6 +27,7 @@ const data = computed(() => {
   orderList.value.forEach((item) => {
     item.orderDetails?.forEach((details) => {
       order.push({
+        orderId: item.id,
         product: details.product,
         quantity: details.quantity,
         totalMoney: item.totalMoney,
@@ -139,6 +141,14 @@ const handleCancelOrder = async (id: number) => {
               <span style="color: blue; font-weight: bold">{{
                 formatCurrency(scope.row.product.newPrice)
               }}</span>
+            </div>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="#ID đơn" width="180">
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              <span> x {{ scope.row.orderId }}</span>
             </div>
           </template>
         </el-table-column>

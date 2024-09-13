@@ -17,3 +17,8 @@ export enum ORDER_STATUS {
   SUCCESS = "success",
   CANCEL = "cancel",
 }
+
+export enum ORDER_TYPE {
+  NORMAL = "normal",
+  ONLINE = "paypal",
+}

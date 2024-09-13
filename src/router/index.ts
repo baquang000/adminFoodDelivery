@@ -86,7 +86,7 @@ const router = createRouter({
 });
 
 
-const PRIVATE_PAGES = ['/my-order']
+const PRIVATE_PAGES = ['/my-order','/success']
 
 router.beforeEach(async (to, _from, next) => {
   if (!to.path.includes('admin') && !PRIVATE_PAGES.includes(to.path)) {

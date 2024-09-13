@@ -1,4 +1,4 @@
-import type { ORDER_STATUS } from "./enum";
+import type { ORDER_STATUS, ORDER_TYPE } from "./enum";
 
 export type TColor = {
   label: string;
@@ -38,7 +38,7 @@ export type TCategory = {
   id?: number;
   name: string;
   productNumber: number;
-  products?: TProduct[]
+  products?: TProduct[];
   image: string;
   status?: string;
   createdAt?: string;
@@ -92,7 +92,7 @@ export type TOrder = {
   id?: number;
   totalMoney: string;
   userNote: string;
-
+  paymentType: ORDER_TYPE;
   orderDetails?: [
     {
       orderId?: number;
@@ -119,10 +119,9 @@ export type TOrder = {
   deletedAt?: string;
 };
 
-
 export type TParamsOrder = {
-  orderStatus: ORDER_STATUS
-}
+  orderStatus: ORDER_STATUS;
+};
 
 export type TOrderDetails = {
   id?: number;
@@ -155,6 +154,7 @@ export type TChart = {
 };
 
 export type TProductParams = {
+  q?: string | null;
   size?: string | null;
   color?: string | null;
   price?: string | null;

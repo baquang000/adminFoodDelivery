@@ -1,22 +1,35 @@
 <script setup lang="ts">
+import { useProduct } from "@/composables/useProduct";
 import { useCartStore } from "@/stores/cart";
+import { useProductStore } from "@/stores/product";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 const { setUser } = useUserStore();
 const { user } = storeToRefs(useUserStore());
-const { cartList } = storeToRefs(useCartStore())
-const cartStore = useCartStore()
+const { cartList } = storeToRefs(useCartStore());
+const cartStore = useCartStore();
+const { getProducts } = useProduct();
+const { setFilter } = useProductStore();
 
 const handleLogout = () => {
   localStorage.removeItem("user");
   setUser(null);
-  cartStore.$reset()
+  cartStore.$reset();
 };
 
-const isAdmin = computed(() => user?.value?.userRoles?.find(item => item.role.roleName === "super_admin"))
+const q = ref<string>("");
 
+const handleFilter = async () => {
+  setFilter({ q: q.value });
+
+  await getProducts();
+};
+
+const isAdmin = computed(() =>
+  user?.value?.userRoles?.find((item) => item.role.roleName === "super_admin")
+);
 </script>
 
 <template>
@@ -24,11 +37,20 @@ const isAdmin = computed(() => user?.value?.userRoles?.find(item => item.role.ro
     <div class="top">
       <div class="top-item logo">
         <router-link to="/">
-          <img src="https://maraviyainfotech.com/projects/carrot-tailwind/assets/img/logo/logo.png"
-            alt="" /></router-link>
+          <img
+            width="120px"
+            height="120px"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC3oqtStSV5cLblLM5ktSihCLZkN0x9Tuq1g&s"
+            alt=""
+        /></router-link>
       </div>
       <div class="top-item search">
-        <input type="text" placeholder="Tìm sản phẩm bạn muốn..." />
+        <input
+          @change="handleFilter"
+          v-model="q"
+          type="text"
+          placeholder="Tìm sản phẩm bạn muốn..."
+        />
         <button>
           <el-icon>
             <Search />
@@ -38,13 +60,19 @@ const isAdmin = computed(() => user?.value?.userRoles?.find(item => item.role.ro
       <div class="top-item action">
         <div v-if="isAdmin" class="item">
           <i class="pi pi-building-columns"></i>&nbsp;
-          <router-link style="color: inherit; text-decoration: none" to="/admin/dashboard">
+          <router-link
+            style="color: inherit; text-decoration: none"
+            to="/admin/dashboard"
+          >
             <span>Trang quản trị</span>
           </router-link>
         </div>
         <div class="item">
           <i class="pi pi-shopping-bag"></i>&nbsp;
-          <router-link style="color: inherit; text-decoration: none" to="/my-order">
+          <router-link
+            style="color: inherit; text-decoration: none"
+            to="/my-order"
+          >
             <span>Đơn hàng</span>
           </router-link>
         </div>
@@ -54,20 +82,33 @@ const isAdmin = computed(() => user?.value?.userRoles?.find(item => item.role.ro
         </div>
         <div class="item">
           <i class="pi pi-shopping-cart"></i>&nbsp;
-          <router-link style="color: inherit; text-decoration: none" to="/cart"><span>Giỏ hàng (<b
-                style="color: red;">{{
-                  cartList.length }}</b>)</span></router-link>
+          <router-link style="color: inherit; text-decoration: none" to="/cart"
+            ><span
+              >Giỏ hàng (<b style="color: red">{{ cartList.length }}</b
+              >)</span
+            ></router-link
+          >
         </div>
         <div class="item" v-if="!user">
           <i class="pi pi-user"></i>&nbsp;
-          <router-link style="color: inherit; text-decoration: none" to="/login"><span>Đăng nhập</span></router-link>
+          <router-link style="color: inherit; text-decoration: none" to="/login"
+            ><span>Đăng nhập</span></router-link
+          >
           <span>&nbsp;|&nbsp;</span>
-          <router-link style="color: inherit; text-decoration: none" to="/register"><span>Đăng ký</span></router-link>
+          <router-link
+            style="color: inherit; text-decoration: none"
+            to="/register"
+            ><span>Đăng ký</span></router-link
+          >
         </div>
 
         <div v-if="user" class="item">
           <i class="pi pi-user"></i>&nbsp;
-          <span><b style="color: green; font-size: 20px;">{{ user.userName }}</b></span>
+          <span
+            ><b style="color: green; font-size: 20px">{{
+              user.userName
+            }}</b></span
+          >
         </div>
 
         <div v-if="user" class="item" @click="handleLogout">

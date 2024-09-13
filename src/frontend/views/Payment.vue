@@ -8,6 +8,8 @@ import { useUserStore } from "@/stores/user";
 import { useOrder } from "@/composables/useOrder";
 import { useRouter } from "vue-router";
 import { useUser } from "@/composables/useUser";
+import PaypalButton from "@/paypal/PaypalButton.vue";
+import { ORDER_TYPE } from "@/common/enum";
 
 interface RuleForm {
   name: string;
@@ -53,6 +55,8 @@ const { cartList, total } = storeToRefs(useCartStore());
 const { createOrder, createOrderDetails } = useOrder();
 
 const { updateUserInfo } = useUser();
+
+const switchPayment = ref(false);
 
 const rules = reactive<FormRules<RuleForm>>({
   name: [
@@ -120,35 +124,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      const orderId = await createOrder({
-        totalMoney: total.value.toString(),
-        userNote: form.note,
-      });
+      await submitCreateOrder(ORDER_TYPE.NORMAL);
 
-      await updateUserInfo({
-        userName: form.userName,
-        phoneNumber: form.phoneNumber,
-        address: form.address,
-      });
-
-      if (orderId) {
-        await Promise.all(
-          cartList.value.map(async (item) => {
-            await createOrderDetails(
-              {
-                productId: item.product.id as number,
-                orderId,
-                quantity: item.quantity,
-                size: item.product.size,
-                color: item.product.color,
-              },
-              false
-            );
-          })
-        );
-      }
-
-      localStorage.removeItem('cart')
+      localStorage.removeItem("cart");
 
       router.replace("/success");
     } else {
@@ -156,34 +134,97 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     }
   });
 };
+
+const submitCreateOrder = async (type: ORDER_TYPE) => {
+  const orderId = await createOrder({
+    totalMoney: total.value.toString(),
+    userNote: form.note,
+    paymentType: type,
+  });
+
+  await updateUserInfo({
+    userName: form.userName,
+    phoneNumber: form.phoneNumber,
+    address: form.address,
+  });
+
+  if (orderId) {
+    await Promise.all(
+      cartList.value.map(async (item) => {
+        await createOrderDetails(
+          {
+            productId: item.product.id as number,
+            orderId,
+            quantity: item.quantity,
+            size: item.product.size,
+            color: item.product.color,
+          },
+          false
+        );
+      })
+    );
+  }
+};
+
+const handleOrderSuccess = async (payload: {
+  name: string;
+  address: string;
+}) => {
+  form.userName = payload.name;
+  form.address = payload.address;
+
+  await submitCreateOrder(ORDER_TYPE.ONLINE);
+
+  localStorage.removeItem("cart");
+
+  router.replace("/success");
+};
 </script>
 
 <template>
   <h2>Thanh toán</h2>
   <div class="payment">
     <el-card class="left">
-      <el-form ref="ruleFormRef" style="max-width: 600px" :model="ruleForm" :rules="rules" label-width="auto"
-        class="demo-ruleForm" :size="formSize">
-        <el-form-item label="Tên người nhận" prop="name">
-          <el-input v-model="form.userName" style="height: 40px" />
-        </el-form-item>
+      <el-form
+        ref="ruleFormRef"
+        style="max-width: 600px"
+        :model="ruleForm"
+        :rules="rules"
+        label-width="auto"
+        class="demo-ruleForm"
+        :size="formSize"
+      >
         <el-form-item label="Số điện thoại" prop="name">
           <el-input v-model="form.phoneNumber" style="height: 40px" />
         </el-form-item>
-        <el-form-item label="Địa chỉ" prop="name">
-          <el-input v-model="form.address" style="height: 40px" />
-        </el-form-item>
 
-        <el-form-item label="Ghi chú cho người bán">
-          <el-input v-model="form.note" type="textarea" />
-        </el-form-item>
-
+        <div v-if="!switchPayment">
+          <el-form-item label="Tên người nhận" prop="name">
+            <el-input v-model="form.userName" style="height: 40px" />
+          </el-form-item>
+          <el-form-item label="Địa chỉ" prop="name">
+            <el-input v-model="form.address" style="height: 40px" />
+          </el-form-item>
+          <el-form-item label="Ghi chú cho người bán">
+            <el-input v-model="form.note" type="textarea" />
+          </el-form-item>
+        </div>
         <el-form-item label="Thanh toán online" prop="delivery">
-          <el-switch v-model="ruleForm.delivery" />
+          <el-switch v-model="switchPayment" />
         </el-form-item>
 
-        <el-form-item>
-          <el-button style="height: 45px; width: 200px" type="primary" @click="submitForm(ruleFormRef)">
+        <PaypalButton
+          @success="handleOrderSuccess"
+          :total="total"
+          v-if="switchPayment"
+        />
+
+        <el-form-item v-else>
+          <el-button
+            style="height: 45px; width: 200px"
+            type="primary"
+            @click="submitForm(ruleFormRef)"
+          >
             Đặt hàng
           </el-button>
         </el-form-item>
@@ -192,23 +233,36 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
     <el-card class="cart-list">
       <div v-for="(item, index) in cartList" :key="index" class="cart-item">
-        <img width="90px" height="90px" style="border-radius: 5px" :src="item.product.image" alt="" />
+        <img
+          width="90px"
+          height="90px"
+          style="border-radius: 5px"
+          :src="item.product.image"
+          alt=""
+        />
         <div class="info">
-          <span><b style="color: #333; font-weight: 500">Tên:</b>&nbsp;
+          <span
+            ><b style="color: #333; font-weight: 500">Tên:</b>&nbsp;
             {{ item.product.description }}
           </span>
-          <span style="margin-top: 5px"><b style="color: #333; font-weight: 500">Số lượng: </b>&nbsp; x
-            {{ item.quantity }}</span>
-          <span style="margin-top: 5px"><b style="color: #333; font-weight: 500">Giá tiền: </b>&nbsp;
+          <span style="margin-top: 5px"
+            ><b style="color: #333; font-weight: 500">Số lượng: </b>&nbsp; x
+            {{ item.quantity }}</span
+          >
+          <span style="margin-top: 5px"
+            ><b style="color: #333; font-weight: 500">Giá tiền: </b>&nbsp;
             <span style="color: red">{{
               formatCurrency(item.product.newPrice)
-            }}</span></span>
+            }}</span></span
+          >
         </div>
       </div>
-      <span style="margin-top: 30px"><b style="margin-top: 20px; color: #333">Tổng tiền: </b>
+      <span style="margin-top: 30px"
+        ><b style="margin-top: 20px; color: #333">Tổng tiền: </b>
         <span style="color: red">{{
           cartList.length ? formatCurrency(total) : formatCurrency(0)
-        }}</span></span>
+        }}</span></span
+      >
     </el-card>
   </div>
 </template>
@@ -223,7 +277,7 @@ h2 {
   align-items: flex-start;
   justify-content: space-between;
   width: 100%;
-  padding: 20px 200px;
+  padding: 10px 200px;
   margin-top: 50px;
   border: 0.5px solid rgba(128, 128, 128, 0.26);
   border-radius: 5px;

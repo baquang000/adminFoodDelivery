@@ -35,14 +35,14 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["edit", "delete"]);
+const emit = defineEmits(["edit", "delete", "export"]);
 
 const appStore = useAppStore();
 
 const placeholderText = computed(() => "Tìm kiếm " + props.screen + "...");
 
 const handleShowForm = (type: ACTION_ENUM, id?: number) => {
-  if(props.screen !== 'đơn hàng'){
+  if (props.screen !== "đơn hàng") {
     appStore.setIsShowActionForm(true);
     appStore.setIsShowOverlay(true);
   }
@@ -56,6 +56,10 @@ const handleShowForm = (type: ACTION_ENUM, id?: number) => {
 const handleDelete = (id: number) => {
   emit("delete", id);
 };
+
+const handleExportData = () => {
+  emit("export");
+};
 </script>
 
 <template>
@@ -64,6 +68,16 @@ const handleDelete = (id: number) => {
       style="width: 240px; height: 40px"
       :placeholder="placeholderText"
     />
+
+    <el-button
+      @click="handleExportData"
+      style="margin-left: 20px"
+      type="success"
+    >
+      <i class="pi pi-file-excel"></i>
+      Xuất excel
+    </el-button>
+
     <el-button
       v-if="!isHiddenComponent"
       type="success"
@@ -119,7 +133,12 @@ const handleDelete = (id: number) => {
                 @click="handleShowForm(ACTION_ENUM.UPDATE, row.id)"
               />
 
-              <i  @click="handleShowForm(ACTION_ENUM.UPDATE, row.id)" v-if="screen === 'đơn hàng'" style="color: green" class="pi pi-check-square"></i>
+              <i
+                @click="handleShowForm(ACTION_ENUM.UPDATE, row.id)"
+                v-if="screen === 'đơn hàng'"
+                style="color: green"
+                class="pi pi-check-square"
+              ></i>
             </span>
             <span class="icon">
               <Delete

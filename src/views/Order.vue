@@ -3,6 +3,7 @@ import BaseTable from "@/base/BaseTable.vue";
 import { ORDER_STATUS } from "@/common/enum";
 import { useOrder } from "@/composables/useOrder";
 import { useOrderStore } from "@/stores/order";
+import { exportToExcel } from "@/utils/export";
 import type { TabsInstance } from "element-plus";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
@@ -23,11 +24,12 @@ const tableData = computed(() =>
       userName: item.user?.userName,
       phoneNumber: item.user?.userInfo?.phoneNumber,
       address: item.user?.userInfo?.address,
+      paymentType: item.paymentType
     };
   })
 );
 
-const { getOrders, deleteOrder, updateOrder } = useOrder();
+const { getOrders, updateOrder } = useOrder();
 
 const tableColumns = [
   { prop: "id", label: "#ID", width: "auto" },
@@ -36,86 +38,100 @@ const tableColumns = [
   { prop: "address", label: "Địa chỉ", width: "auto" },
   { prop: "userName", label: "Tên người dùng", width: "auto" },
   { prop: "totalMoney", label: "Tổng tiền", width: "auto" },
+  { prop: "paymentType", label: "Phương thức", width: "auto" },
   { prop: "userNote", label: "Ghi chú", width: "auto" },
   { prop: "orderStatus", label: "Trạng thái", width: "auto" },
 ];
-const tabPosition = ref<TabsInstance['tabPosition']>('left')
+const tabPosition = ref<TabsInstance["tabPosition"]>("left");
 
-const statusIndex = ref<number>(0)
+const statusIndex = ref<number>(0);
 
 const handleEditData = async (id: number) => {
   switch (statusIndex.value) {
     case 0:
-      await updateOrder({ orderStatus: ORDER_STATUS.DELIVERY }, id)
+      await updateOrder({ orderStatus: ORDER_STATUS.DELIVERY }, id);
       await getOrders({
-        orderStatus: ORDER_STATUS.PENDING
-      })
+        orderStatus: ORDER_STATUS.PENDING,
+      });
 
       break;
-
 
     case 1:
-      await updateOrder({ orderStatus: ORDER_STATUS.SUCCESS }, id)
+      await updateOrder({ orderStatus: ORDER_STATUS.SUCCESS }, id);
       await getOrders({
-        orderStatus: ORDER_STATUS.DELIVERY
-      })
+        orderStatus: ORDER_STATUS.DELIVERY,
+      });
 
       break;
 
-    default: await getOrders({
-      orderStatus: ORDER_STATUS.PENDING
-    })
+    default:
+      await getOrders({
+        orderStatus: ORDER_STATUS.PENDING,
+      });
   }
 };
 
 const handleDelete = async (id: number) => {
-  await updateOrder({ orderStatus: ORDER_STATUS.CANCEL }, id)
+  await updateOrder({ orderStatus: ORDER_STATUS.CANCEL }, id);
   await getOrders({
-    orderStatus: ORDER_STATUS.CANCEL
+    orderStatus: ORDER_STATUS.CANCEL,
   });
 };
 
-onMounted(() => getOrders({
-  orderStatus: ORDER_STATUS.PENDING
-}));
+const handleExportData = () => {
+  exportToExcel(JSON.stringify(orderList.value));
+};
+
+onMounted(() =>
+  getOrders({
+    orderStatus: ORDER_STATUS.PENDING,
+  })
+);
 
 const handleTabChange = async (value: string) => {
-  statusIndex.value = parseInt(value)
+  statusIndex.value = parseInt(value);
 
   switch (parseInt(value)) {
     case 1:
       await getOrders({
-        orderStatus: ORDER_STATUS.DELIVERY
-      })
+        orderStatus: ORDER_STATUS.DELIVERY,
+      });
 
       break;
 
     case 2:
       await getOrders({
-        orderStatus: ORDER_STATUS.SUCCESS
-      })
+        orderStatus: ORDER_STATUS.SUCCESS,
+      });
 
       break;
 
     case 3:
       await getOrders({
-        orderStatus: ORDER_STATUS.CANCEL
-      })
+        orderStatus: ORDER_STATUS.CANCEL,
+      });
 
       break;
 
-    default: await getOrders({
-      orderStatus: ORDER_STATUS.PENDING
-    })
+    default:
+      await getOrders({
+        orderStatus: ORDER_STATUS.PENDING,
+      });
   }
-}
-
+};
 </script>
 
 <template>
   <div class="order-container">
-    <el-card style="margin-top: 20px; margin-left: 20px; width: 250px; height: 300px;">
-      <el-tabs @tab-change="handleTabChange" :tab-position="tabPosition" style="height: 200px" class="demo-tabs">
+    <el-card
+      style="margin-top: 20px; margin-left: 20px; width: 250px; height: 300px"
+    >
+      <el-tabs
+        @tab-change="handleTabChange"
+        :tab-position="tabPosition"
+        style="height: 200px"
+        class="demo-tabs"
+      >
         <el-tab-pane label="Chờ duyệt"></el-tab-pane>
         <el-tab-pane label="Đang giao hàng"></el-tab-pane>
         <el-tab-pane label="Đơn hàng hoàn tất"></el-tab-pane>
@@ -124,9 +140,16 @@ const handleTabChange = async (value: string) => {
     </el-card>
 
     <div class="order-list">
-      <BaseTable :data="tableData" :columns="tableColumns" :isHiddenComponent="true"
-        :isHiddenUpdate="statusIndex === 2 || statusIndex === 3" screen="đơn hàng" @edit="handleEditData"
-        @delete="handleDelete" />
+      <BaseTable
+        :data="tableData"
+        :columns="tableColumns"
+        :isHiddenComponent="true"
+        :isHiddenUpdate="statusIndex === 2 || statusIndex === 3"
+        screen="đơn hàng"
+        @edit="handleEditData"
+        @delete="handleDelete"
+        @export="handleExportData"
+      />
     </div>
   </div>
 </template>
@@ -162,7 +185,7 @@ const handleTabChange = async (value: string) => {
     }
   }
 
-  .demo-tabs>.el-tabs__content {
+  .demo-tabs > .el-tabs__content {
     padding: 32px;
     color: #6b778c;
     font-size: 32px;

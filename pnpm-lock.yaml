@@ -20,12 +20,18 @@ importers:
       element-plus:
         specifier: ^2.7.8
         version: 2.7.8(vue@3.4.35(typescript@5.4.5))
+      file-saver:
+        specifier: ^2.0.5
+        version: 2.0.5
       firebase:
         specifier: ^10.13.0
         version: 10.13.0
       install:
         specifier: ^0.13.0
         version: 0.13.0
+      papaparse:
+        specifier: ^5.4.1
+        version: 5.4.1
       pinia:
         specifier: ^2.1.7
         version: 2.2.0(typescript@5.4.5)(vue@3.4.35(typescript@5.4.5))
@@ -977,6 +983,9 @@ packages:
     resolution: {integrity: sha512-CzbClwlXAuiRQAlUyfqPgvPoNKTckTPGfwZV4ZdAhVcP2lh9KUxJg2b5GkE7XbjKQ3YJnQ9z6D9ntLAlB+tP8g==}
     engines: {node: '>=0.8.0'}
 
+  file-saver@2.0.5:
+    resolution: {integrity: sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==}
+
   fill-range@7.1.1:
     resolution: {integrity: sha512-YsGpe3WHLK8ZYi4tWDg2Jy3ebRz2rXowDxnld4bkQB00cc/1Zw9AWnC0i9ztDJitivtQvaI9KaLyKrc+hBW0yg==}
     engines: {node: '>=8'}
@@ -1171,6 +1180,9 @@ packages:
     resolution: {integrity: sha512-Q+alQAGIW7ZhKcxLt8GcSi3h3ryheD6xnmXahkMRVM5LYmajcUrSITm8h+OPC9RYWMV2GR0Q1ntTUCfxaNoOJw==}
     engines: {node: ^14.18.0 || ^16.13.0 || >=18.0.0, npm: '>= 8'}
     hasBin: true
+
+  papaparse@5.4.1:
+    resolution: {integrity: sha512-HipMsgJkZu8br23pW15uvo6sib6wne/4woLZPlFf3rpDyMe9ywEXUsuD7+6K9PRkJlVT51j/sCOYDKGGS3ZJrw==}
 
   path-browserify@1.0.1:
     resolution: {integrity: sha512-b7uo2UCUOYZcnF/3ID0lulOJi/bafxa1xPe7ZPsammBSpjSWQkjNxlt635YGS2MiR9GjvuXCtz2emr3jbsz98g==}
@@ -2528,6 +2540,8 @@ snapshots:
     dependencies:
       websocket-driver: 0.7.4
 
+  file-saver@2.0.5: {}
+
   fill-range@7.1.1:
     dependencies:
       to-regex-range: 5.0.1
@@ -2694,6 +2708,8 @@ snapshots:
       pidtree: 0.6.0
       read-package-json-fast: 3.0.2
       shell-quote: 1.8.1
+
+  papaparse@5.4.1: {}
 
   path-browserify@1.0.1: {}
 

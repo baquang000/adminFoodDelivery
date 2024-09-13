@@ -30,6 +30,26 @@ export const useProduct = () => {
     }
   };
 
+  const getProductSellTheMost = async () => {
+    try {
+      const response = await request.get(`/product/sell-the-most`);
+
+      const { data } = response.data as TResult;
+
+      productStore.setSingleProduct(data);
+
+      return data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const { message } = error.response?.data as TError;
+
+        return ElMessage.error(message);
+      }
+
+      ElMessage.error("Có lỗi xảy ra !");
+    }
+  };
+
   const getProductByCategory = async (id: number) => {
     try {
       const response = await request.get(`/product/category/${id}`);
@@ -56,6 +76,7 @@ export const useProduct = () => {
       if (!filter.value.color) delete filter.value.color;
       if (!filter.value.price) delete filter.value.price;
       if (!filter.value.categoryId) delete filter.value.categoryId;
+      if (!filter.value.q) delete filter.value.q;
 
       const params = { ...filter.value };
 
@@ -146,5 +167,6 @@ export const useProduct = () => {
     createProduct,
     deleteProduct,
     getProductByCategory,
+    getProductSellTheMost
   };
 };
