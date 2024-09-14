@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import type { ComponentSize, FormInstance, FormRules } from "element-plus";
 import { useCartStore } from "@/stores/cart";
 import { storeToRefs } from "pinia";
@@ -24,22 +24,19 @@ const ruleFormRef = ref<FormInstance>();
 const { user } = storeToRefs(useUserStore());
 
 const ruleForm = reactive<RuleForm>({
-  userName: user.value?.userName || "",
+  userName: user.value?.userName || JSON.parse(localStorage.getItem('user') as string)?.user?.userName || "",
   phoneNumber: user.value?.userInfo?.phoneNumber || "",
   address: user.value?.userInfo?.address || "",
   note: "",
 });
 
-const form = reactive({
-  userName: user.value?.userName || "",
-  phoneNumber: user.value?.userInfo?.phoneNumber || "",
-  address: user.value?.userInfo?.address || "",
-  note: "",
-});
+
 
 const router = useRouter();
 
-const { cartList, total } = storeToRefs(useCartStore());
+const cartStore = useCartStore()
+
+const { cartList, total } = storeToRefs(cartStore);
 
 const { createOrder, createOrderDetails } = useOrder();
 
@@ -48,10 +45,6 @@ const { updateUserInfo } = useUser();
 const switchPayment = ref(false);
 
 const rules = reactive<FormRules<RuleForm>>({
-  userName: [
-    { required: true, message: 'Tên người dùng không được bỏ trống', trigger: ['change', 'blur'] },
-    { min: 2, max: 30, message: 'Tên người dùng phải từ 3 -> 30 ký tự', trigger: ['change', 'blur'] },
-  ],
   phoneNumber: [
     { required: true, message: 'Số điện thoại không được bỏ trống', trigger: ['change', 'blur'] },
     { min: 10, max: 11, message: 'Số điện thoại phải từ 10 -> 11 chữ số', trigger: ['change', 'blur'] },
@@ -79,15 +72,14 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 const submitCreateOrder = async (type: ORDER_TYPE) => {
   const orderId = await createOrder({
     totalMoney: total.value.toString(),
-    userNote: form.note,
+    userNote: ruleForm.note,
     paymentType: type,
   });
 
   await updateUserInfo({
-    userName: form.userName,
-    phoneNumber: form.phoneNumber,
-    address: form.address,
-  });
+    phoneNumber: ruleForm.phoneNumber,
+    address: ruleForm.address,
+  }, false);
 
   if (orderId) {
     await Promise.all(
@@ -105,14 +97,16 @@ const submitCreateOrder = async (type: ORDER_TYPE) => {
       })
     );
   }
+
+  cartStore.clearCart()
 };
 
 const handleOrderSuccess = async (payload: {
   name: string;
   address: string;
 }) => {
-  form.userName = payload.name;
-  form.address = payload.address;
+  ruleForm.userName = payload.name;
+  ruleForm.address = payload.address;
 
   await submitCreateOrder(ORDER_TYPE.ONLINE);
 
@@ -120,6 +114,7 @@ const handleOrderSuccess = async (payload: {
 
   router.replace("/success");
 };
+
 </script>
 
 <template>
@@ -133,9 +128,6 @@ const handleOrderSuccess = async (payload: {
         </el-form-item>
 
         <div v-if="!switchPayment">
-          <el-form-item label="Tên người nhận" prop="userName">
-            <el-input v-model="ruleForm.userName" style="height: 40px" />
-          </el-form-item>
           <el-form-item label="Địa chỉ" prop="address">
             <el-input v-model="ruleForm.address" style="height: 40px" />
           </el-form-item>

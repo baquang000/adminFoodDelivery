@@ -11,7 +11,7 @@
                         <li><a href="#">Chúng tôi</a></li>
                         <li><a href="#">Dịch vụ</a></li>
                         <li><a href="#">Giấy phép</a></li>
-                        <li><a href="#">Chương trình ưu đãi</a></li>
+                        <li><a href="#">Chương trình ưu đãi 24h</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">

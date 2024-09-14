@@ -10,7 +10,7 @@ const props = defineProps({
   },
 });
 
-const totalMoney = computed(() => parseFloat(props.total / 230000).toFixed(2));
+const totalMoney = computed(() => parseFloat(props.total / 24545).toFixed(2));
 
 const emit = defineEmits(["success"]);
 

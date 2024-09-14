@@ -10,18 +10,18 @@ import Info from "../components/Info.vue";
     <Featured />
     <CategoryList />
     <ProductList :isSetCss="true" />
-    <Info/>
+    <Info />
   </div>
 </template>
 
 
 <style scoped lang="scss">
-  .home{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: auto;
-    overflow-x: hidden;
-  }
+.home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  overflow-x: hidden;
+}
 </style>

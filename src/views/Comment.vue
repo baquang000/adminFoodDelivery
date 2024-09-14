@@ -50,7 +50,7 @@ onMounted(() => getComments());
 <template>
   <div class="comment-container">
     <div class="comment-list">
-      <BaseTable :data="tableData" :columns="tableColumns" :isHiddenComponent="true" :isHiddenUpdate="true"
+      <BaseTable styleValue="height: 700px" :data="tableData" :columns="tableColumns" :isHiddenComponent="true" :isHiddenUpdate="true"
         screen="bình luận" @delete="handleDelete" @export="handleExportFile" />
     </div>
   </div>

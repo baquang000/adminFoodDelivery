@@ -6,7 +6,7 @@ import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useProductStore } from "@/stores/product";
 import { useCartStore } from "@/stores/cart";
-import { formatCurrency } from "@/utils/format";
+import { formatCurrency, formatDate } from "@/utils/format";
 import { useComment } from "@/composables/useComment";
 import { ElMessage } from "element-plus";
 import { useCommentStore } from "@/stores/comment";
@@ -161,13 +161,10 @@ const handleChooseSize = (payload: string) => {
             ">-</el-button>
           <div>{{ quantity }}</div>
           <el-button @click="quantity = quantity + 1">+</el-button>
-
-          <router-link style="text-decoration: none; color: inherit" to="/cart">
-            <el-button @click="handleAddToCart" type="primary"
-              style="width: max-content; height: 45px; margin-left: 30px">
-              Thêm vào giỏ hàng
-            </el-button>
-          </router-link>
+          <el-button @click="handleAddToCart" type="primary"
+            style="width: max-content; height: 45px; margin-left: 30px">
+            Thêm vào giỏ hàng
+          </el-button>
         </div>
       </el-card>
     </div>
@@ -180,7 +177,7 @@ const handleChooseSize = (payload: string) => {
           <div style="color: #5e77c9; font-weight: bold">
             {{ item.user?.userName }} |
             <span style="color: gray; font-weight: normal">{{
-              item.createdAt
+              formatDate(item.createdAt)
             }}</span>
           </div>
           <div style="color: #333; margin-top: 10px; font-weight: 500">

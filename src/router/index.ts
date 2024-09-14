@@ -86,7 +86,7 @@ const router = createRouter({
 });
 
 
-const PRIVATE_PAGES = ['/my-order','/success']
+const PRIVATE_PAGES = ['']
 
 router.beforeEach(async (to, _from, next) => {
   if (!to.path.includes('admin') && !PRIVATE_PAGES.includes(to.path)) {
@@ -101,7 +101,7 @@ router.beforeEach(async (to, _from, next) => {
     if (JSON.parse(localStorage.getItem('user') as string)?.userRoles.find((item: { role: { roleName: string; }; }) => item.role.roleName === 'super_admin')) {
       return next()
     } else {
-      return next('/login')
+      return next('/')
     }
   }
 })

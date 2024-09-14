@@ -73,8 +73,6 @@ export const useChart = () => {
 
       const { data } = response.data as TResult;
 
-      console.log(data)
-
       chartsStore.setChartRevenue(data);
 
       return data;

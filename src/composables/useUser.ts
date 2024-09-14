@@ -66,13 +66,13 @@ export const useUser = () => {
     }
   };
 
-  const updateUserInfo = async (payload: TUserInfo) => {
+  const updateUserInfo = async (payload: TUserInfo, isShowMsg = true) => {
     try {
       const response = await request.put(`/user`, payload);
 
       const { message } = response.data as TResult;
 
-      ElMessage.success(message);
+      if (isShowMsg) ElMessage.success(message);
 
       return true;
     } catch (error) {
@@ -163,7 +163,7 @@ export const useUser = () => {
       const { message, data } = response.data as TResult;
 
       localStorage.setItem("user", JSON.stringify(data));
-      
+
       userStore.setUser(data);
 
       ElMessage.success(message);

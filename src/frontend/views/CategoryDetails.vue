@@ -2,7 +2,7 @@
 import { useProduct } from "@/composables/useProduct";
 import ProductList from "../components/product/ProductList.vue";
 import { computed, onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import { onBeforeRouteLeave, useRoute } from "vue-router";
 import { useProductStore } from "@/stores/product";
 import type { TColor, TProductParams } from "@/common/type";
 import { storeToRefs } from "pinia";
@@ -79,6 +79,11 @@ onMounted(() => {
   setFilter({ categoryId: id.value.toString() });
   getProducts();
 });
+
+onBeforeRouteLeave(async () => {
+  setFilter({})
+  await getProducts()
+})
 </script>
 
 <template>
@@ -89,30 +94,20 @@ onMounted(() => {
         <span>Giá</span>
         <div class="hr"></div>
         <div style="display: flex; align-items: center; margin-top: 10px">
-          <input
-            type="checkbox"
-            :checked="filterParams.price === 'DESC'"
-            @change="
-              () => {
-                filterParams.price = 'DESC';
-                submitFilter();
-              }
-            "
-          />
+          <input type="checkbox" :checked="filterParams.price === 'DESC'" @change="() => {
+            filterParams.price = 'DESC';
+            submitFilter();
+          }
+            " />
           <span>Cao -> Thấp</span>
         </div>
 
         <div style="display: flex; align-items: center; margin-top: 10px">
-          <input
-            type="checkbox"
-            :checked="filterParams.price === 'ASC'"
-            @change="
-              () => {
-                filterParams.price = 'ASC';
-                submitFilter();
-              }
-            "
-          />
+          <input type="checkbox" :checked="filterParams.price === 'ASC'" @change="() => {
+            filterParams.price = 'ASC';
+            submitFilter();
+          }
+            " />
           <span>Thấp -> Cao</span>
         </div>
       </div>
@@ -120,21 +115,12 @@ onMounted(() => {
       <div class="filter-item">
         <span>Màu sắc</span>
         <div class="hr"></div>
-        <div
-          v-for="color in colors"
-          :key="color.value"
-          style="display: flex; align-items: center; margin-top: 10px"
-        >
-          <input
-            type="checkbox"
-            :checked="filterParams.color === color.value"
-            @change="
-              () => {
-                filterParams.color = color.value;
-                submitFilter();
-              }
-            "
-          />
+        <div v-for="color in colors" :key="color.value" style="display: flex; align-items: center; margin-top: 10px">
+          <input type="checkbox" :checked="filterParams.color === color.value" @change="() => {
+            filterParams.color = color.value;
+            submitFilter();
+          }
+            " />
           <span>{{ color.label }}</span>
           <div class="color" :style="`background-color:${color.value}`"></div>
         </div>
@@ -143,21 +129,12 @@ onMounted(() => {
       <div class="filter-item">
         <span>Kích cỡ</span>
         <div class="hr"></div>
-        <div
-          v-for="size in sizes"
-          :key="size"
-          style="display: flex; align-items: center; margin-top: 10px"
-        >
-          <input
-            type="checkbox"
-            :checked="size === filterParams.size"
-            @change="
-              () => {
-                filterParams.size = size;
-                submitFilter();
-              }
-            "
-          />
+        <div v-for="size in sizes" :key="size" style="display: flex; align-items: center; margin-top: 10px">
+          <input type="checkbox" :checked="size === filterParams.size" @change="() => {
+            filterParams.size = size;
+            submitFilter();
+          }
+            " />
           <span>{{ size }}</span>
         </div>
       </div>

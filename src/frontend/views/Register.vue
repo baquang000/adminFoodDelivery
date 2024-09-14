@@ -4,12 +4,6 @@ import { useUser } from "@/composables/useUser";
 import { ElMessage, type FormInstance, type FormRules } from "element-plus";
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-const form = reactive({
-  userName: "",
-  email: "",
-  password: "",
-  rePassword: "",
-});
 
 
 type RuleForm = {
@@ -50,9 +44,9 @@ const handleRegister = async (e: Event) => {
   await ruleFormRef?.value?.validate(async (valid, fields) => {
     if (valid) {
       const response = await register({
-        userName: form.userName,
-        email: form.email,
-        password: form.password,
+        userName: ruleForm.userName,
+        email: ruleForm.email,
+        password: ruleForm.password,
       } as TRegister);
 
       if (!response) return;
@@ -75,19 +69,19 @@ const handleRegister = async (e: Event) => {
         <div class="form-holder">
           <span class="lnr lnr-phone-handset"></span>
           <el-form-item prop="userName">
-            <input v-model="form.userName" type="text" class="form-control" placeholder="Tên người dùng" />
+            <input v-model="ruleForm.userName" type="text" class="form-control" placeholder="Tên người dùng" />
           </el-form-item>
         </div>
         <div class="form-holder">
           <span class="lnr lnr-user"></span>
           <el-form-item prop="email">
-            <input v-model="form.email" type="text" class="form-control" placeholder="Email" />
+            <input v-model="ruleForm.email" type="text" class="form-control" placeholder="Email" />
           </el-form-item>
         </div>
         <div class="form-holder">
           <span class="lnr lnr-lock"></span>
           <el-form-item prop="password">
-            <input v-model="form.password" type="password" class="form-control" placeholder="Mật khẩu" />
+            <input v-model="ruleForm.password" type="password" class="form-control" placeholder="Mật khẩu" />
           </el-form-item>
         </div>
         <div>

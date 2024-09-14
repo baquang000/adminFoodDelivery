@@ -4,6 +4,7 @@ import { ORDER_STATUS } from "@/common/enum";
 import { useOrder } from "@/composables/useOrder";
 import { useOrderStore } from "@/stores/order";
 import { exportToExcel } from "@/utils/export";
+import { formatCurrency } from "@/utils/format";
 import type { TabsInstance } from "element-plus";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
@@ -12,19 +13,33 @@ const orderStore = useOrderStore();
 
 const { orderList } = storeToRefs(orderStore);
 
+
+
+const statusHelper = (payload: string) => {
+  switch (payload) {
+    case 'pending':
+      return 'Chờ duyệt'
+    case 'delivery':
+      return 'Đang giao'
+    case 'success':
+      return 'Hoàn tất'
+    default: return 'Đã huỷ'
+  }
+}
+
 const tableData = computed(() =>
   orderList.value?.map((item) => {
     return {
       id: item.id,
       userId: item.user?.id,
-      totalMoney: item.totalMoney,
+      totalMoney: formatCurrency(item.totalMoney),
       userNote: item.userNote,
-      orderStatus: item.orderStatus,
+      orderStatus: statusHelper(item.orderStatus as string),
       email: item.user?.email,
       userName: item.user?.userName,
       phoneNumber: item.user?.userInfo?.phoneNumber,
       address: item.user?.userInfo?.address,
-      paymentType: item.paymentType
+      paymentType: item.paymentType === 'normal' ? 'Tiền mặt' : 'Paypal'
     };
   })
 );
@@ -123,15 +138,8 @@ const handleTabChange = async (value: string) => {
 
 <template>
   <div class="order-container">
-    <el-card
-      style="margin-top: 20px; margin-left: 20px; width: 250px; height: 300px"
-    >
-      <el-tabs
-        @tab-change="handleTabChange"
-        :tab-position="tabPosition"
-        style="height: 200px"
-        class="demo-tabs"
-      >
+    <el-card style="margin-top: 20px; margin-left: 20px; width: 250px; height: 300px">
+      <el-tabs @tab-change="handleTabChange" :tab-position="tabPosition" style="height: 200px" class="demo-tabs">
         <el-tab-pane label="Chờ duyệt"></el-tab-pane>
         <el-tab-pane label="Đang giao hàng"></el-tab-pane>
         <el-tab-pane label="Đơn hàng hoàn tất"></el-tab-pane>
@@ -140,16 +148,9 @@ const handleTabChange = async (value: string) => {
     </el-card>
 
     <div class="order-list">
-      <BaseTable
-        :data="tableData"
-        :columns="tableColumns"
-        :isHiddenComponent="true"
-        :isHiddenUpdate="statusIndex === 2 || statusIndex === 3"
-        screen="đơn hàng"
-        @edit="handleEditData"
-        @delete="handleDelete"
-        @export="handleExportData"
-      />
+      <BaseTable :data="tableData" :columns="tableColumns" :isHiddenComponent="true"
+        :isHiddenUpdate="statusIndex === 2 || statusIndex === 3" screen="đơn hàng" @edit="handleEditData"
+        @delete="handleDelete" @export="handleExportData" />
     </div>
   </div>
 </template>
@@ -175,6 +176,7 @@ const handleTabChange = async (value: string) => {
 
   .order-list {
     width: 100%;
+    height: 800px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -185,7 +187,7 @@ const handleTabChange = async (value: string) => {
     }
   }
 
-  .demo-tabs > .el-tabs__content {
+  .demo-tabs>.el-tabs__content {
     padding: 32px;
     color: #6b778c;
     font-size: 32px;

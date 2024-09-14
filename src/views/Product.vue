@@ -26,9 +26,11 @@ const productStore = useProductStore();
 
 const { orderList } = storeToRefs(useOrderStore());
 
-const { productList, productSellTheMost } = storeToRefs(productStore);
+const { productList, singleProduct } = storeToRefs(productStore);
 
-const tableData = computed(() => productList.value);
+const tableData = computed(() => productList.value.map(item => {
+  return { ...item, newPrice: formatCurrency(item.newPrice), oldPrice: formatCurrency(item.oldPrice) }
+}));
 
 const tableColumns = [
   { prop: "id", label: "#ID", width: "auto" },
@@ -81,7 +83,7 @@ watch(
   }
 );
 
-const handleExportFile = ()=>{
+const handleExportFile = () => {
   exportToExcel(productList.value)
 }
 
@@ -96,33 +98,18 @@ onMounted(async () => {
 <template>
   <div class="product-container">
     <div class="product-featured">
-      <el-card
-        style="display: flex; align-items: center; justify-content: center"
-        ><span
-          >Số lượng:
-          <b style="font-size: 25px">{{ productList.length }}</b></span
-        ></el-card
-      >
-      <el-card
-        style="display: flex; align-items: center; justify-content: center"
-        ><span
-          >Đã bán: <b style="font-size: 25px">{{ selled }}</b></span
-        ></el-card
-      >
-      <el-card
-        style="display: flex; align-items: center; justify-content: center"
-        ><span
-          >Tổng doanh thu:
+      <el-card style="display: flex; align-items: center; justify-content: center"><span>Số lượng:
+          <b style="font-size: 25px">{{ productList.length }}</b></span></el-card>
+      <el-card style="display: flex; align-items: center; justify-content: center"><span>Đã bán: <b
+            style="font-size: 25px">{{ selled }}</b></span></el-card>
+      <el-card style="display: flex; align-items: center; justify-content: center"><span>Tổng doanh thu:
           <b style="font-size: 25px; color: red">{{
             formatCurrency(revenua)
-          }}</b></span
-        ><br />
+          }}</b></span><br />
       </el-card>
-      <el-card
-        style="display: flex; align-items: center; justify-content: center"
-        ><span> Sản phẩm bán chạy nhất: </span><br />
-        <div
-          style="
+      <el-card style="display: flex; align-items: center; justify-content: center"><span> Sản phẩm bán chạy nhất:
+        </span><br />
+        <div style="
             display: flex;
             margin-top: 10px;
             cursor: pointer;
@@ -131,46 +118,26 @@ onMounted(async () => {
             -moz-box-shadow: 2px 2px 25px 0px rgba(45, 103, 191, 0.75);
             padding: 10px;
             border-radius: 5px;
-          "
-        >
-          <img
-            width="90x"
-            height="90px"
-            style="object-fit: cover"
-            :src="productList[0]?.image"
-            alt=""
-          />
-          <div
-            style="
+          ">
+          <img width="90x" height="90px" style="object-fit: cover" :src="singleProduct?.image" alt="" />
+          <div style="
               display: flex;
               flex-direction: column;
               align-items: flex-start;
               margin-left: 10px;
               border-radius: 5px;
-            "
-          >
-            <span
-              >#ID: <b>{{ productSellTheMost?.id }}</b></span
-            >
-            <span
-              >Giá :
+            ">
+            <span>#ID: <b>{{ singleProduct?.id }}</b></span>
+            <span>Giá :
               <b style="color: blue">
-                {{ formatCurrency(productSellTheMost?.newPrice) }}</b
-              ></span
-            >
+                {{ formatCurrency(singleProduct?.newPrice) }}</b></span>
           </div>
         </div>
       </el-card>
     </div>
     <div class="product-list">
-      <BaseTable
-        :data="tableData"
-        :columns="tableColumns"
-        screen="sản phẩm"
-        @edit="handleEditData"
-        @delete="handleDelete"
-        @export="handleExportFile"
-      />
+      <BaseTable styleValue="height:500px" :data="tableData" :columns="tableColumns" screen="sản phẩm"
+        @edit="handleEditData" @delete="handleDelete" @export="handleExportFile" />
     </div>
     <ProductForm v-if="isShowActionForm" />
   </div>

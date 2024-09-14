@@ -1,7 +1,14 @@
+<script setup>
+
+const handleSuccess = () => {
+  window.location.href = '/'
+}
+
+</script>
+
 <template>
   <div class="card">
-    <div
-      style="
+    <div style="
         border-radius: 200px;
         height: 200px;
         width: 200px;
@@ -10,8 +17,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-      "
-    >
+      ">
       <i class="checkmark">✓</i>
     </div>
     <h1>Đặt hàng thành công !</h1>
@@ -19,12 +25,11 @@
       Chúng tôi sẽ sớm kiểm tra đơn hàng và phản hồi qua email cho bạn.<br />
     </p>
     <div style="display: flex; align-items: center; margin-top: 20px;">
-      <router-link to="/"
-      ><el-button type="primary" style="margin-right: 20px; height: 45px;" class="primary">Trang chủ</el-button></router-link
-    >
-    <router-link to="my-order"
-      ><el-button type="primary" style="height: 45px;" class="primary">Đơn hàng đã đặt</el-button></router-link
-    >
+      <el-button @click="handleSuccess" type="primary" style="margin-right: 20px; height: 45px;" class="primary">Trang
+        chủ</el-button>
+
+      <router-link to="my-order"><el-button type="primary" style="height: 45px;" class="primary">Đơn hàng đã
+          đặt</el-button></router-link>
     </div>
   </div>
 </template>

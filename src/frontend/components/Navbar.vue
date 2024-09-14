@@ -32,16 +32,20 @@ const handleFilter = async () => {
 const isAdmin = computed(() =>
   user?.value?.userRoles?.find((item) => item.role.roleName === "super_admin")
 );
+
+const handleToHome = () => {
+  window.location.href = "/"
+}
 </script>
 
 <template>
   <div class="navbar">
     <div class="top">
       <div class="top-item logo">
-        <router-link to="/">
+        <div style="cursor: pointer;" @click="handleToHome">
           <img style="object-fit: cover;" width="200px" height="90px"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStrYqXRWsdtSLitdeuRn-1cwpjl3Jy40fYKg&s"
-            alt="" /></router-link>
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStrYqXRWsdtSLitdeuRn-1cwpjl3Jy40fYKg&s" alt="" />
+        </div>
       </div>
       <div class="top-item search">
         <input @input="handleFilter" v-model="q" type="text" placeholder="Tìm sản phẩm bạn muốn..." />
@@ -58,7 +62,7 @@ const isAdmin = computed(() =>
             <span>Trang quản trị</span>
           </router-link>
         </div>
-        <div class="item">
+        <div class="item" v-if="user">
           <i class="pi pi-shopping-bag"></i>&nbsp;
           <router-link style="color: inherit; text-decoration: none" to="/my-order">
             <span>Đơn hàng</span>
@@ -71,7 +75,7 @@ const isAdmin = computed(() =>
         <div class="item">
           <i class="pi pi-shopping-cart"></i>&nbsp;
           <router-link style="color: inherit; text-decoration: none" to="/cart"><span>Giỏ hàng (<b style="color: red">{{
-                cartList.length }}</b>)</span></router-link>
+            cartList.length }}</b>)</span></router-link>
         </div>
         <div class="item" v-if="!user">
           <i class="pi pi-user"></i>&nbsp;
@@ -124,6 +128,7 @@ const isAdmin = computed(() =>
   right: 0;
   z-index: 99;
   background-color: #FFFFFF;
+  border-bottom: 0.5px solid  #EEEEEE;
 
   .top {
     display: flex;

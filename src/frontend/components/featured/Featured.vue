@@ -49,7 +49,7 @@ import "vue3-carousel/dist/carousel.css";
 
 <style scoped lang="scss">
 .carousel__item {
-  height: 85vh;
+  height: 77vh;
   width: 100vw;
   font-size: 20px;
   border-radius: 15px;

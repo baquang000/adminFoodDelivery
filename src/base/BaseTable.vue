@@ -33,6 +33,12 @@ const props = defineProps({
   isHiddenAction: {
     type: Boolean,
   },
+  isHiddenExcel: {
+    type: Boolean,
+  },
+  styleValue: {
+    type: String
+  }
 });
 
 const emit = defineEmits(["edit", "delete", "export"]);
@@ -64,87 +70,50 @@ const handleExportData = () => {
 
 <template>
   <div class="table-top">
-    <el-input
-      style="width: 240px; height: 40px"
-      :placeholder="placeholderText"
-    />
+    <el-input style="width: 240px; height: 40px" :placeholder="placeholderText" />
 
-    <el-button
-      @click="handleExportData"
-      style="position: absolute; right: 150px"
-      type="success"
-    >
+    <el-button v-if="!isHiddenExcel" @click="handleExportData" style="position: absolute; right: 150px" type="success">
       <i class="pi pi-file-excel"></i>
       Xuất excel
     </el-button>
 
-    <el-button
-      v-if="!isHiddenComponent"
-      type="success"
-      @click="handleShowForm(ACTION_ENUM.CREATE)"
-    >
+    <el-button v-if="!isHiddenComponent" type="success" @click="handleShowForm(ACTION_ENUM.CREATE)">
       <Plus style="width: 1em; height: 1em; color: white" /> Thêm mới
     </el-button>
   </div>
-  <div class="base-table">
+  <div class="base-table" :style="styleValue">
     <el-table :data="props.data" style="width: 100%">
-      <el-table-column
-        v-for="column in columns"
-        :key="column.prop"
-        :prop="column.prop"
-        :label="column.label"
-        :width="column.width"
-      >
+      <el-table-column v-for="column in columns" :key="column.prop" :prop="column.prop" :label="column.label"
+        :width="column.width">
         <template v-slot="scope">
           <div v-if="column.prop === 'image'">
-            <img
-              v-if="scope.row[column.prop]"
-              :src="scope.row[column.prop]"
-              alt="image"
-              style="width: 100px; height: auto"
-            />
+            <img v-if="scope.row[column.prop]" :src="scope.row[column.prop]" alt="image"
+              style="width: 100px; height: auto" />
           </div>
 
           <div v-if="column.prop === 'status'">
-            <div
-              :class="
-                scope.row[column.prop] === 'active' ? 'status on' : 'status off'
-              "
-            ></div>
+            <div :class="scope.row[column.prop] === 'active' ? 'status on' : 'status off'
+              "></div>
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        fixed="right"
-        label="Thao tác"
-        v-if="!props.isHiddenAction"
-      >
+      <el-table-column fixed="right" label="Thao tác" v-if="!props.isHiddenAction">
         <template #default="{ row }">
           <div class="icon-wrap">
             <span class="icon" v-if="props.screen === 'đơn hàng'">
-              <router-link :to="`/admin/order-details/${row.id}`"
-                ><Search style="width: 1em; height: 1em; color: blue"
-              /></router-link>
+              <router-link :to="`/admin/order-details/${row.id}`">
+                <Search style="width: 1em; height: 1em; color: blue" />
+              </router-link>
             </span>
             <span class="icon" v-if="!props.isHiddenUpdate">
-              <Edit
-                v-if="screen !== 'đơn hàng'"
-                style="width: 1em; height: 1em; color: blue"
-                @click="handleShowForm(ACTION_ENUM.UPDATE, row.id)"
-              />
+              <Edit v-if="screen !== 'đơn hàng'" style="width: 1em; height: 1em; color: blue"
+                @click="handleShowForm(ACTION_ENUM.UPDATE, row.id)" />
 
-              <i
-                @click="handleShowForm(ACTION_ENUM.UPDATE, row.id)"
-                v-if="screen === 'đơn hàng'"
-                style="color: green"
-                class="pi pi-check-square"
-              ></i>
+              <i @click="handleShowForm(ACTION_ENUM.UPDATE, row.id)" v-if="screen === 'đơn hàng'" style="color: green"
+                class="pi pi-check-square"></i>
             </span>
             <span class="icon">
-              <Delete
-                style="width: 1em; height: 1em; color: red"
-                @click="handleDelete(row.id)"
-              />
+              <Delete style="width: 1em; height: 1em; color: red" @click="handleDelete(row.id)" />
             </span>
           </div>
         </template>
@@ -157,7 +126,6 @@ const handleExportData = () => {
 .base-table {
   width: 100%;
   position: relative;
-  height: 500px;
   overflow-y: auto;
   margin-top: 20px;
 }

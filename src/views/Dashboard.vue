@@ -36,6 +36,11 @@ const handleEditData = (id: number) => { };
 const handleDelete = async (id: number) => {
   await deleteUser(id);
   await getUsers();
+  getUsers();
+  getCount();
+  getUserStat();
+  getOrderStat();
+  getRevenueStat();
 };
 
 onMounted(() => {
@@ -67,12 +72,12 @@ onMounted(() => {
       </el-card>
     </div>
     <div class="dashboard-main">
-      <el-card class="table" style="height:500px">
-        <BaseTable style="width: 50%;" :data="tableData" :columns="tableColumns" :isHiddenComponent="true" :isHiddenUpdate="true" screen="người dùng"
+      <el-card class="table" style="height: 530px;">
+        <BaseTable style="width: 50%;" :data="tableData" :columns="tableColumns" :isHiddenComponent="true" :isHiddenExcel="true" :isHiddenUpdate="true" screen="người dùng"
           @edit="handleEditData" @delete="handleDelete" />
       </el-card>
 
-      <el-card class="table" style="margin-left: 35px; height: 500px;">
+      <el-card class="table" style="margin-left: 35px; height: 530px;">
         <BarChart :labels="chartCount.labels" :series="chartCount.series" />
       </el-card>
     </div>
@@ -82,7 +87,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .dashboard-container {
   width: 100%;
-  height: 90vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;

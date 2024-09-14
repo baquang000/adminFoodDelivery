@@ -51,6 +51,7 @@ onMounted(() => getCategoryList());
       <BaseTable
         :data="tableData"
         :columns="tableColumns"
+        styleValue="height:700px"
         screen="danh mục"
         @edit="handleEditData"
         @delete="handleDelete"

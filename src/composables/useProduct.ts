@@ -36,6 +36,8 @@ export const useProduct = () => {
 
       const { data } = response.data as TResult;
 
+      console.log(data)
+
       productStore.setSingleProduct(data);
 
       return data;

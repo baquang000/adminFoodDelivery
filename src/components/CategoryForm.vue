@@ -112,8 +112,8 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .category-form-container {
-  width: 25vw;
-  height: 40vh;
+  width: 30vw;
+  height: 50vh;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
