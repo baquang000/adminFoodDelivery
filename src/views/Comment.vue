@@ -2,6 +2,7 @@
 import BaseTable from "@/base/BaseTable.vue";
 import { useComment } from "@/composables/useComment";
 import { useCommentStore } from "@/stores/comment";
+import { exportToExcel } from "@/utils/export";
 import { formatDate } from "@/utils/format";
 import { storeToRefs } from "pinia";
 import { computed, onMounted } from "vue";
@@ -28,7 +29,7 @@ const tableColumns = [
   { prop: "productId", label: "ID sản phẩm", width: "auto" },
   { prop: "email", label: "Email người dùng", width: "auto" },
   { prop: "content", label: "Nội dung", width: "auto" },
-  { prop: "image", label: "Ảnh", width: "auto" },  
+  { prop: "image", label: "Ảnh", width: "auto" },
   { prop: "createdAt", label: "Thời gian", width: "auto" },
 
 ];
@@ -39,14 +40,18 @@ const handleDelete = async (id: number) => {
   await getComments();
 };
 
+const handleExportFile = () => {
+  exportToExcel(commentList.value)
+}
+
 onMounted(() => getComments());
 </script>
 
 <template>
   <div class="comment-container">
     <div class="comment-list">
-      <BaseTable :data="tableData" :columns="tableColumns" :isHiddenComponent="true" :isHiddenUpdate="true" screen="bình luận"
-       @delete="handleDelete" />
+      <BaseTable :data="tableData" :columns="tableColumns" :isHiddenComponent="true" :isHiddenUpdate="true"
+        screen="bình luận" @delete="handleDelete" @export="handleExportFile" />
     </div>
   </div>
 </template>

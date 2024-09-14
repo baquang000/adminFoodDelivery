@@ -1,59 +1,80 @@
 <script lang="ts" setup>
 import { useUser } from "@/composables/useUser";
-import { reactive } from "vue";
+import type { FormInstance, FormRules } from "element-plus";
+import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
-const form = reactive({
+const ruleFormRef = ref<FormInstance>()
+
+type RuleForm = {
+  email: string;
+  password: string
+}
+
+const ruleForm = reactive<RuleForm>({
   email: "",
   password: "",
-});
+})
+
+const rules = reactive<FormRules<{
+  email: string,
+  password: string
+}>>({
+  email: [
+    { required: true, message: 'Email không được bỏ trống', trigger: ['change', 'blur'] },
+  ],
+  password: [
+    { required: true, message: 'Mật khẩu không được bỏ trống', trigger: ['change', 'blur'] },
+    { min: 6, max: 30, message: 'Mật khẩu phải từ 6 -> 30 ký tự', trigger: ['change', 'blur'] },
+  ],
+})
+
 
 const router = useRouter();
 
 const { login } = useUser();
 
 const handleLogin = async () => {
-  const response = await login(form);
 
-  if(!response) return
+  await ruleFormRef?.value?.validate(async (valid, fields) => {
+    if (valid) {
+      const response = await login(ruleForm);
 
-  router.replace("/");
+      if (!response) return
+
+      router.replace("/");
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
 };
 </script>
 
 <template>
   <div class="wrapper">
     <div class="inner">
-      <form @submit.prevent>
+      <el-form @submit.prevent ref="ruleFormRef" :rules="rules" :model="ruleForm">
         <h3>ĐĂNG NHẬP</h3>
         <div class="form-holder">
           <span class="lnr lnr-user"></span>
-          <input
-            v-model="form.email"
-            type="text"
-            class="form-control"
-            placeholder="Email"
-          />
+          <el-form-item prop="email">
+            <input v-model="ruleForm.email" type="email" class="form-control" placeholder="Email" />
+          </el-form-item>
         </div>
         <div class="form-holder">
           <span class="lnr lnr-lock"></span>
-          <input
-            v-model="form.password"
-            type="password"
-            class="form-control"
-            placeholder="Mật khẩu"
-          />
+          <el-form-item prop="password">
+            <input v-model="ruleForm.password" type="password" class="form-control" placeholder="Mật khẩu" />
+          </el-form-item>
         </div>
         <div>
-          <span
-            >Bạn chưa có tài khoản ?
-            <router-link to="/register">Đăng ký</router-link></span
-          >
+          <span>Bạn chưa có tài khoản ?
+            <router-link to="/register">Đăng ký</router-link></span>
         </div>
-        <button type="submit" @click="handleLogin">
+        <button @click="handleLogin">
           <span>Đăng nhập</span>
         </button>
-      </form>
+      </el-form>
     </div>
   </div>
 </template>
@@ -232,6 +253,7 @@ button {
   }
 
   &:hover {
+
     &:before,
     &:after {
       -webkit-transform: translate(0, 0);

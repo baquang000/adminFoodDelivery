@@ -3,10 +3,11 @@ import { ACTION_ENUM } from "@/common/enum";
 import type { TCategory, TColor } from "@/common/type";
 import { useAppStore } from "@/stores/app";
 import { storeToRefs } from "pinia";
-import { computed, onUnmounted, ref, watch } from "vue";
+import { computed, onUnmounted, reactive, ref, watch } from "vue";
 import BaseUpload from "@/base/BaseUpload.vue";
 import { useCategory } from "@/composables/useCategory";
 import { useCategoryStore } from "@/stores/category";
+import type { FormInstance, FormRules } from "element-plus";
 
 const appStore = useAppStore();
 const categoryStore = useCategoryStore();
@@ -20,34 +21,54 @@ const actionText = computed(() =>
   actionType.value === ACTION_ENUM.CREATE ? "Tạo" : "Cập nhật"
 );
 
+const ruleFormRef = ref<FormInstance>()
+
 const handleCloseForm = () => {
   appStore.setIsShowActionForm(false);
   appStore.setIsShowOverlay(false);
 };
 
-const category = ref<TCategory>({
+const ruleForm = reactive<TCategory>({
   name: "",
   image: "",
   productNumber: 0,
-});
+})
+
+const rules = reactive<FormRules<TCategory>>({
+  name: [
+    { required: true, message: 'Tên danh mục không được bỏ trống', trigger: ['change', 'blur'] },
+  ],
+  image: [
+    { required: true, message: 'Ảnh không được bỏ trống', trigger: ['change', 'blur'] },
+  ],
+})
+
+
 
 const handleChangeFile = (url: string) => {
-  category.value.image = url;
+  ruleForm.image = url;
 };
 
 const handleSubmit = async () => {
-  actionType.value === ACTION_ENUM.CREATE
-    ? await createCategory(category.value)
-    : await updateCategory(category.value, singleCategory.value.id as number);
-  await getCategoryList();
+  await ruleFormRef?.value?.validate(async (valid, fields) => {
+    if (valid) {
+      actionType.value === ACTION_ENUM.CREATE
+        ? await createCategory(ruleForm)
+        : await updateCategory(ruleForm, singleCategory.value.id as number);
+      await getCategoryList();
 
-  handleCloseForm();
+      handleCloseForm();
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
 };
 
 watch(
   () => singleCategory.value,
   () => {
-    category.value = { ...singleCategory.value };
+    ruleForm.name = singleCategory.value.name
+    ruleForm.image = singleCategory.value.image
   }
 );
 
@@ -66,20 +87,17 @@ onUnmounted(() => {
   <el-card class="category-form-container">
     <div class="top">
       <h2>{{ actionText }} danh mục</h2>
-      <el-icon
-        style="cursor: pointer; font-size: 16px"
-        @click="handleCloseForm"
-      >
+      <el-icon style="cursor: pointer; font-size: 16px" @click="handleCloseForm">
         <CloseBold />
       </el-icon>
     </div>
-    <el-form>
-      <el-form-item label="Tên danh mục" label-position="top">
-        <el-input v-model="category.name" placeholder="Nhập tên danh mục" />
+    <el-form ref="ruleFormRef" :rules="rules" :model="ruleForm">
+      <el-form-item label="Tên danh mục" label-position="top" prop="name">
+        <el-input v-model="ruleForm.name" placeholder="Nhập tên danh mục" />
       </el-form-item>
 
-      <el-form-item label="Ảnh danh mục" label-position="top">
-        <BaseUpload @change="handleChangeFile" :url="category.image" />
+      <el-form-item label="Ảnh danh mục" label-position="top" prop="image">
+        <BaseUpload @change="handleChangeFile" :url="ruleForm.image" />
       </el-form-item>
 
       <div class="bottom">
@@ -121,6 +139,7 @@ onUnmounted(() => {
   .el-form {
     margin-top: 30px;
     position: relative;
+
     .el-input {
       height: 40px;
     }
@@ -134,7 +153,7 @@ onUnmounted(() => {
       right: 0;
       bottom: 4px;
 
-      .el-button{
+      .el-button {
         height: 50px;
         width: 120px;
       }

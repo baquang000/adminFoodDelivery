@@ -125,7 +125,7 @@ const handleChooseSize = (payload: string) => {
         <div class="details-item">
           <span> Màu sắc: </span>
           <div :class="chooseColor === color ? 'color active' : 'color'" v-for="color in colors" :key="color"
-            :style="`width: 25px;height: 25px; background-color:${color};border-radius: 5px; opacity: 0.5`" @click="
+            :style="`width: 25px;height: 25px; background-color:${color};border-radius: 5px; opacity: 0.5;`" @click="
               handleChooseColor(color,)
               "></div>
         </div>
@@ -285,7 +285,7 @@ const handleChooseSize = (payload: string) => {
           cursor: pointer;
 
           &.active {
-            border: 2px solid blue;
+            border: 3px solid orangered;
           }
         }
 

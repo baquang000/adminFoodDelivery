@@ -71,7 +71,7 @@ const handleExportData = () => {
 
     <el-button
       @click="handleExportData"
-      style="margin-left: 20px"
+      style="position: absolute; right: 150px"
       type="success"
     >
       <i class="pi pi-file-excel"></i>

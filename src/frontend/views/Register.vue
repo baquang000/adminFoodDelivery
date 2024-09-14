@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { TRegister } from "@/common/type";
 import { useUser } from "@/composables/useUser";
-import { ElMessage } from "element-plus";
-import { reactive } from "vue";
+import { ElMessage, type FormInstance, type FormRules } from "element-plus";
+import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 const form = reactive({
   userName: "",
@@ -11,67 +11,93 @@ const form = reactive({
   rePassword: "",
 });
 
+
+type RuleForm = {
+  userName: string,
+  email: string,
+  password: string,
+}
+
 const { register } = useUser();
+
+const ruleFormRef = ref<FormInstance>()
+
+const ruleForm = reactive<RuleForm>({
+  email: "",
+  password: "",
+  userName: ""
+})
+
+const rules = reactive<FormRules<RuleForm>>({
+  email: [
+    { required: true, message: 'Email không được bỏ trống', trigger: ['change', 'blur'] },
+  ],
+  password: [
+    { required: true, message: 'Mật khẩu không được bỏ trống', trigger: ['change', 'blur'] },
+    { min: 6, max: 30, message: 'Mật khẩu phải từ 6 -> 30 ký tự', trigger: ['change', 'blur'] },
+  ],
+  userName: [
+    { required: true, message: 'Tên người dùng không được bỏ trống', trigger: ['change', 'blur'] },
+    { min: 6, max: 30, message: 'Tên người dùng phải từ 6 -> 30 ký tự', trigger: ['change', 'blur'] },
+  ],
+})
 
 const router = useRouter();
 
 const handleRegister = async (e: Event) => {
   e.preventDefault();
 
-  const response = await register({
-    userName: form.userName,
-    email: form.email,
-    password: form.password,
-  } as TRegister);
+  await ruleFormRef?.value?.validate(async (valid, fields) => {
+    if (valid) {
+      const response = await register({
+        userName: form.userName,
+        email: form.email,
+        password: form.password,
+      } as TRegister);
 
-  if (!response) return;
+      if (!response) return;
 
-  router.replace("/login");
+      router.replace("/login");
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
+
+
 };
 </script>
 
 <template>
   <div class="wrapper">
     <div class="inner">
-      <form  @submit.prevent>
+      <el-form @submit.prevent ref="ruleFormRef" :rules="rules" :model="ruleForm">
         <h3>TẠO TÀI KHOẢN</h3>
         <div class="form-holder">
           <span class="lnr lnr-phone-handset"></span>
-          <input
-            v-model="form.userName"
-            type="text"
-            class="form-control"
-            placeholder="Tên người dùng"
-          />
+          <el-form-item prop="userName">
+            <input v-model="form.userName" type="text" class="form-control" placeholder="Tên người dùng" />
+          </el-form-item>
         </div>
         <div class="form-holder">
           <span class="lnr lnr-user"></span>
-          <input
-            v-model="form.email"
-            type="text"
-            class="form-control"
-            placeholder="Email"
-          />
+          <el-form-item prop="email">
+            <input v-model="form.email" type="text" class="form-control" placeholder="Email" />
+          </el-form-item>
         </div>
         <div class="form-holder">
           <span class="lnr lnr-lock"></span>
-          <input
-            v-model="form.password"
-            type="password"
-            class="form-control"
-            placeholder="Mật khẩu"
-          />
+          <el-form-item prop="password">
+            <input v-model="form.password" type="password" class="form-control" placeholder="Mật khẩu" />
+          </el-form-item>
         </div>
         <div>
-          <span
-            >Bạn đã có tài khoản ?
-            <router-link to="/login">Đăng nhập</router-link></span
-          >
+          <span>Bạn đã có tài khoản ?
+            <router-link to="/login">Đăng nhập</router-link></span>
         </div>
         <button @click="handleRegister">
           <span>Đăng ký</span>
         </button>
-      </form>
+      </el-form>
     </div>
   </div>
 </template>
@@ -250,6 +276,7 @@ button {
   }
 
   &:hover {
+
     &:before,
     &:after {
       -webkit-transform: translate(0, 0);

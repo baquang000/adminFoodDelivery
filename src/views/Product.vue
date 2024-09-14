@@ -8,6 +8,7 @@ import { useProduct } from "@/composables/useProduct";
 import { useAppStore } from "@/stores/app";
 import { useOrderStore } from "@/stores/order";
 import { useProductStore } from "@/stores/product";
+import { exportToExcel } from "@/utils/export";
 import { formatCurrency } from "@/utils/format";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
@@ -79,6 +80,10 @@ watch(
     }, 0);
   }
 );
+
+const handleExportFile = ()=>{
+  exportToExcel(productList.value)
+}
 
 onMounted(async () => {
   getProducts();
@@ -164,6 +169,7 @@ onMounted(async () => {
         screen="sản phẩm"
         @edit="handleEditData"
         @delete="handleDelete"
+        @export="handleExportFile"
       />
     </div>
     <ProductForm v-if="isShowActionForm" />

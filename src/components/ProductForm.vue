@@ -3,11 +3,12 @@ import { ACTION_ENUM } from "@/common/enum";
 import type { TColor, TProduct } from "@/common/type";
 import { useAppStore } from "@/stores/app";
 import { storeToRefs } from "pinia";
-import { computed, onUnmounted, ref, watch } from "vue";
+import { computed, onUnmounted, reactive, ref, watch } from "vue";
 import BaseUpload from "@/base/BaseUpload.vue";
 import { useProduct } from "@/composables/useProduct";
 import { useCategoryStore } from "@/stores/category";
 import { useProductStore } from "@/stores/product";
+import type { FormInstance, FormRules } from "element-plus";
 
 const colors = [
   {
@@ -69,7 +70,9 @@ const chooseSize = ref<string[]>([])
 
 const { createProduct, getProducts, updateProduct } = useProduct();
 
-const product = ref<TProduct>({
+const ruleFormRef = ref<FormInstance>()
+
+const ruleForm = reactive<TProduct>({
   name: "",
   description: "",
   image: "",
@@ -82,6 +85,39 @@ const product = ref<TProduct>({
   color: '',
 });
 
+
+const rules = reactive<FormRules<TProduct>>({
+  name: [
+    { required: true, message: 'Tên sản phẩm không được bỏ trống', trigger: ['change', 'blur'] },
+  ],
+  description: [
+    { required: true, message: 'Mô tả không được bỏ trống', trigger: ['change', 'blur'] },
+  ],
+
+  image: [
+    { required: true, message: 'Ảnh không được bỏ trống', trigger: ['change', 'blur'] },
+  ],
+
+  newPrice: [
+    { required: true, message: 'Giá mới không được bỏ trống', trigger: ['change', 'blur'] },
+  ],
+
+  oldPrice: [
+    { required: true, message: 'Giá cũ không được bỏ trống', trigger: ['change', 'blur'] },
+  ],
+
+  size: [
+    { required: true, message: 'Kích cỡ không được bỏ trống', trigger: ['change', 'blur'] },
+  ],
+
+  color: [
+    { required: true, message: 'Màu không được bỏ trống', trigger: ['change', 'blur'] },
+  ],
+  categoryId: [
+    { required: true, message: 'ID danh mục không được bỏ trống', trigger: ['change', 'blur'] },
+  ],
+})
+
 const actionText = computed(() =>
   actionType.value === ACTION_ENUM.CREATE ? "Tạo" : "Cập nhật"
 );
@@ -92,30 +128,46 @@ const handleCloseForm = () => {
 };
 
 const handleChangeFile = (url: string) => {
-  product.value.image = url;
+  ruleForm.image = url;
 };
 
 const handleSubmit = async () => {
-  actionType.value === ACTION_ENUM.CREATE
-    ? await createProduct(product.value)
-    : await updateProduct(product.value, singleProduct.value.id as number);
+  await ruleFormRef?.value?.validate(async (valid, fields) => {
+    if (valid) {
+      actionType.value === ACTION_ENUM.CREATE
+        ? await createProduct(ruleForm)
+        : await updateProduct(ruleForm, singleProduct.value.id as number);
 
-  await getProducts();
+      await getProducts();
 
-  handleCloseForm();
+      handleCloseForm();
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
 };
 
 watch(() => singleProduct.value, () => {
-  product.value = { ...singleProduct.value };
+  ruleForm.name = singleProduct.value.name
+  ruleForm.description = singleProduct.value.description
+  ruleForm.color = singleProduct.value.color
+  ruleForm.size = singleProduct.value.size
+  ruleForm.newPrice = singleProduct.value.newPrice
+  ruleForm.oldPrice = singleProduct.value.oldPrice
+  ruleForm.sold = singleProduct.value.sold
+  ruleForm.stock = singleProduct.value.stock
+  ruleForm.categoryId = singleProduct.value.categoryId
+  ruleForm.createdAt = singleProduct.value.createdAt
+  ruleForm.updatedAt = singleProduct.value.updatedAt
 });
 
 
 watch(() => chooseColor.value, () => {
-  product.value.color = chooseColor.value.join(',')
+  ruleForm.color = chooseColor.value.join(',')
 })
 
 watch(() => chooseSize.value, () => {
-  product.value.size = chooseSize.value.join(',')
+  ruleForm.size = chooseSize.value.join(',')
 })
 
 onUnmounted(() => {
@@ -145,51 +197,51 @@ onUnmounted(() => {
           <CloseBold />
         </el-icon>
       </div>
-      <el-form>
-        <el-form-item label="Tên sản phẩm" label-position="top">
-          <el-input v-model="product.name" placeholder="Nhập tên sản phẩm" />
+      <el-form ref="ruleFormRef" :rules="rules" :model="ruleForm">
+        <el-form-item label="Tên sản phẩm" label-position="top" prop="name">
+          <el-input v-model="ruleForm.name" placeholder="Nhập tên sản phẩm" />
         </el-form-item>
 
-        <el-form-item label="Mô tả" label-position="top">
-          <el-input v-model="product.description" placeholder="Nhập mô tả" />
+        <el-form-item label="Mô tả" label-position="top" prop="description">
+          <el-input v-model="ruleForm.description" placeholder="Nhập mô tả" />
         </el-form-item>
 
-        <el-form-item label="Màu sắc" label-position="top">
+        <el-form-item label="Màu sắc" label-position="top" prop="color">
           <el-select multiple v-model="chooseColor" placeholder="Select" size="large" style="width: 240px">
             <el-option v-for="item in colors" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
 
-        <el-form-item label="Kích cỡ" label-position="top">
+        <el-form-item label="Kích cỡ" label-position="top" prop="size">
           <el-select multiple v-model="chooseSize" placeholder="Select" size="large" style="width: 240px">
             <el-option v-for="item in sizes" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
 
-        <el-form-item label="Giá cũ" label-position="top">
-          <el-input v-model="product.oldPrice" placeholder="Nhập giá cũ" />
+        <el-form-item label="Giá cũ" label-position="top" prop="oldPrice">
+          <el-input v-model="ruleForm.oldPrice" placeholder="Nhập giá cũ" />
         </el-form-item>
 
-        <el-form-item label="Giá mới" label-position="top">
-          <el-input v-model="product.newPrice" placeholder="Nhập giá mới" />
+        <el-form-item label="Giá mới" label-position="top" prop="newPrice">
+          <el-input v-model="ruleForm.newPrice" placeholder="Nhập giá mới" />
         </el-form-item>
 
-        <el-form-item label="Đã bán" label-position="top">
-          <el-input type="number" v-model.number="product.sold" placeholder="Nhập số lượng đã bán" />
+        <el-form-item label="Đã bán" label-position="top" prop="sold">
+          <el-input type="number" v-model.number="ruleForm.sold" placeholder="Nhập số lượng đã bán" />
         </el-form-item>
 
-        <el-form-item label="Tồn kho" label-position="top">
-          <el-input type="number" v-model.number="product.stock" placeholder="Nhập số lượng tồn kho" />
+        <el-form-item label="Tồn kho" label-position="top" prop="stock">
+          <el-input type="number" v-model.number="ruleForm.stock" placeholder="Nhập số lượng tồn kho" />
         </el-form-item>
 
-        <el-form-item label="Danh mục" label-position="top">
-          <el-select v-model="product.categoryId" placeholder="Select" size="large" style="width: 240px">
+        <el-form-item label="Danh mục" label-position="top" prop="categoryId">
+          <el-select v-model="ruleForm.categoryId" placeholder="Select" size="large" style="width: 240px">
             <el-option v-for="item in categoryList" :key="item.name" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
 
-        <el-form-item label="Ảnh sản phẩm" label-position="top">
-          <BaseUpload @change="handleChangeFile" :url="product.image" />
+        <el-form-item label="Ảnh sản phẩm" label-position="top" prop="image">
+          <BaseUpload @change="handleChangeFile" :url="ruleForm.image" />
         </el-form-item>
       </el-form>
     </el-card>
@@ -206,7 +258,7 @@ onUnmounted(() => {
 <style scoped lang="scss">
 .product-form-container {
   width: 25vw;
-  height: 85vh;
+  height: 87vh;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);

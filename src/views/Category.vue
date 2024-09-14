@@ -4,6 +4,7 @@ import CategoryForm from "@/components/CategoryForm.vue";
 import { useCategory } from "@/composables/useCategory";
 import { useAppStore } from "@/stores/app";
 import { useCategoryStore } from "@/stores/category";
+import { exportToExcel } from "@/utils/export";
 import { storeToRefs } from "pinia";
 import { computed, onMounted } from "vue";
 
@@ -35,6 +36,12 @@ const handleDelete = async (id: number) => {
   await getCategoryList();
 };
 
+
+const handleExportFile = ()=>{
+  exportToExcel(categoryList.value)
+}
+
+
 onMounted(() => getCategoryList());
 </script>
 
@@ -47,6 +54,7 @@ onMounted(() => getCategoryList());
         screen="danh mục"
         @edit="handleEditData"
         @delete="handleDelete"
+        @export="handleExportFile"
       />
     </div>
     <CategoryForm v-if="isShowActionForm" />

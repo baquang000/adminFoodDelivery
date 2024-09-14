@@ -172,7 +172,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .category-details {
   width: 100%;
-  padding: 0 200px;
+  padding: 0 80px;
   display: flex;
   align-items: flex-start;
   height: auto;
@@ -182,7 +182,7 @@ onMounted(() => {
 
   .left {
     border-radius: 5px;
-    width: 20%;
+    width: 23%;
     padding: 20px;
     color: gray;
     margin-top: 25px;

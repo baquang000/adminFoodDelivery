@@ -11,35 +11,24 @@ import { useUser } from "@/composables/useUser";
 import PaypalButton from "@/paypal/PaypalButton.vue";
 import { ORDER_TYPE } from "@/common/enum";
 
-interface RuleForm {
-  name: string;
-  region: string;
-  count: string;
-  date1: string;
-  date2: string;
-  delivery: boolean;
-  location: string;
-  type: string[];
-  resource: string;
-  desc: string;
+type RuleForm = {
+  userName: string
+  phoneNumber: string
+  address: string
+  note: string,
 }
 
 const formSize = ref<ComponentSize>("default");
 const ruleFormRef = ref<FormInstance>();
-const ruleForm = reactive<RuleForm>({
-  name: "Hello",
-  region: "",
-  count: "",
-  date1: "",
-  date2: "",
-  delivery: false,
-  location: "",
-  type: [],
-  resource: "",
-  desc: "",
-});
 
 const { user } = storeToRefs(useUserStore());
+
+const ruleForm = reactive<RuleForm>({
+  userName: user.value?.userName || "",
+  phoneNumber: user.value?.userInfo?.phoneNumber || "",
+  address: user.value?.userInfo?.address || "",
+  note: "",
+});
 
 const form = reactive({
   userName: user.value?.userName || "",
@@ -59,64 +48,16 @@ const { updateUserInfo } = useUser();
 const switchPayment = ref(false);
 
 const rules = reactive<FormRules<RuleForm>>({
-  name: [
-    { required: true, message: "Please input Activity name", trigger: "blur" },
-    { min: 3, max: 5, message: "Length should be 3 to 5", trigger: "blur" },
+  userName: [
+    { required: true, message: 'Tên người dùng không được bỏ trống', trigger: ['change', 'blur'] },
+    { min: 2, max: 30, message: 'Tên người dùng phải từ 3 -> 30 ký tự', trigger: ['change', 'blur'] },
   ],
-  region: [
-    {
-      required: true,
-      message: "Please select Activity zone",
-      trigger: "change",
-    },
+  phoneNumber: [
+    { required: true, message: 'Số điện thoại không được bỏ trống', trigger: ['change', 'blur'] },
+    { min: 10, max: 11, message: 'Số điện thoại phải từ 10 -> 11 chữ số', trigger: ['change', 'blur'] },
   ],
-  count: [
-    {
-      required: true,
-      message: "Please select Activity count",
-      trigger: "change",
-    },
-  ],
-  date1: [
-    {
-      type: "date",
-      required: true,
-      message: "Please pick a date",
-      trigger: "change",
-    },
-  ],
-  date2: [
-    {
-      type: "date",
-      required: true,
-      message: "Please pick a time",
-      trigger: "change",
-    },
-  ],
-  location: [
-    {
-      required: true,
-      message: "Please select a location",
-      trigger: "change",
-    },
-  ],
-  type: [
-    {
-      type: "array",
-      required: true,
-      message: "Please select at least one activity type",
-      trigger: "change",
-    },
-  ],
-  resource: [
-    {
-      required: true,
-      message: "Please select activity resource",
-      trigger: "change",
-    },
-  ],
-  desc: [
-    { required: true, message: "Please input activity form", trigger: "blur" },
+  address: [
+    { required: true, message: 'Địa chỉ dùng không được bỏ trống', trigger: ['change', 'blur'] },
   ],
 });
 
@@ -185,46 +126,31 @@ const handleOrderSuccess = async (payload: {
   <h2>Thanh toán</h2>
   <div class="payment">
     <el-card class="left">
-      <el-form
-        ref="ruleFormRef"
-        style="max-width: 600px"
-        :model="ruleForm"
-        :rules="rules"
-        label-width="auto"
-        class="demo-ruleForm"
-        :size="formSize"
-      >
-        <el-form-item label="Số điện thoại" prop="name">
-          <el-input v-model="form.phoneNumber" style="height: 40px" />
+      <el-form ref="ruleFormRef" style="max-width: 600px" :model="ruleForm" :rules="rules" label-width="auto"
+        class="demo-ruleForm" :size="formSize">
+        <el-form-item label="Số điện thoại" prop="phoneNumber">
+          <el-input v-model="ruleForm.phoneNumber" style="height: 40px" />
         </el-form-item>
 
         <div v-if="!switchPayment">
-          <el-form-item label="Tên người nhận" prop="name">
-            <el-input v-model="form.userName" style="height: 40px" />
+          <el-form-item label="Tên người nhận" prop="userName">
+            <el-input v-model="ruleForm.userName" style="height: 40px" />
           </el-form-item>
-          <el-form-item label="Địa chỉ" prop="name">
-            <el-input v-model="form.address" style="height: 40px" />
+          <el-form-item label="Địa chỉ" prop="address">
+            <el-input v-model="ruleForm.address" style="height: 40px" />
           </el-form-item>
           <el-form-item label="Ghi chú cho người bán">
-            <el-input v-model="form.note" type="textarea" />
+            <el-input v-model="ruleForm.note" type="textarea" />
           </el-form-item>
         </div>
         <el-form-item label="Thanh toán online" prop="delivery">
           <el-switch v-model="switchPayment" />
         </el-form-item>
 
-        <PaypalButton
-          @success="handleOrderSuccess"
-          :total="total"
-          v-if="switchPayment"
-        />
+        <PaypalButton @success="handleOrderSuccess" :total="total" v-if="switchPayment" />
 
         <el-form-item v-else>
-          <el-button
-            style="height: 45px; width: 200px"
-            type="primary"
-            @click="submitForm(ruleFormRef)"
-          >
+          <el-button style="height: 45px; width: 200px" type="primary" @click="submitForm(ruleFormRef)">
             Đặt hàng
           </el-button>
         </el-form-item>
@@ -233,36 +159,23 @@ const handleOrderSuccess = async (payload: {
 
     <el-card class="cart-list">
       <div v-for="(item, index) in cartList" :key="index" class="cart-item">
-        <img
-          width="90px"
-          height="90px"
-          style="border-radius: 5px"
-          :src="item.product.image"
-          alt=""
-        />
+        <img width="90px" height="90px" style="border-radius: 5px" :src="item.product.image" alt="" />
         <div class="info">
-          <span
-            ><b style="color: #333; font-weight: 500">Tên:</b>&nbsp;
+          <span><b style="color: #333; font-weight: 500">Tên:</b>&nbsp;
             {{ item.product.description }}
           </span>
-          <span style="margin-top: 5px"
-            ><b style="color: #333; font-weight: 500">Số lượng: </b>&nbsp; x
-            {{ item.quantity }}</span
-          >
-          <span style="margin-top: 5px"
-            ><b style="color: #333; font-weight: 500">Giá tiền: </b>&nbsp;
+          <span style="margin-top: 5px"><b style="color: #333; font-weight: 500">Số lượng: </b>&nbsp; x
+            {{ item.quantity }}</span>
+          <span style="margin-top: 5px"><b style="color: #333; font-weight: 500">Giá tiền: </b>&nbsp;
             <span style="color: red">{{
               formatCurrency(item.product.newPrice)
-            }}</span></span
-          >
+            }}</span></span>
         </div>
       </div>
-      <span style="margin-top: 30px"
-        ><b style="margin-top: 20px; color: #333">Tổng tiền: </b>
+      <span style="margin-top: 30px"><b style="margin-top: 20px; color: #333">Tổng tiền: </b>
         <span style="color: red">{{
           cartList.length ? formatCurrency(total) : formatCurrency(0)
-        }}</span></span
-      >
+        }}</span></span>
     </el-card>
   </div>
 </template>

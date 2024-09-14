@@ -24,7 +24,9 @@ const q = ref<string>("");
 const handleFilter = async () => {
   setFilter({ q: q.value });
 
-  await getProducts();
+  setTimeout(async () => {
+    await getProducts();
+  }, 1000);
 };
 
 const isAdmin = computed(() =>
@@ -37,20 +39,12 @@ const isAdmin = computed(() =>
     <div class="top">
       <div class="top-item logo">
         <router-link to="/">
-          <img
-            width="120px"
-            height="120px"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC3oqtStSV5cLblLM5ktSihCLZkN0x9Tuq1g&s"
-            alt=""
-        /></router-link>
+          <img style="object-fit: cover;" width="200px" height="90px"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStrYqXRWsdtSLitdeuRn-1cwpjl3Jy40fYKg&s"
+            alt="" /></router-link>
       </div>
       <div class="top-item search">
-        <input
-          @change="handleFilter"
-          v-model="q"
-          type="text"
-          placeholder="Tìm sản phẩm bạn muốn..."
-        />
+        <input @input="handleFilter" v-model="q" type="text" placeholder="Tìm sản phẩm bạn muốn..." />
         <button>
           <el-icon>
             <Search />
@@ -60,19 +54,13 @@ const isAdmin = computed(() =>
       <div class="top-item action">
         <div v-if="isAdmin" class="item">
           <i class="pi pi-building-columns"></i>&nbsp;
-          <router-link
-            style="color: inherit; text-decoration: none"
-            to="/admin/dashboard"
-          >
+          <router-link style="color: inherit; text-decoration: none" to="/admin/dashboard">
             <span>Trang quản trị</span>
           </router-link>
         </div>
         <div class="item">
           <i class="pi pi-shopping-bag"></i>&nbsp;
-          <router-link
-            style="color: inherit; text-decoration: none"
-            to="/my-order"
-          >
+          <router-link style="color: inherit; text-decoration: none" to="/my-order">
             <span>Đơn hàng</span>
           </router-link>
         </div>
@@ -82,33 +70,21 @@ const isAdmin = computed(() =>
         </div>
         <div class="item">
           <i class="pi pi-shopping-cart"></i>&nbsp;
-          <router-link style="color: inherit; text-decoration: none" to="/cart"
-            ><span
-              >Giỏ hàng (<b style="color: red">{{ cartList.length }}</b
-              >)</span
-            ></router-link
-          >
+          <router-link style="color: inherit; text-decoration: none" to="/cart"><span>Giỏ hàng (<b style="color: red">{{
+                cartList.length }}</b>)</span></router-link>
         </div>
         <div class="item" v-if="!user">
           <i class="pi pi-user"></i>&nbsp;
-          <router-link style="color: inherit; text-decoration: none" to="/login"
-            ><span>Đăng nhập</span></router-link
-          >
+          <router-link style="color: inherit; text-decoration: none" to="/login"><span>Đăng nhập</span></router-link>
           <span>&nbsp;|&nbsp;</span>
-          <router-link
-            style="color: inherit; text-decoration: none"
-            to="/register"
-            ><span>Đăng ký</span></router-link
-          >
+          <router-link style="color: inherit; text-decoration: none" to="/register"><span>Đăng ký</span></router-link>
         </div>
 
         <div v-if="user" class="item">
           <i class="pi pi-user"></i>&nbsp;
-          <span
-            ><b style="color: green; font-size: 20px">{{
-              user.userName
-            }}</b></span
-          >
+          <span><b style="color: green; font-size: 20px">{{
+            user.userName
+          }}</b></span>
         </div>
 
         <div v-if="user" class="item" @click="handleLogout">
@@ -142,6 +118,12 @@ const isAdmin = computed(() =>
   height: auto;
   padding: 20px 150px;
   font-weight: 500;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  background-color: #FFFFFF;
 
   .top {
     display: flex;
