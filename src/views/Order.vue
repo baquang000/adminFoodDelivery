@@ -13,8 +13,6 @@ const orderStore = useOrderStore();
 
 const { orderList } = storeToRefs(orderStore);
 
-
-
 const statusHelper = (payload: string) => {
   switch (payload) {
     case 'pending':
