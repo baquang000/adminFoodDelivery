@@ -1,118 +1,65 @@
 <script lang="ts" setup>
 import { ACTION_ENUM } from "@/common/enum";
-import type { TColor, TProduct } from "@/common/type";
+import type { TFood } from "@/common/type";
 import { useAppStore } from "@/stores/app";
 import { storeToRefs } from "pinia";
 import { computed, onUnmounted, reactive, ref, watch } from "vue";
 import BaseUpload from "@/base/BaseUpload.vue";
-import { useProduct } from "@/composables/useProduct";
 import { useCategoryStore } from "@/stores/category";
-import { useProductStore } from "@/stores/product";
 import type { FormInstance, FormRules } from "element-plus";
+import { useFood } from "@/composables/useFood";
+import { foodStore } from "@/stores/food";
 
-const colors = [
-  {
-    label: "Trắng",
-    value: "white",
-  },
-  {
-    label: "Đen",
-    value: "black",
-  },
-  {
-    label: "Đỏ",
-    value: "red",
-  },
-  {
-    label: "Xanh lam",
-    value: "blue",
-  },
-  {
-    label: "Xanh lục",
-    value: "green",
-  },
-  {
-    label: "Vàng",
-    value: "yellow",
-  },
-  {
-    label: "Cam",
-    value: "orange",
-  },
-  {
-    label: "Xám",
-    value: "gray",
-  },
-  {
-    label: "Hồng",
-    value: "pink",
-  },
-  {
-    label: "Tím",
-    value: "Violet",
-  },
-];
-
-const sizes = [
-  'S', 'M', 'L'
-]
 
 const appStore = useAppStore();
 const category = useCategoryStore();
-const productStore = useProductStore();
+const foodstore = foodStore();
 const { actionType } = storeToRefs(appStore);
-const { singleProduct } = storeToRefs(productStore);
+const { singleFood } = storeToRefs(foodstore);
 const { categoryList } = storeToRefs(category);
 
-const chooseColor = ref<string[]>([])
-const chooseSize = ref<string[]>([])
-
-
-const { createProduct, getProducts, updateProduct } = useProduct();
+const { createFood, getFoods, updateFood } = useFood();
 
 const ruleFormRef = ref<FormInstance>()
 
-const ruleForm = reactive<TProduct>({
-  name: "",
+const ruleForm = reactive<TFood>({
+  bestFood: false,
+  categoryId: 0,
   description: "",
-  image: "",
-  newPrice: "",
-  oldPrice: "",
-  sold: 0,
-  size: '',
-  stock: 0,
-  categoryId: null,
-  color: '',
+  imagePath: "",
+  price: {
+    id: 0,
+    price: ""
+  },
+  star: "",
+  time: {
+    id: 0,
+    time: ""
+  },
+  timeId: 0,
+  priceId: 0,
+  title: "",
+  idShop: "",
+  showFood: true,
 });
 
 
-const rules = reactive<FormRules<TProduct>>({
-  name: [
+const rules = reactive<FormRules<TFood>>({
+  title: [
     { required: true, message: 'Tên sản phẩm không được bỏ trống', trigger: ['change', 'blur'] },
   ],
   description: [
     { required: true, message: 'Mô tả không được bỏ trống', trigger: ['change', 'blur'] },
   ],
 
-  image: [
+  imagePath: [
     { required: true, message: 'Ảnh không được bỏ trống', trigger: ['change', 'blur'] },
   ],
 
-  newPrice: [
-    { required: true, message: 'Giá mới không được bỏ trống', trigger: ['change', 'blur'] },
-  ],
-
-  oldPrice: [
+  price: [
     { required: true, message: 'Giá cũ không được bỏ trống', trigger: ['change', 'blur'] },
   ],
 
-  size: [
-    { required: true, message: 'Kích cỡ không được bỏ trống', trigger: ['change', 'blur'] },
-  ],
-
-  color: [
-    { required: true, message: 'Màu không được bỏ trống', trigger: ['change', 'blur'] },
-  ],
   categoryId: [
     { required: true, message: 'ID danh mục không được bỏ trống', trigger: ['change', 'blur'] },
   ],
@@ -128,17 +75,17 @@ const handleCloseForm = () => {
 };
 
 const handleChangeFile = (url: string) => {
-  ruleForm.image = url;
+  ruleForm.imagePath = url;
 };
 
 const handleSubmit = async () => {
   await ruleFormRef?.value?.validate(async (valid, fields) => {
     if (valid) {
       actionType.value === ACTION_ENUM.CREATE
-        ? await createProduct(ruleForm)
-        : await updateProduct(ruleForm, singleProduct.value.id as number);
+        ? await createFood(ruleForm)
+        : await updateFood(ruleForm, singleFood.value.idFood as number);
 
-      await getProducts();
+      await getFoods();
 
       handleCloseForm();
     } else {
@@ -147,43 +94,49 @@ const handleSubmit = async () => {
   })
 };
 
-watch(() => singleProduct.value, () => {
-  ruleForm.name = singleProduct.value.name
-  ruleForm.description = singleProduct.value.description
-  ruleForm.color = singleProduct.value.color
-  ruleForm.size = singleProduct.value.size
-  ruleForm.newPrice = singleProduct.value.newPrice
-  ruleForm.oldPrice = singleProduct.value.oldPrice
-  ruleForm.sold = singleProduct.value.sold
-  ruleForm.stock = singleProduct.value.stock
-  ruleForm.categoryId = singleProduct.value.categoryId
-  ruleForm.createdAt = singleProduct.value.createdAt
-  ruleForm.updatedAt = singleProduct.value.updatedAt
+watch(() => singleFood.value, () => {
+  ruleForm.bestFood = singleFood.value.bestFood,
+    ruleForm.categoryId = singleFood.value.categoryId,
+    ruleForm.description = singleFood.value.description,
+    ruleForm.imagePath = singleFood.value.imagePath,
+    ruleForm.price = {
+      id: singleFood.value.priceId,
+      price: singleFood.value.price.price
+    },
+    ruleForm.star = singleFood.value.star,
+    ruleForm.time = {
+      id: singleFood.value.timeId,
+      time: singleFood.value.time.time
+    },
+    ruleForm.timeId = singleFood.value.timeId,
+    ruleForm.priceId = singleFood.value.priceId,
+    ruleForm.title = singleFood.value.title,
+    ruleForm.idShop = singleFood.value.idShop,
+    ruleForm.showFood = singleFood.value.showFood
 });
 
 
-watch(() => chooseColor.value, () => {
-  ruleForm.color = chooseColor.value.join(',')
-})
-
-watch(() => chooseSize.value, () => {
-  ruleForm.size = chooseSize.value.join(',')
-})
-
 onUnmounted(() => {
-  productStore.setSingleProduct({
-    name: "",
-    image: "",
-    oldPrice: "",
-    newPrice: "",
-    stock: 0,
-    sold: 0,
-    size: '',
+  foodstore.setSingleFood({
+    bestFood: false,
+    categoryId: 0,
     description: "",
-    color: "",
-    categoryId: null,
+    imagePath: "",
+    price: {
+      id: 0,
+      price: ""
+    },
+    star: "",
+    time: {
+      id: 0,
+      time: ""
+    },
+    timeId: 0,
+    priceId: 0,
+    title: "",
+    idShop: "",
+    showFood: true,
   });
-
   appStore.setActionType(ACTION_ENUM.CREATE);
 });
 </script>
@@ -198,50 +151,43 @@ onUnmounted(() => {
         </el-icon>
       </div>
       <el-form ref="ruleFormRef" :rules="rules" :model="ruleForm">
-        <el-form-item label="Tên sản phẩm" label-position="top" prop="name">
-          <el-input v-model="ruleForm.name" placeholder="Nhập tên sản phẩm" />
+        <el-form-item label="Tên sản phẩm" label-position="top" prop="title">
+          <el-input v-model="ruleForm.title" placeholder="Nhập tên sản phẩm" />
         </el-form-item>
 
         <el-form-item label="Mô tả" label-position="top" prop="description">
           <el-input v-model="ruleForm.description" placeholder="Nhập mô tả" />
         </el-form-item>
 
-        <el-form-item label="Màu sắc" label-position="top" prop="color">
-          <el-select multiple v-model="chooseColor" placeholder="Select" size="large" style="width: 240px">
-            <el-option v-for="item in colors" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-form-item>
 
-        <el-form-item label="Kích cỡ" label-position="top" prop="size">
-          <el-select multiple v-model="chooseSize" placeholder="Select" size="large" style="width: 240px">
-            <el-option v-for="item in sizes" :key="item" :label="item" :value="item" />
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="Giá cũ" label-position="top" prop="oldPrice">
-          <el-input v-model="ruleForm.oldPrice" placeholder="Nhập giá cũ" />
-        </el-form-item>
-
-        <el-form-item label="Giá mới" label-position="top" prop="newPrice">
-          <el-input v-model="ruleForm.newPrice" placeholder="Nhập giá mới" />
-        </el-form-item>
-
-        <el-form-item label="Đã bán" label-position="top" prop="sold">
-          <el-input type="number" v-model.number="ruleForm.sold" placeholder="Nhập số lượng đã bán" />
-        </el-form-item>
-
-        <el-form-item label="Tồn kho" label-position="top" prop="stock">
-          <el-input type="number" v-model.number="ruleForm.stock" placeholder="Nhập số lượng tồn kho" />
+        <el-form-item label="Giá" label-position="top" prop="price">
+          <el-input v-model="ruleForm.price.price" placeholder="Nhập giá" />
         </el-form-item>
 
         <el-form-item label="Danh mục" label-position="top" prop="categoryId">
           <el-select v-model="ruleForm.categoryId" placeholder="Select" size="large" style="width: 240px">
-            <el-option v-for="item in categoryList" :key="item.name" :label="item.name" :value="item.id" />
+            <el-option v-for="item in categoryList" :key="item.name" :label="item.name" :value="item.name" />
           </el-select>
         </el-form-item>
 
-        <el-form-item label="Ảnh sản phẩm" label-position="top" prop="image">
-          <BaseUpload @change="handleChangeFile" :url="ruleForm.image" />
+        <el-form-item label="Ảnh sản phẩm" label-position="top" prop="imagePath">
+          <BaseUpload @change="handleChangeFile" :url="ruleForm.imagePath" />
+        </el-form-item>
+
+        <el-form-item label="Thời gian" label-position="top" prop="time">
+          <el-input v-model="ruleForm.time.time" placeholder="Nhập thời gian" />
+        </el-form-item>
+
+        <el-form-item label="Id cửa hàng" label-position="top" prop="idShop">
+          <el-input v-model="ruleForm.idShop" placeholder="Nhập id cửa hàng" />
+        </el-form-item>
+
+        <el-form-item label="bestFood" label-position="top" prop="bestFood">
+          <el-input v-model="ruleForm.bestFood" placeholder="Nhập bestFood" />
+        </el-form-item>
+
+        <el-form-item label="Hiển thị đồ ăn" label-position="top" prop="showFood">
+          <el-input v-model="ruleForm.showFood" placeholder="Hiển thị" />
         </el-form-item>
       </el-form>
     </el-card>

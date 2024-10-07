@@ -21,42 +21,38 @@ const tableData = computed(() => categoryList.value);
 const { getCategoryList, getSingleCategory, deleteCategory } = useCategory();
 
 const tableColumns = [
-{ prop: "id", label: "#ID", width: "auto" },
-  { prop: "image", label: "Ảnh", width: "auto" },
+  { prop: "categoryId", label: "#ID", width: "auto" },
+  { prop: "imagePath", label: "Ảnh", width: "auto" },
   { prop: "name", label: "Tên", width: "auto" },
-  { prop: "status", label: "Trạng thái", width: "auto" },
 ];
 
 const handleEditData = (id: number) => {
+  console.log(123,id);
+  
   getSingleCategory(id);
 };
 
 const handleDelete = async (id: number) => {
   await deleteCategory(id);
-  await getCategoryList();
+  getCategoryList();
 };
 
 
-const handleExportFile = ()=>{
-  exportToExcel(categoryList.value)
+const handleExportFile = () => {
+  //exportToExcel(categoryList.value)
 }
 
 
 onMounted(() => getCategoryList());
+
+
 </script>
 
 <template>
   <div class="category-container">
     <div class="category-list">
-      <BaseTable
-        :data="tableData"
-        :columns="tableColumns"
-        styleValue="height:700px"
-        screen="danh mục"
-        @edit="handleEditData"
-        @delete="handleDelete"
-        @export="handleExportFile"
-      />
+      <BaseTable :data="tableData" :columns="tableColumns" styleValue="height:700px" screen="danh mục"
+        @edit="handleEditData" @delete="handleDelete" @export="handleExportFile" />
     </div>
     <CategoryForm v-if="isShowActionForm" />
   </div>
@@ -88,6 +84,7 @@ onMounted(() => getCategoryList());
     flex-direction: column;
     align-items: flex-start;
     padding: 20px;
+
     .el-input {
       margin-bottom: 20px;
     }

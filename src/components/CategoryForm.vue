@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ACTION_ENUM } from "@/common/enum";
-import type { TCategory, TColor } from "@/common/type";
+import type { TCategory } from "@/common/type";
 import { useAppStore } from "@/stores/app";
 import { storeToRefs } from "pinia";
 import { computed, onUnmounted, reactive, ref, watch } from "vue";
@@ -12,7 +12,11 @@ import type { FormInstance, FormRules } from "element-plus";
 const appStore = useAppStore();
 const categoryStore = useCategoryStore();
 
-const { createCategory, getCategoryList, updateCategory } = useCategory();
+const {
+  createCategory,
+  getCategoryList,
+  updateCategory
+} = useCategory();
 const { singleCategory } = storeToRefs(categoryStore);
 
 const { actionType } = storeToRefs(appStore);
@@ -30,15 +34,14 @@ const handleCloseForm = () => {
 
 const ruleForm = reactive<TCategory>({
   name: "",
-  image: "",
-  productNumber: 0,
+  imagePath: "",
 })
 
 const rules = reactive<FormRules<TCategory>>({
   name: [
     { required: true, message: 'Tên danh mục không được bỏ trống', trigger: ['change', 'blur'] },
   ],
-  image: [
+  imagePath: [
     { required: true, message: 'Ảnh không được bỏ trống', trigger: ['change', 'blur'] },
   ],
 })
@@ -46,7 +49,7 @@ const rules = reactive<FormRules<TCategory>>({
 
 
 const handleChangeFile = (url: string) => {
-  ruleForm.image = url;
+  ruleForm.imagePath = url;
 };
 
 const handleSubmit = async () => {
@@ -54,7 +57,7 @@ const handleSubmit = async () => {
     if (valid) {
       actionType.value === ACTION_ENUM.CREATE
         ? await createCategory(ruleForm)
-        : await updateCategory(ruleForm, singleCategory.value.id as number);
+        : await updateCategory(ruleForm, singleCategory.value.categoryId as number);
       await getCategoryList();
 
       handleCloseForm();
@@ -64,19 +67,20 @@ const handleSubmit = async () => {
   })
 };
 
+
 watch(
   () => singleCategory.value,
   () => {
-    ruleForm.name = singleCategory.value.name
-    ruleForm.image = singleCategory.value.image
+    ruleForm.name = singleCategory.value.name,
+      ruleForm.imagePath = singleCategory.value.imagePath
   }
 );
+
 
 onUnmounted(() => {
   categoryStore.setSingleCategory({
     name: "",
-    image: "",
-    productNumber: 0,
+    imagePath: "",
   });
 
   appStore.setActionType(ACTION_ENUM.CREATE);
@@ -96,8 +100,8 @@ onUnmounted(() => {
         <el-input v-model="ruleForm.name" placeholder="Nhập tên danh mục" />
       </el-form-item>
 
-      <el-form-item label="Ảnh danh mục" label-position="top" prop="image">
-        <BaseUpload @change="handleChangeFile" :url="ruleForm.image" />
+      <el-form-item label="Ảnh danh mục" label-position="top" prop="imagePath">
+        <BaseUpload @change="handleChangeFile" :url="ruleForm.imagePath" />
       </el-form-item>
 
       <div class="bottom">

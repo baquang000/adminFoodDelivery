@@ -15,12 +15,14 @@ const { orderList } = storeToRefs(orderStore);
 
 const statusHelper = (payload: string) => {
   switch (payload) {
-    case 'pending':
+    case 'PENDING':
       return 'Chờ duyệt'
-    case 'delivery':
+    case 'DELIVERY':
       return 'Đang giao'
-    case 'success':
+    case 'SUCCESS':
       return 'Hoàn tất'
+    case 'FOODBACK':
+      return 'Bình luận'
     default: return 'Đã huỷ'
   }
 }
@@ -28,16 +30,16 @@ const statusHelper = (payload: string) => {
 const tableData = computed(() =>
   orderList.value?.map((item) => {
     return {
-      id: item.id,
-      userId: item.user?.id,
-      totalMoney: formatCurrency(item.totalMoney),
-      userNote: item.userNote,
+      idOrder: item.idOrder,
+      idUser: item.idUser,
+      idShop: item.idShop,
+      sumPrice: formatCurrency(item.sumPrice),
+      noteOrder: item.noteOrder,
       orderStatus: statusHelper(item.orderStatus as string),
       email: item.user?.email,
-      userName: item.user?.userName,
-      phoneNumber: item.user?.userInfo?.phoneNumber,
-      address: item.user?.userInfo?.address,
-      paymentType: item.paymentType === 'normal' ? 'Tiền mặt' : 'Paypal'
+      userName: item.user?.name,
+      numberPhone: item.user?.numberPhone,
+      address: item.user?.address,
     };
   })
 );
@@ -45,26 +47,26 @@ const tableData = computed(() =>
 const { getOrders, updateOrder } = useOrder();
 
 const tableColumns = [
-  { prop: "id", label: "#ID", width: "auto" },
+  { prop: "idOrder", label: "#ID Order", width: "auto" },
+  { prop: "idShop", label: "ID Shop", width: "auto" },
   { prop: "email", label: "Email", width: "auto" },
-  { prop: "phoneNumber", label: "Số điện thoại", width: "auto" },
+  { prop: "numberPhone", label: "Số điện thoại", width: "auto" },
   { prop: "address", label: "Địa chỉ", width: "auto" },
   { prop: "userName", label: "Tên người dùng", width: "auto" },
-  { prop: "totalMoney", label: "Tổng tiền", width: "auto" },
-  { prop: "paymentType", label: "Phương thức", width: "auto" },
-  { prop: "userNote", label: "Ghi chú", width: "auto" },
+  { prop: "sumPrice", label: "Tổng tiền", width: "auto" },
+  { prop: "noteOrder", label: "Ghi chú", width: "auto" },
   { prop: "orderStatus", label: "Trạng thái", width: "auto" },
 ];
 const tabPosition = ref<TabsInstance["tabPosition"]>("left");
 
 const statusIndex = ref<number>(0);
 
-const handleEditData = async (id: number) => {
+const handleEditData = async (id: string) => {
   switch (statusIndex.value) {
     case 0:
       await updateOrder({ orderStatus: ORDER_STATUS.DELIVERY }, id);
       await getOrders({
-        orderStatus: ORDER_STATUS.PENDING,
+        statusOrder: ORDER_STATUS.PENDING,
       });
 
       break;
@@ -72,22 +74,22 @@ const handleEditData = async (id: number) => {
     case 1:
       await updateOrder({ orderStatus: ORDER_STATUS.SUCCESS }, id);
       await getOrders({
-        orderStatus: ORDER_STATUS.DELIVERY,
+        statusOrder: ORDER_STATUS.DELIVERY,
       });
 
       break;
 
     default:
       await getOrders({
-        orderStatus: ORDER_STATUS.PENDING,
+        statusOrder: ORDER_STATUS.PENDING,
       });
   }
 };
 
-const handleDelete = async (id: number) => {
+const handleDelete = async (id: string) => {
   await updateOrder({ orderStatus: ORDER_STATUS.CANCEL }, id);
   await getOrders({
-    orderStatus: ORDER_STATUS.CANCEL,
+    statusOrder: ORDER_STATUS.CANCEL,
   });
 };
 
@@ -97,7 +99,7 @@ const handleExportData = () => {
 
 onMounted(() =>
   getOrders({
-    orderStatus: ORDER_STATUS.PENDING,
+    statusOrder: ORDER_STATUS.PENDING,
   })
 );
 
@@ -107,28 +109,28 @@ const handleTabChange = async (value: string) => {
   switch (parseInt(value)) {
     case 1:
       await getOrders({
-        orderStatus: ORDER_STATUS.DELIVERY,
+        statusOrder: ORDER_STATUS.DELIVERY,
       });
 
       break;
 
     case 2:
       await getOrders({
-        orderStatus: ORDER_STATUS.SUCCESS,
+        statusOrder: ORDER_STATUS.SUCCESS && ORDER_STATUS.FOODBACK,
       });
 
       break;
 
     case 3:
       await getOrders({
-        orderStatus: ORDER_STATUS.CANCEL,
+        statusOrder: ORDER_STATUS.CANCEL,
       });
 
       break;
 
     default:
       await getOrders({
-        orderStatus: ORDER_STATUS.PENDING,
+        statusOrder: ORDER_STATUS.PENDING,
       });
   }
 };

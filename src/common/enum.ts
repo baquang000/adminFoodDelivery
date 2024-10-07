@@ -12,10 +12,11 @@ export enum ACTION_ENUM {
 }
 
 export enum ORDER_STATUS {
-  PENDING = "pending",
-  DELIVERY = "delivery",
-  SUCCESS = "success",
-  CANCEL = "cancel",
+  PENDING = "PENDING",
+  DELIVERY = "DELIVERY",
+  SUCCESS = "SUCCESS",
+  CANCEL = "CANCEL",
+  FOODBACK = "FOODBACK",
 }
 
 export enum ORDER_TYPE {

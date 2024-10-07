@@ -35,15 +35,9 @@ export type TPropsCart = {
 };
 
 export type TCategory = {
-  id?: number;
+  categoryId?: number;
   name: string;
-  productNumber: number;
-  products?: TProduct[];
-  image: string;
-  status?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
+  imagePath: string;
 };
 
 export type TComment = {
@@ -89,38 +83,49 @@ export type TLogin = {
 };
 
 export type TOrder = {
-  id?: number;
-  totalMoney: string;
-  userNote: string;
-  paymentType: ORDER_TYPE;
+  idOrder?: number;
+  sumPrice: string;
+  noteOrder: string;
+  idUser: string;
+  idShop: string;
+  rewardForDriver: number;
+  deliverytoDoor: Boolean;
+  diningSubtances: Boolean;
+  time: Date;
+  orderStatus?: string;
   orderDetails?: [
     {
-      orderId?: number;
-      product?: TProduct;
-      quantity?: number;
-      color?: string;
-      size?: string;
-      createdAt?: string;
+      id?: string;
+      idOrder?: TProduct;
+      idFood?: number;
+      quantity?: string;
+      price?: string;
+      title?: string;
+      imagePath?: string;
     }
   ];
   user?: {
     email?: string;
-    userName?: string;
-    id?: string;
-    userInfo?: {
-      address?: string;
-      phoneNumber?: string;
-      avatar?: string;
-    };
+    name?: string;
+    idUser?: string;
+    address?: string;
+    numberPhone?: string;
+    dateOfBirth?: string;
   };
-  orderStatus?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
+  shop?: {
+    idShop?: string;
+    address?: string;
+    email?: string;
+    name?: string;
+    imageUrl?: string;
+    phoneNumber?: string;
+    starShop?: string;
+    titleShop?: string;
+  };
 };
 
 export type TParamsOrder = {
-  orderStatus: ORDER_STATUS;
+  statusOrder: ORDER_STATUS;
 };
 
 export type TOrderDetails = {
@@ -148,6 +153,11 @@ export type TResult = {
   data: any;
 };
 
+export type TSuccess = {
+  statusCode: number;
+  message: string;
+};
+
 export type TChart = {
   labels?: string[];
   series?: number[];
@@ -161,6 +171,10 @@ export type TProductParams = {
   categoryId?: string | null;
 };
 
+export type TFoodParams = {
+  q?: string | null;
+};
+
 export type TUserInfo = {
   userName?: string;
   address?: string;
@@ -169,4 +183,32 @@ export type TUserInfo = {
 
 export type TStatus = {
   orderStatus: string;
+};
+
+export type TAllAccount = {
+  id: string;
+  email: string;
+  role: string;
+};
+
+export type TFood = {
+  idFood?: number;
+  bestFood: boolean;
+  categoryId: number;
+  description: string;
+  imagePath: string;
+  price: {
+    id: number;
+    price: string;
+  };
+  star: string;
+  time: {
+    id: number;
+    time: string;
+  };
+  timeId: number;
+  priceId: number;
+  title: string;
+  idShop: string;
+  showFood: true;
 };

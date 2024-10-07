@@ -1,112 +1,117 @@
-import type { TCategory, TError, TResult } from "@/common/type"
-import { useCategoryStore } from "@/stores/category"
-import { request } from "@/utils/request"
-import { AxiosError } from "axios"
-import { ElMessage } from "element-plus"
+import type { TCategory, TError, TResult, TSuccess } from "@/common/type";
+import { useCategoryStore } from "@/stores/category";
+import { request } from "@/utils/request";
+import { AxiosError } from "axios";
+import { ElMessage } from "element-plus";
 
 export const useCategory = () => {
-  const categoryStore = useCategoryStore()
+  const categoryStore = useCategoryStore();
 
   const getSingleCategory = async (id: number) => {
     try {
-      const response = await request.get(`/category/${id}`)
+      console.log("getSingleCategory", id);
+      const response = await request.get(`/category/${id}`);
 
-      const { data } = response.data as TResult
+      const { data } = response.data as TResult;
+      console.log("getSingleCategory", data);
+      categoryStore.setSingleCategory(data);
 
-      categoryStore.setSingleCategory(data)
-
-      return data
+      return data;
     } catch (error) {
       if (error instanceof AxiosError) {
-        const { message } = error.response?.data as TError
+        const { message } = error.response?.data as TError;
 
-        return ElMessage.error(message)
+        return ElMessage.error(message);
       }
 
-      ElMessage.error('Có lỗi xảy ra !')
+      ElMessage.error("Có lỗi xảy ra !");
     }
-  }
+  };
 
   const getCategoryList = async () => {
     try {
-      const response = await request.get('/category')
+      const response = await request.get("/category");
+  
+      categoryStore.setCategoryList(response.data);
 
-      const { data } = response.data as TResult
-
-      categoryStore.setCategoryList(data)
-
-      return data
+      return true;
     } catch (error) {
       if (error instanceof AxiosError) {
-        const { message } = error.response?.data as TError
+        const { message } = error.response?.data as TError;
 
-        return ElMessage.error(message)
+        return ElMessage.error(message);
       }
 
-      ElMessage.error('Có lỗi xảy ra !')
+      ElMessage.error("Có lỗi xảy ra !");
     }
-  }
+  };
 
   const updateCategory = async (payload: TCategory, id: number) => {
     try {
-      const response = await request.put(`/category/${id}`, payload)
+      console.log("updateCategory ", payload);
+      const response = await request.put(`/category/${id}`, payload);
 
-      const { message } = response.data as TResult
+      const { message } = response.data as TSuccess;
+      console.log("success ", message);
+      ElMessage.success(message);
 
-      ElMessage.success(message)
-
-      return true
+      return true;
     } catch (error) {
       if (error instanceof AxiosError) {
-        const { message } = error.response?.data as TError
+        const { message } = error.response?.data as TError;
 
-        return ElMessage.error(message)
+        return ElMessage.error(message);
       }
 
-      ElMessage.error('Có lỗi xảy ra !')
+      ElMessage.error("Có lỗi xảy ra !");
     }
-  }
+  };
 
   const deleteCategory = async (id: number) => {
     try {
-      const response = await request.delete(`/category/${id}`)
+      const response = await request.delete(`/category/${id}`);
 
-      const { message } = response.data as TResult
+      const { message } = response.data as TSuccess;
 
-      ElMessage.success(message)
+      ElMessage.success(message);
 
-      return true
+      return true;
     } catch (error) {
       if (error instanceof AxiosError) {
-        const { message } = error.response?.data as TError
+        const { message } = error.response?.data as TError;
 
-        return ElMessage.error(message)
+        return ElMessage.error(message);
       }
 
-      ElMessage.error('Có lỗi xảy ra !')
+      ElMessage.error("Có lỗi xảy ra !");
     }
-  }
+  };
 
   const createCategory = async (payload: TCategory) => {
     try {
-      const response = await request.post('/category', payload)
+      const response = await request.post("/category", payload);
 
-      const { message } = response.data as TResult
+      const { message } = response.data as TResult;
 
-      ElMessage.success(message)
+      ElMessage.success(message);
 
-      return true
+      return true;
     } catch (error) {
       if (error instanceof AxiosError) {
-        const { message } = error.response?.data as TError
+        const { message } = error.response?.data as TError;
 
-        return ElMessage.error(message)
+        return ElMessage.error(message);
       }
 
-      ElMessage.error('Có lỗi xảy ra !')
+      ElMessage.error("Có lỗi xảy ra !");
     }
-  }
+  };
 
-
-  return { getSingleCategory, getCategoryList, updateCategory, createCategory, deleteCategory }
-}
+  return {
+    getSingleCategory,
+    getCategoryList,
+    updateCategory,
+    createCategory,
+    deleteCategory,
+  };
+};

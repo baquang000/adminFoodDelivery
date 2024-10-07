@@ -10,8 +10,11 @@ import { useChartsStore } from "@/stores/charts";
 import LineChart from "@/components/charts/LineChart.vue";
 import AreaChart from "@/components/charts/AreaChart.vue";
 import BarChart from "@/components/charts/BarChart.vue";
+import { useFood } from "../composables/useFood";
 
 const userStore = useUserStore();
+
+const { getFoods } = useFood()
 
 const { userList } = storeToRefs(userStore);
 
@@ -44,11 +47,7 @@ const handleDelete = async (id: number) => {
 };
 
 onMounted(() => {
-  getUsers();
-  getCount();
-  getUserStat();
-  getOrderStat();
-  getRevenueStat();
+  getFoods()
 });
 </script>
 
@@ -73,8 +72,9 @@ onMounted(() => {
     </div>
     <div class="dashboard-main">
       <el-card class="table" style="height: 530px;">
-        <BaseTable style="width: 50%;" :data="tableData" :columns="tableColumns" :isHiddenComponent="true" :isHiddenExcel="true" :isHiddenUpdate="true" screen="người dùng"
-          @edit="handleEditData" @delete="handleDelete" />
+        <BaseTable style="width: 50%;" :data="tableData" :columns="tableColumns" :isHiddenComponent="true"
+          :isHiddenExcel="true" :isHiddenUpdate="true" screen="người dùng" @edit="handleEditData"
+          @delete="handleDelete" />
       </el-card>
 
       <el-card class="table" style="margin-left: 35px; height: 530px;">

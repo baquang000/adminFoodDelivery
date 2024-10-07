@@ -1,26 +1,20 @@
-import type {
-  TError,
-  TOrder,
-  TOrderDetails,
-  TParamsOrder,
-  TResult,
-  TStatus,
-} from "@/common/type";
-import { useOrderStore } from "@/stores/order";
+import type { TError, TFood, TResult, TSuccess } from "@/common/type";
 import { request } from "@/utils/request";
 import { AxiosError } from "axios";
 import { ElMessage } from "element-plus";
+import { storeToRefs } from "pinia";
+import { foodStore } from "../stores/food";
 
-export const useOrder = () => {
-  const orderStore = useOrderStore();
+export const useFood = () => {
+  const food = foodStore();
 
-  const getSingleOrder = async (id: string) => {
+  const getSingleFood = async (id: number) => {
     try {
-      const response = await request.get(`/order/single/${id}`);
+      const response = await request.get(`/foods/${id}`);
 
       const { data } = response.data as TResult;
 
-      orderStore.setSingleOrder(data);
+      food.setSingleFood(data);
 
       return data;
     } catch (error) {
@@ -34,15 +28,13 @@ export const useOrder = () => {
     }
   };
 
-  const getOrders = async (params?: TParamsOrder) => {
+  const getFoodSellTheMost = async () => {
     try {
-      const response = await request.get(
-        `/order/orderStatus/${params?.statusOrder}`
-      );
+      const response = await request.get(`/foods/sell-the-most`);
 
       const { data } = response.data as TResult;
 
-      orderStore.setOrderList(data);
+      console.log(data);
 
       return data;
     } catch (error) {
@@ -56,13 +48,11 @@ export const useOrder = () => {
     }
   };
 
-  const getOrderByUser = async (id: string) => {
+  const getFoodByCategory = async (id: number) => {
     try {
-      const response = await request.get(`/order/${id}`);
+      const response = await request.get(`/foods/category/${id}`);
 
-      const { data } = response.data;
-
-      orderStore.setOrderList(data);
+      const { data } = response.data as TResult;
 
       return data;
     } catch (error) {
@@ -76,9 +66,51 @@ export const useOrder = () => {
     }
   };
 
-  const updateOrder = async (payload: TStatus, id: string) => {
+  const getFoods = async () => {
     try {
-      const response = await request.put(`/order/${id}`, payload);
+      const params = {};
+
+      const response = await request.get("/foods", {
+        params,
+      });
+
+      food.setFoodList(response.data);
+
+      return true;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const { message } = error.response?.data as TError;
+
+        return ElMessage.error(message);
+      }
+
+      ElMessage.error("Có lỗi xảy ra !");
+    }
+  };
+
+  const updateFood = async (payload: TFood, id: number) => {
+    try {
+      const response = await request.put(`/foods/${id}`, payload);
+
+      const { message } = response.data as TSuccess;
+
+      ElMessage.success(message);
+
+      return true;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const { message } = error.response?.data as TError;
+
+        return ElMessage.error(message);
+      }
+
+      ElMessage.error("Có lỗi xảy ra !");
+    }
+  };
+
+  const deleteFood = async (id: number) => {
+    try {
+      const response = await request.delete(`/foods/${id}`);
 
       const { message } = response.data as TResult;
 
@@ -96,62 +128,15 @@ export const useOrder = () => {
     }
   };
 
-  const deleteOrder = async (id: string) => {
+  const createFood = async (payload: TFood) => {
     try {
-      const response = await request.delete(`/order/${id}`);
+      const response = await request.post("/foods", payload);
 
       const { message } = response.data as TResult;
 
       ElMessage.success(message);
 
       return true;
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const { message } = error.response?.data as TError;
-
-        return ElMessage.error(message);
-      }
-
-      ElMessage.error("Có lỗi xảy ra !");
-    }
-  };
-
-  const createOrder = async (payload: TOrder) => {
-    try {
-      const response = await request.post("/order", payload);
-
-      const { message, data } = response.data as TResult;
-
-      ElMessage.success(message);
-
-      return data as number;
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const { message } = error.response?.data as TError;
-
-        ElMessage.error(message);
-
-        return false;
-      }
-
-      ElMessage.error("Có lỗi xảy ra !");
-
-      return false;
-    }
-  };
-
-  const createOrderDetails = async (
-    payload: TOrderDetails,
-    isShowMsg = true
-  ) => {
-    try {
-      const response = await request.post("/order-details", payload);
-
-      const { message, data } = response.data as TResult;
-
-      if (isShowMsg) ElMessage.success(message);
-
-      return data;
     } catch (error) {
       if (error instanceof AxiosError) {
         const { message } = error.response?.data as TError;
@@ -164,12 +149,12 @@ export const useOrder = () => {
   };
 
   return {
-    getSingleOrder,
-    getOrders,
-    updateOrder,
-    createOrder,
-    deleteOrder,
-    createOrderDetails,
-    getOrderByUser,
+    getSingleFood,
+    getFoods,
+    updateFood,
+    createFood,
+    deleteFood,
+    getFoodByCategory,
+    getFoodSellTheMost,
   };
 };

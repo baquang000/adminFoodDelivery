@@ -66,6 +66,20 @@ const handleDelete = (id: number) => {
 const handleExportData = () => {
   emit("export");
 };
+
+const screenHelper = () => {
+  switch (props.screen) {
+    case 'danh mục':
+      return 'categoryId'
+
+    case 'sản phẩm':
+      return 'idFood'
+
+    default:
+      break;
+  }
+}
+
 </script>
 
 <template>
@@ -86,7 +100,11 @@ const handleExportData = () => {
       <el-table-column v-for="column in columns" :key="column.prop" :prop="column.prop" :label="column.label"
         :width="column.width">
         <template v-slot="scope">
-          <div v-if="column.prop === 'image'">
+          <div v-if="column.prop === 'bestFood'">
+            <span>{{ scope.row[column.prop] ? 'Đúng' : 'Sai' }}</span>
+          </div>
+
+          <div v-if="column.prop === 'imagePath'">
             <img v-if="scope.row[column.prop]" :src="scope.row[column.prop]" alt="image"
               style="width: 100px; height: auto" />
           </div>
@@ -95,7 +113,18 @@ const handleExportData = () => {
             <div :class="scope.row[column.prop] === 'active' ? 'status on' : 'status off'
               "></div>
           </div>
+
+          <div v-if="column.prop === 'price'">
+            <span>{{ scope.row[column.prop].price }}</span>
+          </div>
+
+          <div v-if="column.prop === 'time'">
+            <span>{{ scope.row[column.prop].time }}</span>
+          </div>
+
         </template>
+
+
       </el-table-column>
       <el-table-column fixed="right" label="Thao tác" v-if="!props.isHiddenAction">
         <template #default="{ row }">
@@ -107,13 +136,13 @@ const handleExportData = () => {
             </span>
             <span class="icon" v-if="!props.isHiddenUpdate">
               <Edit v-if="screen !== 'đơn hàng'" style="width: 1em; height: 1em; color: blue"
-                @click="handleShowForm(ACTION_ENUM.UPDATE, row.id)" />
+                @click="handleShowForm(ACTION_ENUM.UPDATE, row[screenHelper()])" />
 
-              <i @click="handleShowForm(ACTION_ENUM.UPDATE, row.id)" v-if="screen === 'đơn hàng'" style="color: green"
-                class="pi pi-check-square"></i>
+              <i @click="handleShowForm(ACTION_ENUM.UPDATE, row[screenHelper()])" v-if="screen === 'đơn hàng'"
+                style="color: green" class="pi pi-check-square"></i>
             </span>
             <span class="icon">
-              <Delete style="width: 1em; height: 1em; color: red" @click="handleDelete(row.id)" />
+              <Delete style="width: 1em; height: 1em; color: red" @click="handleDelete(row[screenHelper()])" />
             </span>
           </div>
         </template>
