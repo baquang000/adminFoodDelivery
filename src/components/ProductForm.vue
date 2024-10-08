@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ACTION_ENUM } from "@/common/enum";
-import type { CreateFood, TFood } from "@/common/type";
+import type { TFood } from "@/common/type";
 import { useAppStore } from "@/stores/app";
 import { storeToRefs } from "pinia";
 import { computed, onUnmounted, reactive, ref, watch } from "vue";
@@ -104,6 +104,7 @@ const handleSubmit = async () => {
 };
 
 watch(() => singleFood.value, () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   ruleForm.bestFood = singleFood.value.bestFood,
     ruleForm.idCategory = singleFood.value.idCategory,
     ruleForm.description = singleFood.value.description,

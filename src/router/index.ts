@@ -33,7 +33,6 @@ const router = createRouter({
       path: "/order-details/:id",
       component: () => import("../views/OrderDetails.vue"),
     },
-
   ],
 
   scrollBehavior(to, from, savedPosition) {
@@ -60,7 +59,7 @@ router.beforeEach(async (to, _from, next) => {
     next();
   }
 
-  next()
+  next();
 });
 
 export default router;

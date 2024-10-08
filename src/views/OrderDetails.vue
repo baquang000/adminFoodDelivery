@@ -2,7 +2,6 @@
 import BaseTable from "@/base/BaseTable.vue";
 import { useOrder } from "@/composables/useOrder";
 import { useOrderStore } from "@/stores/order";
-import { formatDate } from "@/utils/format";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
@@ -47,28 +46,29 @@ const status = ref<TStatus[]>([
   {
     content: "Chờ duyệt",
     color: "#0bbd87",
-    key: "pending",
+    key: "PENDING",
   },
   {
     content: "Đang giao hàng",
     color: "#0bbd87",
-    key: "delivery",
+    key: "DELIVERY",
   },
   {
     content: "Đơn hàng hoàn tất",
     color: "#0bbd87",
-    key: "success",
+    key: "SUCCESS",
   },
   {
     content: "Đã hủy đơn",
     color: "#0bbd87",
-    key: "cancel",
+    key: "CANCEL",
   },
 ]);
 
 watch(
   () => singleOrder.value,
   () => {
+    
     status.value = status.value.map((item) => ({
       ...item,
       color: singleOrder.value?.orderStatus === item.key ? "#0bbd87" : "",
@@ -76,20 +76,20 @@ watch(
   }
 );
 
-const handleEditData = (id: number) => { };
+const handleEditData = () => { };
 
 onMounted(async () => {
   await getSingleOrder(id.value);
 
   tableData.value = singleOrder.value?.orderDetails?.map((item) => {
     return {
-      id: item.id ,
-      idOrder: item?.idOrder,
-      idFood: item?.idFood,
-      quantity: item?.quantity,
-      price: item?.price,
-      imagePath: item?.imagePath,
-      title: item?.title,
+      id: item.id,
+      idOrder: item.idOrder,
+      idFood: item.idFood,
+      quantity: item.quantity,
+      price: item.price,
+      imagePath: item.imagePath,
+      title: item.title,
     } as TOrderDetails;
   }) as TOrderDetails[];
 });

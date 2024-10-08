@@ -17,9 +17,9 @@ export const useOrder = () => {
   const getSingleOrder = async (id: number) => {
     try {
       const response = await request.get(`/order/single/${id}`);
-
+      
       const { data } = response.data as TResult;
-
+      
       orderStore.setSingleOrder(data);
 
       return data;

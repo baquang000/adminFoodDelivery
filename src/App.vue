@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { RouterView } from "vue-router";
 import Overlay from "./components/Overlay.vue";
 import { useAppStore } from "./stores/app";
 import { storeToRefs } from "pinia";
 import Adminview from "./components/Adminview.vue";
-import { useUserStore } from "./stores/user";
 
 const appStore = useAppStore();
 

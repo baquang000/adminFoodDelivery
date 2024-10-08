@@ -1,4 +1,4 @@
-import type { ORDER_STATUS, ORDER_TYPE } from "./enum";
+import type { ORDER_STATUS } from "./enum";
 
 export type TColor = {
   label: string;
@@ -76,9 +76,9 @@ export type TOrder = {
   idUser: string;
   idShop: string;
   rewardForDriver: number;
-  deliverytoDoor: Boolean;
-  diningSubtances: Boolean;
-  time: String;
+  deliverytoDoor: boolean;
+  diningSubtances: boolean;
+  time: string;
   orderStatus?: string;
   orderDetails?: [
     {
@@ -108,6 +108,7 @@ export type TOrder = {
     phoneNumber?: string;
     starShop?: string;
     titleShop?: string;
+    idAccount?: number;
   };
 };
 

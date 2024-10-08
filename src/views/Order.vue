@@ -5,7 +5,6 @@ import { useOrder } from "@/composables/useOrder";
 import { useOrderStore } from "@/stores/order";
 import { exportToExcel } from "@/utils/export";
 import { formatCurrency } from "@/utils/format";
-import { time } from "console";
 import type { TabsInstance } from "element-plus";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
@@ -30,7 +29,6 @@ const statusHelper = (payload: string) => {
 
 const tableData = computed(() =>
   orderList.value?.map((item) => {
-    console.log(item.time)
     return {
       id: item.id,
       idUser: item.idUser,

@@ -103,7 +103,8 @@ const handleExportData = () => {
           </div>
 
           <div v-if="column.prop === 'price'">
-            <span>{{ scope.row[column.prop].price }}</span>
+            <span>{{ typeof scope.row[column.prop] === 'object' ? scope.row[column.prop].price :
+              scope.row[column.prop] }}</span>
           </div>
 
           <div v-if="column.prop === 'time'">
@@ -111,7 +112,7 @@ const handleExportData = () => {
               : scope.row[column.prop] }}</span>
           </div>
 
-        
+
         </template>
 
 
@@ -120,7 +121,7 @@ const handleExportData = () => {
         <template #default="{ row }">
           <div class="icon-wrap">
             <span class="icon" v-if="props.screen === 'đơn hàng'">
-              <router-link :to="`/admin/order-details/${row.id}`">
+              <router-link :to="`/order-details/${row.id}`">
                 <Search style="width: 1em; height: 1em; color: blue" />
               </router-link>
             </span>
