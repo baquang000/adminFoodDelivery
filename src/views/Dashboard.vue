@@ -52,6 +52,7 @@ onMounted(() => {
 </script>
 
 <template>
+  
   <div class="dashboard-container">
     <div class="dashboard-featured">
       <el-card>

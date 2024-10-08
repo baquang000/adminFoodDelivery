@@ -3,6 +3,7 @@ import type {
   TLogin,
   TRegister,
   TResult,
+  TSuccess,
   TUser,
   TUserInfo,
 } from "@/common/type";
@@ -30,7 +31,6 @@ export const useUser = () => {
       }
 
       ElMessage.error("Có lỗi xảy ra !");
-      
     }
   };
 
@@ -39,6 +39,7 @@ export const useUser = () => {
       const response = await request.get("/auth");
 
       const { data } = response.data as TResult;
+
       userStore.setUserList(data);
 
       return data;
@@ -97,7 +98,7 @@ export const useUser = () => {
     try {
       const response = await request.delete(`/auth/${id}`);
 
-      const { message } = response.data as TResult;
+      const { message } = response.data as TSuccess;
 
       ElMessage.success(message);
 
