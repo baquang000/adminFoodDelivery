@@ -3,15 +3,18 @@ import { RouterView } from "vue-router";
 import Overlay from "./components/Overlay.vue";
 import { useAppStore } from "./stores/app";
 import { storeToRefs } from "pinia";
+import Adminview from "./components/Adminview.vue";
+import { useUserStore } from "./stores/user";
 
 const appStore = useAppStore();
 
 const { isShowOverlay } = storeToRefs(appStore);
 
+
 </script>
 
 <template>
-  <RouterView />
+  <Adminview />
   <Overlay v-if="isShowOverlay" />
 </template>
 
@@ -23,6 +26,7 @@ const { isShowOverlay } = storeToRefs(appStore);
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     flex: 1;
     height: 100vh;
     overflow-y: auto;

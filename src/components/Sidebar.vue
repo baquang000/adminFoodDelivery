@@ -1,40 +1,37 @@
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { useUserStore } from "@/stores/user";
+import { storeToRefs } from "pinia";
+import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const sidebarList = [
   {
     name: "Tổng quan",
-    route: "/admin/dashboard",
+    route: "/",
     icon: "pi-chart-line",
   },
   {
     name: "Sản phẩm",
-    route: "/admin/product",
+    route: "/product",
     icon: "pi-objects-column",
   },
   {
     name: "Danh mục",
-    route: "/admin/category",
+    route: "/category",
     icon: "pi-bars",
   },
   {
     name: "Đơn hàng",
-    route: "/admin/order",
+    route: "/order",
     icon: "pi-shopping-cart",
   },
   {
     name: "Bình luận",
-    route: "/admin/comment",
+    route: "/comment",
     icon: "pi-comments",
   },
   {
-    name: "Trang chủ",
-    route: "/",
-    icon: "pi-home",
-  },
-  {
-    name: "Thoát",
+    name: "Đăng xuất",
     route: "/",
     icon: "pi-sign-out",
   },
@@ -44,24 +41,40 @@ const router = useRouter();
 
 const route = useRoute();
 
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
+
+const isUser = user.value || null
+
 const defaultIndexActive = ref(0);
 
-const handleChangeSidebar = (index: number, path: string) => {
-  defaultIndexActive.value = index;
-  router.replace(path);
+const handleChangeSidebar = (index: number, path: string, name?: string) => {
+  if (name !== "Đăng xuất") {
+    defaultIndexActive.value = index;
+    router.replace(path);
+  } else {
+    localStorage.clear()
+    userStore.setUser(null)
+
+    router.push("/login")
+  }
 };
 
 
 onMounted(() => {
-  defaultIndexActive.value = sidebarList.findIndex(item => item.route === route.path)
+  if (route.path === "/login") {
+    defaultIndexActive.value = 0
+  } else {
+    defaultIndexActive.value = sidebarList.findIndex(item => item.route === route.path)
+  }
 })
 </script>
 
 <template>
-  <el-card class="sidebar-container">
+  <el-card class="sidebar-container" v-if="isUser">
     <div class="menu-list">
       <div :class="defaultIndexActive === index ? 'menu-item active' : 'menu-item'" v-for="(item, index) in sidebarList"
-        :key="item.name" @click="handleChangeSidebar(index, item.route)">
+        :key="item.name" @click="handleChangeSidebar(index, item.route, item.name)">
         <div style="
             border: 0.5px solid #e2e8f0;
             border-radius: 5px;

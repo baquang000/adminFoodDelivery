@@ -1,4 +1,10 @@
-import type { TError, TProduct, TResult } from "@/common/type";
+import type {
+  CreateFood,
+  TError,
+  TProduct,
+  TResult,
+  TSuccess,
+} from "@/common/type";
 import { useProductStore } from "@/stores/product";
 import { request } from "@/utils/request";
 import { AxiosError } from "axios";
@@ -36,7 +42,7 @@ export const useProduct = () => {
 
       const { data } = response.data as TResult;
 
-      console.log(data)
+      console.log(data);
 
       productStore.setSingleProduct(data);
 
@@ -142,11 +148,11 @@ export const useProduct = () => {
     }
   };
 
-  const createProduct = async (payload: TProduct) => {
+  const createProduct = async (payload: CreateFood) => {
     try {
-      const response = await request.post("/product", payload);
+      const response = await request.post("/foods", payload);
 
-      const { message } = response.data as TResult;
+      const { message } = response.data as TSuccess;
 
       ElMessage.success(message);
 
@@ -169,6 +175,6 @@ export const useProduct = () => {
     createProduct,
     deleteProduct,
     getProductByCategory,
-    getProductSellTheMost
+    getProductSellTheMost,
   };
 };

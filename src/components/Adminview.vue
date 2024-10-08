@@ -1,12 +1,27 @@
 <script lang="ts" setup>
-import Navbar from '@/components/Navbar.vue';
+import { onMounted, ref, watch } from 'vue';
 import Sidebar from './Sidebar.vue';
 import { RouterView } from "vue-router";
+import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/stores/user';
+
+const token = ref(null)
+
+const { user } = storeToRefs(useUserStore())
+
+const setToken = () => {
+    token.value = JSON.parse(localStorage.getItem('user') as string)?.accessToken
+}
+
+watch(() => user.value, () => setToken())
+
+onMounted(() => setToken())
+
 </script>
 
 <template>
     <div class="app-container">
-        <Sidebar />
+        <Sidebar v-if="token && user" />
         <div class="main">
             <RouterView />
         </div>
@@ -18,7 +33,9 @@ import { RouterView } from "vue-router";
 .app-container {
     display: flex;
     width: 100%;
+    height: 100vh;
     overflow-y: hidden;
+
     .main {
         display: flex;
         flex-direction: column;

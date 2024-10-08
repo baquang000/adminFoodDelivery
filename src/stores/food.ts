@@ -2,29 +2,31 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 import type { TFood, TFoodParams } from "../common/type";
 
-export const foodStore = defineStore("foodStore", () => {
+export const userFoodStore = defineStore("foodStore", () => {
   const foodList = ref<TFood[]>([]);
 
   const filter = ref<TFoodParams>({});
   const singleFood = ref<TFood>({
+    id: 0,
     bestFood: false,
-    categoryId: 0,
+    idCategory: 0,
     description: "",
     imagePath: "",
+    idPrice: 0,
+    star: "",
+    idTime: 0,
+    title: "",
+    idShop: 0,
+    showFood: false,
     price: {
       id: 0,
-      price: ""
+      price: "",
     },
-    star: "",
     time: {
       id: 0,
-      time: ""
+      time: "",
     },
-    timeId: 0,
-    priceId: 0,
-    title: "",
-    idShop: "",
-    showFood: true,
+    timeValue:""
   })
 
   const setFoodList = (payload: TFood[]) => {

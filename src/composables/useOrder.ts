@@ -14,7 +14,7 @@ import { ElMessage } from "element-plus";
 export const useOrder = () => {
   const orderStore = useOrderStore();
 
-  const getSingleOrder = async (id: string) => {
+  const getSingleOrder = async (id: number) => {
     try {
       const response = await request.get(`/order/single/${id}`);
 

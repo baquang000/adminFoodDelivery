@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ACTION_ENUM } from "@/common/enum";
-import type { TFood } from "@/common/type";
+import type { CreateFood, TFood } from "@/common/type";
 import { useAppStore } from "@/stores/app";
 import { storeToRefs } from "pinia";
 import { computed, onUnmounted, reactive, ref, watch } from "vue";
@@ -8,14 +8,14 @@ import BaseUpload from "@/base/BaseUpload.vue";
 import { useCategoryStore } from "@/stores/category";
 import type { FormInstance, FormRules } from "element-plus";
 import { useFood } from "@/composables/useFood";
-import { foodStore } from "@/stores/food";
+import { userFoodStore } from "@/stores/food";
 
 
 const appStore = useAppStore();
 const category = useCategoryStore();
-const foodstore = foodStore();
+const foodStore = userFoodStore();
 const { actionType } = storeToRefs(appStore);
-const { singleFood } = storeToRefs(foodstore);
+const { singleFood } = storeToRefs(foodStore);
 const { categoryList } = storeToRefs(category);
 
 const { createFood, getFoods, updateFood } = useFood();
@@ -24,7 +24,7 @@ const ruleFormRef = ref<FormInstance>()
 
 const ruleForm = reactive<TFood>({
   bestFood: false,
-  categoryId: 0,
+  idCategory: 0,
   description: "",
   imagePath: "",
   price: {
@@ -36,10 +36,11 @@ const ruleForm = reactive<TFood>({
     id: 0,
     time: ""
   },
-  timeId: 0,
-  priceId: 0,
+  idTime: 0,
+  idPrice: 0,
+  timeValue: "",
   title: "",
-  idShop: "",
+  idShop: null,
   showFood: true,
 });
 
@@ -60,10 +61,16 @@ const rules = reactive<FormRules<TFood>>({
     { required: true, message: 'Giá cũ không được bỏ trống', trigger: ['change', 'blur'] },
   ],
 
-  categoryId: [
+  idCategory: [
     { required: true, message: 'ID danh mục không được bỏ trống', trigger: ['change', 'blur'] },
   ],
+
+  idShop: [
+    { required: true, message: 'ID shop không được bỏ trống', trigger: ['change', 'blur'] },
+  ],
 })
+
+
 
 const actionText = computed(() =>
   actionType.value === ACTION_ENUM.CREATE ? "Tạo" : "Cập nhật"
@@ -76,18 +83,20 @@ const handleCloseForm = () => {
 
 const handleChangeFile = (url: string) => {
   ruleForm.imagePath = url;
+  ruleFormRef.value?.validateField('imagePath')
 };
 
 const handleSubmit = async () => {
   await ruleFormRef?.value?.validate(async (valid, fields) => {
     if (valid) {
-      actionType.value === ACTION_ENUM.CREATE
+      const response = actionType.value === ACTION_ENUM.CREATE
         ? await createFood(ruleForm)
-        : await updateFood(ruleForm, singleFood.value.idFood as number);
+        : await updateFood(ruleForm, singleFood.value.id as number);
 
-      await getFoods();
-
-      handleCloseForm();
+      if (response) {
+        await getFoods();
+        handleCloseForm();
+      }
     } else {
       console.log('error submit!', fields)
     }
@@ -96,30 +105,28 @@ const handleSubmit = async () => {
 
 watch(() => singleFood.value, () => {
   ruleForm.bestFood = singleFood.value.bestFood,
-    ruleForm.categoryId = singleFood.value.categoryId,
+    ruleForm.idCategory = singleFood.value.idCategory,
     ruleForm.description = singleFood.value.description,
     ruleForm.imagePath = singleFood.value.imagePath,
     ruleForm.price = {
-      id: singleFood.value.priceId,
+      id: singleFood.value.idPrice,
       price: singleFood.value.price.price
     },
     ruleForm.star = singleFood.value.star,
-    ruleForm.time = {
-      id: singleFood.value.timeId,
-      time: singleFood.value.time.time
-    },
-    ruleForm.timeId = singleFood.value.timeId,
-    ruleForm.priceId = singleFood.value.priceId,
+    ruleForm.time = singleFood.value.time,
+    ruleForm.idTime = singleFood.value.idTime,
+    ruleForm.idPrice = singleFood.value.idPrice,
     ruleForm.title = singleFood.value.title,
     ruleForm.idShop = singleFood.value.idShop,
     ruleForm.showFood = singleFood.value.showFood
 });
 
 
+
 onUnmounted(() => {
-  foodstore.setSingleFood({
+  foodStore.setSingleFood({
     bestFood: false,
-    categoryId: 0,
+    idCategory: 0,
     description: "",
     imagePath: "",
     price: {
@@ -131,11 +138,12 @@ onUnmounted(() => {
       id: 0,
       time: ""
     },
-    timeId: 0,
-    priceId: 0,
+    idTime: 0,
+    idPrice: 0,
     title: "",
-    idShop: "",
+    idShop: 0,
     showFood: true,
+    timeValue: ""
   });
   appStore.setActionType(ACTION_ENUM.CREATE);
 });
@@ -164,9 +172,9 @@ onUnmounted(() => {
           <el-input v-model="ruleForm.price.price" placeholder="Nhập giá" />
         </el-form-item>
 
-        <el-form-item label="Danh mục" label-position="top" prop="categoryId">
-          <el-select v-model="ruleForm.categoryId" placeholder="Select" size="large" style="width: 240px">
-            <el-option v-for="item in categoryList" :key="item.name" :label="item.name" :value="item.name" />
+        <el-form-item label="Danh mục" label-position="top" prop="idCategory">
+          <el-select v-model="ruleForm.idCategory" placeholder="Select" size="large" style="width: 240px">
+            <el-option v-for="item in categoryList" :key="item.name" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
 
@@ -203,7 +211,7 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .product-form-container {
-  width: 25vw;
+  min-width: 35vw;
   height: 87vh;
   position: absolute;
   top: 50%;

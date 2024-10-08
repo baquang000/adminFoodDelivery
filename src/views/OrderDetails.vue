@@ -8,10 +8,13 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 export type TOrderDetails = {
-  name?: string;
-  image?: string;
-  quantity?: number;
-  totalMoney?: number;
+  id: number;
+  idOrder: number;
+  idFood: number;
+  quantity: number;
+  price: number;
+  title: string;
+  imagePath: string;
 };
 
 type TStatus = {
@@ -31,14 +34,13 @@ const id = computed(() => parseInt(route.params.id as string));
 const { getSingleOrder } = useOrder();
 
 const tableColumns = [
-  { prop: "name", label: "Tên sản phẩm", width: "auto" },
-  { prop: "image", label: "Ảnh sản phẩm", width: "auto" },
-  { prop: "newPrice", label: "Giá sản phẩm", width: "auto" },
-  { prop: "size", label: "Kích cỡ", width: "auto" },
-  { prop: "color", label: "Màu sắc", width: "auto" },
+  { prop: "id", label: "#Id", width: "auto" },
+  { prop: "idOrder", label: "#Id đơn hàng", width: "auto" },
+  { prop: "idFood", label: "#Id sản phẩm", width: "auto" },
   { prop: "quantity", label: "Số lượng", width: "auto" },
-  { prop: "totalMoney", label: "Tổng tiền", width: "auto" },
-  { prop: "createdAt", label: "Ngày đặt hàng", width: "auto" },
+  { prop: "price", label: "giá", width: "auto" },
+  { prop: "title", label: "Tên", width: "auto" },
+  { prop: "imagePath", label: "Ảnh", width: "auto" },
 ];
 
 const status = ref<TStatus[]>([
@@ -74,22 +76,20 @@ watch(
   }
 );
 
-const handleEditData = (id: number) => {};
+const handleEditData = (id: number) => { };
 
 onMounted(async () => {
   await getSingleOrder(id.value);
 
   tableData.value = singleOrder.value?.orderDetails?.map((item) => {
     return {
-      name: item?.product?.name,
-      image: item?.product?.image,
+      id: item.id ,
+      idOrder: item?.idOrder,
+      idFood: item?.idFood,
       quantity: item?.quantity,
-      color: item.color,
-      size: item.size,
-      totalMoney: Math.ceil(
-        parseFloat(item.product?.newPrice as string) * (item?.quantity || 1)
-      ),
-      createdAt: formatDate(item.createdAt as string),
+      price: item?.price,
+      imagePath: item?.imagePath,
+      title: item?.title,
     } as TOrderDetails;
   }) as TOrderDetails[];
 });
@@ -99,26 +99,16 @@ onMounted(async () => {
   <div class="order-details-container">
     <el-card style="margin-top: 20px;">
       <el-timeline style="max-width: 600px; width: 250px; margin-top: 25px; color: gray">
-      <el-timeline-item
-        style="height: 100px;"
-        v-for="(activity, index) in status"
-        :key="index"
-        :color="activity.color"
-      >
-        {{ activity.content }}
-      </el-timeline-item>
-    </el-timeline>
+        <el-timeline-item style="height: 100px;" v-for="(activity, index) in status" :key="index"
+          :color="activity.color">
+          {{ activity.content }}
+        </el-timeline-item>
+      </el-timeline>
     </el-card>
     <div class="order-container">
       <div class="order-list">
-        <BaseTable
-          :data="tableData"
-          :columns="tableColumns"
-          :isHiddenComponent="true"
-          :isHiddenAction="true"
-          screen="chi tiết đơn hàng"
-          @edit="handleEditData"
-        />
+        <BaseTable :data="tableData" :columns="tableColumns" :isHiddenComponent="true" :isHiddenAction="true"
+          screen="chi tiết đơn hàng" @edit="handleEditData" />
       </div>
     </div>
   </div>
@@ -157,6 +147,7 @@ onMounted(async () => {
     flex-direction: column;
     align-items: flex-start;
     padding: 20px;
+
     .el-input {
       margin-bottom: 20px;
     }

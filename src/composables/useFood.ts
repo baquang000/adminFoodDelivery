@@ -3,10 +3,10 @@ import { request } from "@/utils/request";
 import { AxiosError } from "axios";
 import { ElMessage } from "element-plus";
 import { storeToRefs } from "pinia";
-import { foodStore } from "../stores/food";
+import { userFoodStore } from "../stores/food";
 
 export const useFood = () => {
-  const food = foodStore();
+  const food = userFoodStore();
 
   const getSingleFood = async (id: number) => {
     try {
@@ -70,9 +70,7 @@ export const useFood = () => {
     try {
       const params = {};
 
-      const response = await request.get("/foods", {
-        params,
-      });
+      const response = await request.get("/foods");
 
       food.setFoodList(response.data);
 
@@ -90,7 +88,14 @@ export const useFood = () => {
 
   const updateFood = async (payload: TFood, id: number) => {
     try {
-      const response = await request.put(`/foods/${id}`, payload);
+      const { time, idTime, idPrice, ...rest } = payload;
+
+      const response = await request.put(`/foods/${id}`, {
+        ...rest,
+        price: payload.price.price,
+        idShop: payload.idShop?.toString(),
+        timeValue: time.time,
+      });
 
       const { message } = response.data as TSuccess;
 
@@ -112,7 +117,7 @@ export const useFood = () => {
     try {
       const response = await request.delete(`/foods/${id}`);
 
-      const { message } = response.data as TResult;
+      const { message } = response.data as TSuccess;
 
       ElMessage.success(message);
 
@@ -130,7 +135,13 @@ export const useFood = () => {
 
   const createFood = async (payload: TFood) => {
     try {
-      const response = await request.post("/foods", payload);
+      const { time, idTime, idPrice, ...rest } = payload;
+
+      const response = await request.post("/foods", {
+        ...rest,
+        price: payload.price.price,
+        timeValue: time.time,
+      });
 
       const { message } = response.data as TResult;
 
@@ -141,10 +152,14 @@ export const useFood = () => {
       if (error instanceof AxiosError) {
         const { message } = error.response?.data as TError;
 
-        return ElMessage.error(message);
+        ElMessage.error(message);
+
+        return false;
       }
 
       ElMessage.error("Có lỗi xảy ra !");
+
+      return false;
     }
   };
 

@@ -5,6 +5,7 @@ import { useOrder } from "@/composables/useOrder";
 import { useOrderStore } from "@/stores/order";
 import { exportToExcel } from "@/utils/export";
 import { formatCurrency } from "@/utils/format";
+import { time } from "console";
 import type { TabsInstance } from "element-plus";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
@@ -29,8 +30,9 @@ const statusHelper = (payload: string) => {
 
 const tableData = computed(() =>
   orderList.value?.map((item) => {
+    console.log(item.time)
     return {
-      idOrder: item.idOrder,
+      id: item.id,
       idUser: item.idUser,
       idShop: item.idShop,
       sumPrice: formatCurrency(item.sumPrice),
@@ -40,6 +42,7 @@ const tableData = computed(() =>
       userName: item.user?.name,
       numberPhone: item.user?.numberPhone,
       address: item.user?.address,
+      time: item.time
     };
   })
 );
@@ -47,7 +50,7 @@ const tableData = computed(() =>
 const { getOrders, updateOrder } = useOrder();
 
 const tableColumns = [
-  { prop: "idOrder", label: "#ID Order", width: "auto" },
+  { prop: "id", label: "#ID Order", width: "auto" },
   { prop: "idShop", label: "ID Shop", width: "auto" },
   { prop: "email", label: "Email", width: "auto" },
   { prop: "numberPhone", label: "Số điện thoại", width: "auto" },
@@ -56,6 +59,7 @@ const tableColumns = [
   { prop: "sumPrice", label: "Tổng tiền", width: "auto" },
   { prop: "noteOrder", label: "Ghi chú", width: "auto" },
   { prop: "orderStatus", label: "Trạng thái", width: "auto" },
+  { prop: "time", label: "Thời gian", width: "220px" },
 ];
 const tabPosition = ref<TabsInstance["tabPosition"]>("left");
 
@@ -116,7 +120,7 @@ const handleTabChange = async (value: string) => {
 
     case 2:
       await getOrders({
-        statusOrder: ORDER_STATUS.SUCCESS && ORDER_STATUS.FOODBACK,
+        statusOrder: ORDER_STATUS.SUCCESS || ORDER_STATUS.FOODBACK,
       });
 
       break;

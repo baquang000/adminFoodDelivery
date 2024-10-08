@@ -35,40 +35,27 @@ export type TPropsCart = {
 };
 
 export type TCategory = {
-  categoryId?: number;
+  id?: number;
   name: string;
   imagePath: string;
 };
 
 export type TComment = {
-  id?: number;
-  user?: {
-    userName?: string;
-    email?: string;
-  };
-  productId?: number;
-  content?: string;
-  image?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
+  id: number;
+  idShop: number;
+  idUser: number;
+  idFood?: number;
+  idOrder: number;
+  content: string;
+  imagePath: string;
+  rating: string;
+  time: string;
 };
 
 export type TUser = {
   id?: number;
-  userName?: string;
   email?: string;
-  status?: string;
-  userRoles?: any[];
-  userInfo: {
-    avatar?: string;
-    address?: string;
-    phoneNumber?: string;
-  };
-  accessToken?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
+  role?: string;
 };
 
 export type TRegister = {
@@ -83,7 +70,7 @@ export type TLogin = {
 };
 
 export type TOrder = {
-  idOrder?: number;
+  id?: number;
   sumPrice: string;
   noteOrder: string;
   idUser: string;
@@ -91,15 +78,15 @@ export type TOrder = {
   rewardForDriver: number;
   deliverytoDoor: Boolean;
   diningSubtances: Boolean;
-  time: Date;
+  time: String;
   orderStatus?: string;
   orderDetails?: [
     {
-      id?: string;
-      idOrder?: TProduct;
+      id?: number;
+      idOrder?: number;
       idFood?: number;
-      quantity?: string;
-      price?: string;
+      quantity?: number;
+      price?: number;
       title?: string;
       imagePath?: string;
     }
@@ -107,13 +94,13 @@ export type TOrder = {
   user?: {
     email?: string;
     name?: string;
-    idUser?: string;
+    id?: number;
     address?: string;
     numberPhone?: string;
     dateOfBirth?: string;
   };
   shop?: {
-    idShop?: string;
+    id?: number;
     address?: string;
     email?: string;
     name?: string;
@@ -192,23 +179,37 @@ export type TAllAccount = {
 };
 
 export type TFood = {
-  idFood?: number;
+  id?: number;
   bestFood: boolean;
-  categoryId: number;
+  idCategory: number;
   description: string;
   imagePath: string;
+  idPrice: number;
+  star: string;
+  idTime: number;
+  title: string;
+  idShop: number | null;
+  showFood: boolean;
+  timeValue: string;
   price: {
     id: number;
     price: string;
   };
-  star: string;
   time: {
     id: number;
     time: string;
   };
-  timeId: number;
-  priceId: number;
+};
+
+export type CreateFood = {
   title: string;
-  idShop: string;
-  showFood: true;
+  description: string;
+  price: string;
+  idCategory: number;
+  imagePath: string;
+  timeValue: string;
+  idShop: number;
+  bestFood: boolean;
+  showFood: boolean;
+  star: string;
 };

@@ -1,4 +1,4 @@
-import type { TError, TComment, TResult } from "@/common/type";
+import type { TError, TComment, TResult, TSuccess } from "@/common/type";
 import { useCommentStore } from "@/stores/comment";
 import { request } from "@/utils/request";
 import { AxiosError } from "axios";
@@ -27,23 +27,19 @@ export const useComment = () => {
 
   const getComments = async (productId?: number) => {
     try {
-      const response = await request.get("/comment", {
-        params: {
-          productId,
-        },
-      });
+      const response = await request.get("/comment");
 
       const { data } = response.data as TResult;
 
       commentStore.setCommentList(data);
-      
+
       return true;
     } catch (error) {
       if (error instanceof AxiosError) {
         const { message } = error.response?.data as TError;
-        
+
         ElMessage.error(message);
-        
+
         return false;
       }
 
@@ -77,7 +73,7 @@ export const useComment = () => {
     try {
       const response = await request.delete(`/comment/${id}`);
 
-      const { message } = response.data as TResult;
+      const { message } = response.data as TSuccess;
 
       ElMessage.success(message);
 

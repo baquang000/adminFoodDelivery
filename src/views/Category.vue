@@ -21,7 +21,7 @@ const tableData = computed(() => categoryList.value);
 const { getCategoryList, getSingleCategory, deleteCategory } = useCategory();
 
 const tableColumns = [
-  { prop: "categoryId", label: "#ID", width: "auto" },
+  { prop: "id", label: "#ID", width: "auto" },
   { prop: "imagePath", label: "Ảnh", width: "auto" },
   { prop: "name", label: "Tên", width: "auto" },
 ];
@@ -39,7 +39,7 @@ const handleDelete = async (id: number) => {
 
 
 const handleExportFile = () => {
-  //exportToExcel(categoryList.value)
+  exportToExcel(categoryList.value)
 }
 
 

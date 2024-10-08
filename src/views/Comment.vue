@@ -14,11 +14,14 @@ const { commentList } = storeToRefs(commentStore);
 const tableData = computed(() => commentList.value.map(item => {
   return {
     id: item.id,
-    productId: item.productId,
-    email: item.user?.email,
+    idShop: item.idShop,
+    idUser: item.idUser,
+    idFood: item.idFood,
+    idOrder: item.idOrder,
     content: item.content,
-    image: item.image,
-    createdAt: formatDate(item.createdAt as string)
+    imagePath: item.imagePath,
+    rating: item.rating,
+    time: item.time
   }
 }));
 
@@ -26,13 +29,17 @@ const { getComments, deleteComment } = useComment();
 
 const tableColumns = [
 
-  { prop: "productId", label: "ID sản phẩm", width: "auto" },
-  { prop: "email", label: "Email người dùng", width: "auto" },
+  { prop: "id", label: "#ID", width: "auto" },
+  { prop: "idShop", label: "#ID cửa hàng", width: "auto" },
+  { prop: "idUser", label: "#ID người dùng", width: "auto" },
+  { prop: "idFood", label: "#ID sản phẩm", width: "auto" },
+  { prop: "idOrder", label: "#ID đơn hàng", width: "auto" },
   { prop: "content", label: "Nội dung", width: "auto" },
-  { prop: "image", label: "Ảnh", width: "auto" },
-  { prop: "createdAt", label: "Thời gian", width: "auto" },
-
+  { prop: "imagePath", label: "Ảnh", width: "auto" },
+  { prop: "rating", label: "Đánh giá", width: "auto" },
+  { prop: "time", label: "Thời gian", width: "auto" },
 ];
+
 
 
 const handleDelete = async (id: number) => {
@@ -50,8 +57,8 @@ onMounted(() => getComments());
 <template>
   <div class="comment-container">
     <div class="comment-list">
-      <BaseTable styleValue="height: 700px" :data="tableData" :columns="tableColumns" :isHiddenComponent="true" :isHiddenUpdate="true"
-        screen="bình luận" @delete="handleDelete" @export="handleExportFile" />
+      <BaseTable styleValue="height: 700px" :data="tableData" :columns="tableColumns" :isHiddenComponent="true"
+        :isHiddenUpdate="true" screen="bình luận" @delete="handleDelete" @export="handleExportFile" />
     </div>
   </div>
 </template>

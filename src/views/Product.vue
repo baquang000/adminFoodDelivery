@@ -4,19 +4,16 @@ import { ORDER_STATUS } from "@/common/enum";
 import ProductForm from "@/components/ProductForm.vue";
 import { useCategory } from "@/composables/useCategory";
 import { useOrder } from "@/composables/useOrder";
-import { useProduct } from "@/composables/useProduct";
 import { useAppStore } from "@/stores/app";
 import { useOrderStore } from "@/stores/order";
-import { useProductStore } from "@/stores/product";
 import { exportToExcel } from "@/utils/export";
 import { formatCurrency } from "@/utils/format";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import { useFood } from "../composables/useFood";
-import { foodStore } from "@/stores/food";
+import { userFoodStore } from "@/stores/food";
 
-const { foodList } = storeToRefs(foodStore())
-
+const { foodList, singleFood } = storeToRefs(userFoodStore())
 
 const { getFoods, updateFood, deleteFood, getSingleFood } = useFood();
 
@@ -26,10 +23,18 @@ const { isShowActionForm } = storeToRefs(appStore);
 const { getCategoryList } = useCategory();
 const { getOrders } = useOrder();
 
+
+const { orderList } = storeToRefs(useOrderStore());
+
+
+const dataTable = computed(() => foodList.value.map(item => ({ ...item, time: item.time.time })))
+
+
+
 const tableColumns = [
-  { prop: "idFood", label: "#ID", width: "auto" },
+  { prop: "id", label: "#ID", width: "auto" },
   { prop: "bestFood", label: "Best food", width: "auto" },
-  { prop: "categoryId", label: "Category ID", width: "auto" },
+  { prop: "idCategory", label: "Category ID", width: "auto" },
   { prop: "title", label: "Food Name", width: "auto" },
   { prop: "description", label: "Description", width: "300px" },
   { prop: "imagePath", label: "Image", width: "auto" },
@@ -42,7 +47,7 @@ const tableColumns = [
 
 const handleEditData = (id: number) => {
   console.log(id);
-  
+
   getSingleFood(id);
 };
 
@@ -55,36 +60,38 @@ const selled = ref(0);
 const revenua = ref(0);
 const sellTotal = ref(0);
 
-// watch(
-//   () => productList.value,
-//   () => {
-//     sellTotal.value += productList.value.reduce((x, y) => {
-//       return x + parseFloat(y.oldPrice);
-//     }, 0);
-//   }
-// );
+watch(
+  () => foodList.value,
+  () => {
+    sellTotal.value += foodList.value.reduce((x, y) => {
+      return x + parseFloat(y.price.price);
+    }, 0);
+  }
+);
 
-// watch(
-//   () => orderList.value,
-//   () => {
-//     selled.value = orderList.value.reduce((initValue, nextValue) => {
-//       if (nextValue.orderStatus === ORDER_STATUS.SUCCESS) {
-//         const orderSuccessNum = nextValue.orderDetails?.length || 0;
-//         revenua.value = revenua.value + parseFloat(nextValue.totalMoney);
-//         return Number(initValue) + orderSuccessNum;
-//       } else {
-//         return initValue;
-//       }
-//     }, 0);
-//   }
-// );
+watch(
+  () => orderList.value,
+  () => {
+    selled.value = orderList.value.reduce((initValue, nextValue) => {
+      if (nextValue.orderStatus === ORDER_STATUS.SUCCESS || nextValue.orderStatus === ORDER_STATUS.FOODBACK) {
+        const orderSuccessNum = nextValue.orderDetails?.length || 0;
+        revenua.value = revenua.value + parseFloat(nextValue.sumPrice);
+        return Number(initValue) + orderSuccessNum;
+      } else {
+        return initValue;
+      }
+    }, 0);
+  }
+);
 
 const handleExportFile = () => {
-  // exportToExcel(productList.value)
+  exportToExcel(foodList.value)
 }
 
 onMounted(() => {
   getFoods()
+  getCategoryList()
+  getOrders()
 });
 
 watch(() => foodList, () => {
@@ -94,9 +101,9 @@ watch(() => foodList, () => {
 
 <template>
   <div class="product-container">
-    <!-- <div class="product-featured">
+    <div class="product-featured">
       <el-card style="display: flex; align-items: center; justify-content: center"><span>Số lượng:
-          <b style="font-size: 25px">{{ productList.length }}</b></span></el-card>
+          <b style="font-size: 25px">{{ foodList.length }}</b></span></el-card>
       <el-card style="display: flex; align-items: center; justify-content: center"><span>Đã bán: <b
             style="font-size: 25px">{{ selled }}</b></span></el-card>
       <el-card style="display: flex; align-items: center; justify-content: center"><span>Tổng doanh thu:
@@ -116,7 +123,7 @@ watch(() => foodList, () => {
             padding: 10px;
             border-radius: 5px;
           ">
-          <img width="90x" height="90px" style="object-fit: cover" :src="singleProduct?.image" alt="" />
+          <img width="90x" height="90px" style="object-fit: cover" :src="singleFood?.imagePath" alt="" />
           <div style="
               display: flex;
               flex-direction: column;
@@ -124,16 +131,16 @@ watch(() => foodList, () => {
               margin-left: 10px;
               border-radius: 5px;
             ">
-            <span>#ID: <b>{{ singleProduct?.id }}</b></span>
+            <span>#ID: <b>{{ singleFood?.id }}</b></span>
             <span>Giá :
               <b style="color: blue">
-                {{ formatCurrency(singleProduct?.newPrice) }}</b></span>
+                {{ formatCurrency(singleFood?.price.price) }}</b></span>
           </div>
         </div>
       </el-card>
-    </div> -->
+    </div>
     <div class="product-list">
-      <BaseTable styleValue="height:80vh" :data="foodList" :columns="tableColumns" screen="sản phẩm"
+      <BaseTable styleValue="height:80vh" :data="dataTable" :columns="tableColumns" screen="sản phẩm"
         @edit="handleEditData" @delete="handleDelete" @export="handleExportFile" />
     </div>
     <ProductForm v-if="isShowActionForm" />

@@ -16,7 +16,7 @@ const userStore = useUserStore();
 
 const { getFoods } = useFood()
 
-const { userList } = storeToRefs(userStore);
+const { userList, user } = storeToRefs(userStore);
 
 const tableData = computed(() => userList.value);
 
@@ -30,8 +30,7 @@ const { getCount, getUserStat, getOrderStat, getRevenueStat } = useChart();
 const tableColumns = [
   { prop: "id", label: "ID", width: "auto" },
   { prop: "email", label: "Email", width: "250px" },
-  { prop: "userName", label: "Tên người dùng", width: "auto" },
-  { prop: "status", label: "Trạng thái", width: "auto" },
+  { prop: "role", label: "Quyền", width: "auto" },
 ];
 
 const handleEditData = (id: number) => { };
@@ -48,6 +47,7 @@ const handleDelete = async (id: number) => {
 
 onMounted(() => {
   getFoods()
+  getUsers()
 });
 </script>
 
@@ -77,9 +77,9 @@ onMounted(() => {
           @delete="handleDelete" />
       </el-card>
 
-      <el-card class="table" style="margin-left: 35px; height: 530px;">
+      <!-- <el-card class="table" style="margin-left: 35px; height: 530px;">
         <BarChart :labels="chartCount.labels" :series="chartCount.series" />
-      </el-card>
+      </el-card> -->
     </div>
   </div>
 </template>

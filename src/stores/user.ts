@@ -5,7 +5,9 @@ import type { TUser } from "@/common/type";
 export const useUserStore = defineStore("userStore", () => {
   const userList = ref<TUser[]>([]);
 
-  const user = ref<TUser | null>(JSON.parse(localStorage.getItem("user") as string) as TUser || null);
+  const user = ref<TUser | null>(
+    JSON.parse(localStorage.getItem("user") as string) || null
+  );
 
   const setUserList = (payload: TUser[]) => {
     userList.value = payload;

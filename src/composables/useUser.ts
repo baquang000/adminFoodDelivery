@@ -1,4 +1,11 @@
-import type { TError, TLogin, TRegister, TResult, TUser, TUserInfo } from "@/common/type";
+import type {
+  TError,
+  TLogin,
+  TRegister,
+  TResult,
+  TUser,
+  TUserInfo,
+} from "@/common/type";
 import { useUserStore } from "@/stores/user";
 import { request } from "@/utils/request";
 import { AxiosError } from "axios";
@@ -10,7 +17,7 @@ export const useUser = () => {
 
   const getSingleUser = async (id: number) => {
     try {
-      const response = await request.get(`/user/${id}`);
+      const response = await request.get(`/auth/${id}`);
 
       const { data } = response.data as TResult;
 
@@ -23,15 +30,15 @@ export const useUser = () => {
       }
 
       ElMessage.error("Có lỗi xảy ra !");
+      
     }
   };
 
   const getUsers = async () => {
     try {
-      const response = await request.get("/user");
+      const response = await request.get("/auth");
 
       const { data } = response.data as TResult;
-
       userStore.setUserList(data);
 
       return data;
@@ -48,7 +55,7 @@ export const useUser = () => {
 
   const updateUser = async (payload: TUser, id: number) => {
     try {
-      const response = await request.put(`/user/${id}`, payload);
+      const response = await request.put(`/auth/${id}`, payload);
 
       const { message } = response.data as TResult;
 
@@ -68,7 +75,7 @@ export const useUser = () => {
 
   const updateUserInfo = async (payload: TUserInfo, isShowMsg = true) => {
     try {
-      const response = await request.put(`/user`, payload);
+      const response = await request.put(`/auth`, payload);
 
       const { message } = response.data as TResult;
 
@@ -88,7 +95,7 @@ export const useUser = () => {
 
   const deleteUser = async (id: number) => {
     try {
-      const response = await request.delete(`/user/${id}`);
+      const response = await request.delete(`/auth/${id}`);
 
       const { message } = response.data as TResult;
 
@@ -108,7 +115,7 @@ export const useUser = () => {
 
   const createUser = async (payload: TUser) => {
     try {
-      const response = await request.post("/user", payload);
+      const response = await request.post("/auth", payload);
 
       const { message } = response.data as TResult;
 
@@ -142,7 +149,7 @@ export const useUser = () => {
         if (isArray(message)) {
           ElMessage.error(message[0]);
 
-          return false
+          return false;
         }
 
         ElMessage.error(message);
@@ -174,7 +181,7 @@ export const useUser = () => {
         const { message } = error.response?.data as TError;
 
         if (isArray(message)) {
-          ElMessage.error(message[0])
+          ElMessage.error(message[0]);
 
           return false;
         }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ACTION_ENUM } from "@/common/enum";
 import { useAppStore } from "@/stores/app";
+import { formatDate } from "@/utils/format";
 import { computed } from "vue";
 
 type TColumn = {
@@ -67,19 +68,6 @@ const handleExportData = () => {
   emit("export");
 };
 
-const screenHelper = () => {
-  switch (props.screen) {
-    case 'danh mục':
-      return 'categoryId'
-
-    case 'sản phẩm':
-      return 'idFood'
-
-    default:
-      break;
-  }
-}
-
 </script>
 
 <template>
@@ -119,9 +107,11 @@ const screenHelper = () => {
           </div>
 
           <div v-if="column.prop === 'time'">
-            <span>{{ scope.row[column.prop].time }}</span>
+            <span> {{ new Date(scope.row[column.prop]) instanceof Date ? formatDate(scope.row[column.prop])
+              : scope.row[column.prop] }}</span>
           </div>
 
+        
         </template>
 
 
@@ -136,13 +126,13 @@ const screenHelper = () => {
             </span>
             <span class="icon" v-if="!props.isHiddenUpdate">
               <Edit v-if="screen !== 'đơn hàng'" style="width: 1em; height: 1em; color: blue"
-                @click="handleShowForm(ACTION_ENUM.UPDATE, row[screenHelper()])" />
+                @click="handleShowForm(ACTION_ENUM.UPDATE, row.id)" />
 
-              <i @click="handleShowForm(ACTION_ENUM.UPDATE, row[screenHelper()])" v-if="screen === 'đơn hàng'"
-                style="color: green" class="pi pi-check-square"></i>
+              <i @click="handleShowForm(ACTION_ENUM.UPDATE, row.id)" v-if="screen === 'đơn hàng'" style="color: green"
+                class="pi pi-check-square"></i>
             </span>
             <span class="icon">
-              <Delete style="width: 1em; height: 1em; color: red" @click="handleDelete(row[screenHelper()])" />
+              <Delete style="width: 1em; height: 1em; color: red" @click="handleDelete(row.id)" />
             </span>
           </div>
         </template>

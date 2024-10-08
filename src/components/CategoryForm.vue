@@ -57,7 +57,7 @@ const handleSubmit = async () => {
     if (valid) {
       actionType.value === ACTION_ENUM.CREATE
         ? await createCategory(ruleForm)
-        : await updateCategory(ruleForm, singleCategory.value.categoryId as number);
+        : await updateCategory(ruleForm, singleCategory.value.id as number);
       await getCategoryList();
 
       handleCloseForm();
