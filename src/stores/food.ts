@@ -26,8 +26,33 @@ export const userFoodStore = defineStore("foodStore", () => {
       id: 0,
       time: "",
     },
-    timeValue:""
-  })
+    timeValue: "",
+    sold: 10,
+  });
+
+  const foodSellTheMost = ref<TFood>({
+    id: 0,
+    bestFood: false,
+    idCategory: 0,
+    description: "",
+    imagePath: "",
+    idPrice: 0,
+    star: "",
+    idTime: 0,
+    title: "",
+    idShop: 0,
+    showFood: false,
+    price: {
+      id: 0,
+      price: "",
+    },
+    time: {
+      id: 0,
+      time: "",
+    },
+    timeValue: "",
+    sold: 10,
+  });
 
   const setFoodList = (payload: TFood[]) => {
     foodList.value = payload;
@@ -41,6 +66,10 @@ export const userFoodStore = defineStore("foodStore", () => {
     filter.value = payload;
   };
 
+  const setFoodSellTheMost = (payload: TFood) => {
+    foodSellTheMost.value = payload;
+  };
+
   return {
     foodList,
     setFoodList,
@@ -48,5 +77,7 @@ export const userFoodStore = defineStore("foodStore", () => {
     setSingleFood,
     filter,
     setFilter,
+    foodSellTheMost,
+    setFoodSellTheMost,
   };
 });

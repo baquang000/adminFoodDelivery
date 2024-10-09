@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const sidebarList = [

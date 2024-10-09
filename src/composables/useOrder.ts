@@ -14,12 +14,32 @@ import { ElMessage } from "element-plus";
 export const useOrder = () => {
   const orderStore = useOrderStore();
 
+  const getAll = async () => {
+    try {
+      const response = await request.get(`/order`);
+
+      const { data } = response.data as TResult;
+
+      orderStore.setOrderList(data);
+
+      return data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const { message } = error.response?.data as TError;
+
+        return ElMessage.error(message);
+      }
+
+      ElMessage.error("Có lỗi xảy ra !");
+    }
+  };
+
   const getSingleOrder = async (id: number) => {
     try {
       const response = await request.get(`/order/single/${id}`);
-      
+
       const { data } = response.data as TResult;
-      
+
       orderStore.setSingleOrder(data);
 
       return data;
@@ -171,5 +191,6 @@ export const useOrder = () => {
     deleteOrder,
     createOrderDetails,
     getOrderByUser,
+    getAll
   };
 };

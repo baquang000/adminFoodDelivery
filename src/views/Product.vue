@@ -13,15 +13,15 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useFood } from "../composables/useFood";
 import { userFoodStore } from "@/stores/food";
 
-const { foodList, singleFood } = storeToRefs(userFoodStore())
+const { foodList, foodSellTheMost } = storeToRefs(userFoodStore())
 
-const { getFoods, updateFood, deleteFood, getSingleFood } = useFood();
+const { getFoods, deleteFood, getSingleFood, getFoodSellTheMost } = useFood();
 
 const appStore = useAppStore();
 const { isShowActionForm } = storeToRefs(appStore);
 
 const { getCategoryList } = useCategory();
-const { getOrders } = useOrder();
+const { getAll } = useOrder();
 
 
 const { orderList } = storeToRefs(useOrderStore());
@@ -46,8 +46,6 @@ const tableColumns = [
 ];
 
 const handleEditData = (id: number) => {
-  console.log(id);
-
   getSingleFood(id);
 };
 
@@ -58,30 +56,46 @@ const handleDelete = (id: number) => {
 
 const selled = ref(0);
 const revenua = ref(0);
-const sellTotal = ref(0);
+//const sellTotal = ref(0);
+
+
+// watch(
+//   () => foodList.value,
+//   () => {
+//     sellTotal.value += foodList.value.reduce((x, y) => {
+//       return x + parseFloat(y.price.price);
+//     }, 0);
+//   }
+// );
 
 watch(
-  () => foodList.value,
+  () => orderList.value,
   () => {
-    sellTotal.value += foodList.value.reduce((x, y) => {
-      return x + parseFloat(y.price.price);
+    const totalPrice = orderList.value.reduce((total, order) => {
+      if (order.orderStatus === ORDER_STATUS.SUCCESS || order.orderStatus === ORDER_STATUS.FOODBACK) {
+        return total + parseFloat(order.totalMoney);
+      }
+      return total;
     }, 0);
-  }
+    revenua.value = totalPrice;
+
+  },
 );
 
 watch(
   () => orderList.value,
   () => {
-    selled.value = orderList.value.reduce((initValue, nextValue) => {
-      if (nextValue.orderStatus === ORDER_STATUS.SUCCESS || nextValue.orderStatus === ORDER_STATUS.FOODBACK) {
-        const orderSuccessNum = nextValue.orderDetails?.length || 0;
-        revenua.value = revenua.value + parseFloat(nextValue.sumPrice);
-        return Number(initValue) + orderSuccessNum;
+    const totalOrderDetails = orderList.value.reduce((total, order) => {
+      if (order.orderStatus === ORDER_STATUS.SUCCESS || order.orderStatus === ORDER_STATUS.FOODBACK) {
+        return total + (order.orderDetails?.reduce((subTotal, orderDetail) => {
+          return subTotal + (orderDetail.quantity || 0);
+        }, 0) || 0);
       } else {
-        return initValue;
+        return total;
       }
     }, 0);
-  }
+    selled.value = totalOrderDetails
+  },
 );
 
 const handleExportFile = () => {
@@ -91,12 +105,10 @@ const handleExportFile = () => {
 onMounted(() => {
   getFoods()
   getCategoryList()
-  getOrders()
+  getAll()
+  getFoodSellTheMost()
 });
 
-watch(() => foodList, () => {
-  console.log(foodList)
-})
 </script>
 
 <template>
@@ -123,7 +135,7 @@ watch(() => foodList, () => {
             padding: 10px;
             border-radius: 5px;
           ">
-          <img width="90x" height="90px" style="object-fit: cover" :src="singleFood?.imagePath" alt="" />
+          <img width="90x" height="90px" style="object-fit: cover" :src="foodSellTheMost?.imagePath" alt="" />
           <div style="
               display: flex;
               flex-direction: column;
@@ -131,10 +143,10 @@ watch(() => foodList, () => {
               margin-left: 10px;
               border-radius: 5px;
             ">
-            <span>#ID: <b>{{ singleFood?.id }}</b></span>
+            <span>#ID: <b>{{ foodSellTheMost?.id }}</b></span>
             <span>Giá :
               <b style="color: blue">
-                {{ formatCurrency(singleFood?.price.price) }}</b></span>
+                {{ formatCurrency(foodSellTheMost?.price.price) }}</b></span>
           </div>
         </div>
       </el-card>

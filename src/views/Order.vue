@@ -33,14 +33,14 @@ const tableData = computed(() =>
       id: item.id,
       idUser: item.idUser,
       idShop: item.idShop,
-      sumPrice: formatCurrency(item.sumPrice),
+      sumPrice: formatCurrency(item.totalMoney),
       noteOrder: item.noteOrder,
       orderStatus: statusHelper(item.orderStatus as string),
       email: item.user?.email,
       userName: item.user?.name,
       numberPhone: item.user?.numberPhone,
       address: item.user?.address,
-      time: item.time
+      createAt: item.createdAt
     };
   })
 );
@@ -57,7 +57,7 @@ const tableColumns = [
   { prop: "sumPrice", label: "Tổng tiền", width: "auto" },
   { prop: "noteOrder", label: "Ghi chú", width: "auto" },
   { prop: "orderStatus", label: "Trạng thái", width: "auto" },
-  { prop: "time", label: "Thời gian", width: "220px" },
+  { prop: "createAt", label: "Thời gian", width: "220px" },
 ];
 const tabPosition = ref<TabsInstance["tabPosition"]>("left");
 

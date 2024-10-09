@@ -2,7 +2,6 @@ import type { TError, TFood, TResult, TSuccess } from "@/common/type";
 import { request } from "@/utils/request";
 import { AxiosError } from "axios";
 import { ElMessage } from "element-plus";
-import { storeToRefs } from "pinia";
 import { userFoodStore } from "../stores/food";
 
 export const useFood = () => {
@@ -10,7 +9,7 @@ export const useFood = () => {
 
   const getSingleFood = async (id: number) => {
     try {
-      const response = await request.get(`/foods/${id}`);
+      const response = await request.get(`/foods/single/${id}`);
 
       const { data } = response.data as TResult;
 
@@ -33,8 +32,8 @@ export const useFood = () => {
       const response = await request.get(`/foods/sell-the-most`);
 
       const { data } = response.data as TResult;
-
-      console.log(data);
+  
+      food.setFoodSellTheMost(data);
 
       return data;
     } catch (error) {
@@ -68,8 +67,6 @@ export const useFood = () => {
 
   const getFoods = async () => {
     try {
-      const params = {};
-
       const response = await request.get("/foods");
 
       food.setFoodList(response.data);

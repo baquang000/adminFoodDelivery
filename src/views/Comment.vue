@@ -3,7 +3,6 @@ import BaseTable from "@/base/BaseTable.vue";
 import { useComment } from "@/composables/useComment";
 import { useCommentStore } from "@/stores/comment";
 import { exportToExcel } from "@/utils/export";
-import { formatDate } from "@/utils/format";
 import { storeToRefs } from "pinia";
 import { computed, onMounted } from "vue";
 
@@ -21,7 +20,7 @@ const tableData = computed(() => commentList.value.map(item => {
     content: item.content,
     imagePath: item.imagePath,
     rating: item.rating,
-    time: item.time
+    createAt: item.createdAt
   }
 }));
 
@@ -37,7 +36,7 @@ const tableColumns = [
   { prop: "content", label: "Nội dung", width: "auto" },
   { prop: "imagePath", label: "Ảnh", width: "auto" },
   { prop: "rating", label: "Đánh giá", width: "auto" },
-  { prop: "time", label: "Thời gian", width: "auto" },
+  { prop: "createAt", label: "Thời gian", width: "auto" },
 ];
 
 

@@ -11,7 +11,7 @@ export type TOrderDetails = {
   idOrder: number;
   idFood: number;
   quantity: number;
-  price: number;
+  price: string;
   title: string;
   imagePath: string;
 };
@@ -68,7 +68,7 @@ const status = ref<TStatus[]>([
 watch(
   () => singleOrder.value,
   () => {
-    
+
     status.value = status.value.map((item) => ({
       ...item,
       color: singleOrder.value?.orderStatus === item.key ? "#0bbd87" : "",

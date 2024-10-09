@@ -38,6 +38,9 @@ export type TCategory = {
   id?: number;
   name: string;
   imagePath: string;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
 };
 
 export type TComment = {
@@ -49,7 +52,9 @@ export type TComment = {
   content: string;
   imagePath: string;
   rating: string;
-  time: string;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
 };
 
 export type TUser = {
@@ -71,14 +76,13 @@ export type TLogin = {
 
 export type TOrder = {
   id?: number;
-  sumPrice: string;
+  totalMoney: string;
   noteOrder: string;
   idUser: string;
   idShop: string;
   rewardForDriver: number;
   deliverytoDoor: boolean;
   diningSubtances: boolean;
-  time: string;
   orderStatus?: string;
   orderDetails?: [
     {
@@ -86,9 +90,12 @@ export type TOrder = {
       idOrder?: number;
       idFood?: number;
       quantity?: number;
-      price?: number;
+      price?: string;
       title?: string;
       imagePath?: string;
+      createdAt?: string;
+      updatedAt?: string;
+      deletedAt?: string;
     }
   ];
   user?: {
@@ -98,6 +105,9 @@ export type TOrder = {
     address?: string;
     numberPhone?: string;
     dateOfBirth?: string;
+    createdAt?: string;
+    updatedAt?: string;
+    deletedAt?: string;
   };
   shop?: {
     id?: number;
@@ -109,7 +119,13 @@ export type TOrder = {
     starShop?: string;
     titleShop?: string;
     idAccount?: number;
+    createdAt?: string;
+    updatedAt?: string;
+    deletedAt?: string;
   };
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
 };
 
 export type TParamsOrder = {
@@ -195,11 +211,21 @@ export type TFood = {
   price: {
     id: number;
     price: string;
+    createdAt?: string;
+    updatedAt?: string;
+    deletedAt?: string;
   };
   time: {
     id: number;
     time: string;
+    createdAt?: string;
+    updatedAt?: string;
+    deletedAt?: string;
   };
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
+  sold: number;
 };
 
 export type CreateFood = {
