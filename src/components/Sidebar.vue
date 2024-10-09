@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const sidebarList = [
@@ -32,7 +32,7 @@ const sidebarList = [
   },
   {
     name: "Đăng xuất",
-    route: "/",
+    route: "/login",
     icon: "pi-sign-out",
   },
 ];
@@ -46,9 +46,13 @@ const { user } = storeToRefs(userStore)
 
 const isUser = user.value || null
 
-const defaultIndexActive = ref(0);
+const defaultIndexActive = ref(Number(localStorage.getItem('sidebarIndex')) || 0);
+
+const path = computed(() => route.path)
 
 const handleChangeSidebar = (index: number, path: string, name?: string) => {
+  localStorage.setItem('sidebarIndex', index.toString())
+
   if (name !== "Đăng xuất") {
     defaultIndexActive.value = index;
     router.replace(path);
@@ -60,14 +64,12 @@ const handleChangeSidebar = (index: number, path: string, name?: string) => {
   }
 };
 
+onMounted(() => console.log('ok'))
 
-onMounted(() => {
-  if (route.path === "/login") {
-    defaultIndexActive.value = 0
-  } else {
-    defaultIndexActive.value = sidebarList.findIndex(item => item.route === route.path)
-  }
+watch(() => path.value, () => {
+  defaultIndexActive.value = sidebarList.findIndex(item => item.route === route.path)
 })
+
 </script>
 
 <template>

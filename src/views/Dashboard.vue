@@ -16,7 +16,7 @@ const userStore = useUserStore();
 
 const { getFoods } = useFood()
 
-const { userList, user } = storeToRefs(userStore);
+const { userList } = storeToRefs(userStore);
 
 const tableData = computed(() => userList.value);
 
@@ -33,7 +33,7 @@ const tableColumns = [
   { prop: "role", label: "Quyền", width: "auto" },
 ];
 
-const handleEditData = (id: number) => { };
+const handleEditData = () => { };
 
 const handleDelete = async (id: number) => {
   await deleteUser(id);
@@ -47,12 +47,16 @@ const handleDelete = async (id: number) => {
 
 onMounted(() => {
   getFoods()
-  getUsers()
+  getUsers();
+  getCount();
+  getUserStat();
+  getOrderStat();
+  getRevenueStat();
 });
 </script>
 
 <template>
-  
+
   <div class="dashboard-container">
     <div class="dashboard-featured">
       <el-card>
@@ -78,9 +82,9 @@ onMounted(() => {
           @delete="handleDelete" />
       </el-card>
 
-      <!-- <el-card class="table" style="margin-left: 35px; height: 530px;">
+      <el-card class="table" style="margin-left: 35px; height: 530px;">
         <BarChart :labels="chartCount.labels" :series="chartCount.series" />
-      </el-card> -->
+      </el-card>
     </div>
   </div>
 </template>
