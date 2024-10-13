@@ -34,6 +34,10 @@ const router = createRouter({
       component: () => import("../views/Time.vue"),
     },
     {
+      path: "/discount",
+      component: () => import("../views/DiscountCode.vue"),
+    },
+    {
       path: "/login",
       component: () => import("../views/Login.vue"),
     },

@@ -48,8 +48,8 @@ onMounted(() => getTimeList());
 </script>
 
 <template>
-    <div class="time-container">
-        <div class="time-list">
+    <div class="discountcode-container">
+        <div class="discountcode-list">
             <BaseTable :data="tableData" :columns="tableColumns" styleValue="height:700px" screen="Thời gian"
                 @edit="handleEditData" @delete="handleDelete" @export="handleExportFile" />
         </div>
@@ -58,7 +58,7 @@ onMounted(() => getTimeList());
 </template>
 
 <style lang="scss" scoped>
-.time-container {
+.discountcode-container {
     width: 100%;
     height: 100%;
     display: flex;
@@ -77,7 +77,7 @@ onMounted(() => getTimeList());
         }
     }
 
-    .time-list {
+    .discountcode-list {
         width: 100%;
         display: flex;
         flex-direction: column;

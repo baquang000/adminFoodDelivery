@@ -256,3 +256,27 @@ export type TTime = {
   updatedAt?: string;
   deletedAt?: string;
 };
+
+export type TDiscountCode = {
+  id?: number;
+  name: string;
+  description: string;
+  percentage: string;
+  maxDiscountAmount: string;
+  minOrderAmount: string;
+  startDate: Date | null;
+  endDate: Date | null;
+  isActive: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+  idShop: number;
+  typeDiscount: string;
+  maxUser: number;
+  numberUse: number;
+};
+
+export enum TypeDiscount {
+  PERCENTAGE = 'PERCENTAGE',
+  FIXED = 'FIXED',
+}

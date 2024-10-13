@@ -9,3 +9,8 @@ export const formatCurrency = (amount: any) => {
 export const formatDate = (date: string) => {
   return date.split(" ").reverse().join(" / ");
 };
+
+
+export const formatDateIOS = (date: string) => {
+  return date.split("T")[0].split("-").reverse().join(" / ");
+};

@@ -33,12 +33,17 @@ const sidebarList = [
   {
     name: "Giá",
     route: "/price",
-    icon: "pi-comments",
+    icon: "pi-dollar",
   },
   {
     name: "Thời gian",
     route: "/time",
-    icon: "pi-comments",
+    icon: "pi-clock",
+  },
+  {
+    name: "Mã giảm giá",
+    route: "/discount",
+    icon: "pi-ticket",
   },
   {
     name: "Đăng xuất",

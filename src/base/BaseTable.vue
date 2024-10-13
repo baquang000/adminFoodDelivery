@@ -112,7 +112,9 @@ const handleExportData = () => {
               : scope.row[column.prop] }}</span>
           </div>
 
-
+          <div v-if="column.prop === 'isActive'">
+            <span>{{ scope.row[column.prop] ? 'Đang chạy' : 'Dừng' }}</span>
+          </div>
         </template>
 
 
