@@ -88,7 +88,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <el-card class="category-form-container">
+  <el-card class="price-form-container">
     <div class="top">
       <h2>{{ actionText }} danh mục</h2>
       <el-icon style="cursor: pointer; font-size: 16px" @click="handleCloseForm">
@@ -115,7 +115,7 @@ onUnmounted(() => {
 </template>
 
 <style scoped lang="scss">
-.category-form-container {
+.price-form-container {
   width: 30vw;
   height: 50vh;
   position: absolute;
@@ -165,17 +165,17 @@ onUnmounted(() => {
   }
 }
 
-.category-form-container::-webkit-scrollbar-track {
+.price-form-container::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: #f5f5f5;
 }
 
-.category-form-container::-webkit-scrollbar {
+.price-form-container::-webkit-scrollbar {
   width: 6px;
   background-color: #f5f5f5;
 }
 
-.category-form-container::-webkit-scrollbar-thumb {
+.price-form-container::-webkit-scrollbar-thumb {
   background-color: rgba(128, 128, 128, 0.562);
 }
 </style>

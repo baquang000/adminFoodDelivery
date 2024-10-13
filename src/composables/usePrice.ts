@@ -1,20 +1,20 @@
-import type { TCategory, TError, TResult, TSuccess } from "@/common/type";
-import { useCategoryStore } from "@/stores/category";
+import type { TError, TPrice, TResult, TSuccess } from "@/common/type";
+import { usePriceStore } from "@/stores/price";
 import { request } from "@/utils/request";
 import { AxiosError } from "axios";
 import { ElMessage } from "element-plus";
 
-export const useCategory = () => {
-  const categoryStore = useCategoryStore();
+export const usePrice = () => {
+  const priceStore = usePriceStore();
 
-  const getSingleCategory = async (id: number) => {
+  const getSinglePrice = async (id: number) => {
     try {
       console.log("getSingleCategory", id);
-      const response = await request.get(`/category/${id}`);
+      const response = await request.get(`/price/${id}`);
 
       const { data } = response.data as TResult;
 
-      categoryStore.setSingleCategory(data);
+      priceStore.setSinglePrice(data);
 
       return data;
     } catch (error) {
@@ -28,11 +28,11 @@ export const useCategory = () => {
     }
   };
 
-  const getCategoryList = async () => {
+  const getPriceList = async () => {
     try {
-      const response = await request.get("/category");
+      const response = await request.get("/price");
 
-      categoryStore.setCategoryList(response.data);
+      priceStore.setPriceList(response.data);
 
       return true;
     } catch (error) {
@@ -46,30 +46,9 @@ export const useCategory = () => {
     }
   };
 
-  const updateCategory = async (payload: TCategory, id: number) => {
+  const updatePrice = async (payload: TPrice, id: number) => {
     try {
-      console.log("updateCategory ", payload);
-      const response = await request.put(`/category/${id}`, payload);
-
-      const { message } = response.data as TSuccess;
-      console.log("success ", message);
-      ElMessage.success(message);
-
-      return true;
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const { message } = error.response?.data as TError;
-
-        return ElMessage.error(message);
-      }
-
-      ElMessage.error("Có lỗi xảy ra !");
-    }
-  };
-
-  const deleteCategory = async (id: number) => {
-    try {
-      const response = await request.delete(`/category/${id}`);
+      const response = await request.put(`/price/${id}`, payload);
 
       const { message } = response.data as TSuccess;
 
@@ -87,9 +66,29 @@ export const useCategory = () => {
     }
   };
 
-  const createCategory = async (payload: TCategory) => {
+  const deletePrice = async (id: number) => {
     try {
-      const response = await request.post("/category", payload);
+      const response = await request.delete(`/price/${id}`);
+
+      const { message } = response.data as TSuccess;
+
+      ElMessage.success(message);
+
+      return true;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const { message } = error.response?.data as TError;
+
+        return ElMessage.error(message);
+      }
+
+      ElMessage.error("Có lỗi xảy ra !");
+    }
+  };
+
+  const createPrice = async (payload: TPrice) => {
+    try {
+      const response = await request.post("/price", payload);
 
       const { message } = response.data as TResult;
 
@@ -108,10 +107,10 @@ export const useCategory = () => {
   };
 
   return {
-    getSingleCategory,
-    getCategoryList,
-    updateCategory,
-    createCategory,
-    deleteCategory,
+    getSinglePrice,
+    getPriceList,
+    updatePrice,
+    createPrice,
+    deletePrice,
   };
 };

@@ -50,7 +50,7 @@ onMounted(() => getCategoryList());
 
 <template>
   <div class="category-container">
-    <div class="category-list">
+    <div class="price-list">
       <BaseTable :data="tableData" :columns="tableColumns" styleValue="height:700px" screen="danh mục"
         @edit="handleEditData" @delete="handleDelete" @export="handleExportFile" />
     </div>
@@ -78,7 +78,7 @@ onMounted(() => getCategoryList());
     }
   }
 
-  .category-list {
+  .price-list {
     width: 100%;
     display: flex;
     flex-direction: column;

@@ -240,3 +240,12 @@ export type CreateFood = {
   showFood: boolean;
   star: string;
 };
+
+
+export type TPrice = {
+    id?: number;
+    price: string;
+    createdAt?: string;
+    updatedAt?: string;
+    deletedAt?: string;
+}

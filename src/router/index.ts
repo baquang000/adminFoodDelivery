@@ -26,6 +26,10 @@ const router = createRouter({
       component: () => import("../views/Comment.vue"),
     },
     {
+      path: "/price",
+      component: () => import("../views/Price.vue"),
+    },
+    {
       path: "/login",
       component: () => import("../views/Login.vue"),
     },

@@ -42,6 +42,7 @@ const ruleForm = reactive<TFood>({
   title: "",
   idShop: null,
   showFood: true,
+  sold: 0
 });
 
 
@@ -144,7 +145,8 @@ onUnmounted(() => {
     title: "",
     idShop: 0,
     showFood: true,
-    timeValue: ""
+    timeValue: "",
+    sold: 0
   });
   appStore.setActionType(ACTION_ENUM.CREATE);
 });
