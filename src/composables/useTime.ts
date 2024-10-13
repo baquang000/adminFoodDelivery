@@ -1,20 +1,19 @@
-import type { TError, TPrice, TResult, TSuccess } from "@/common/type";
-import { usePriceStore } from "@/stores/price";
+import type { TError, TPrice, TResult, TSuccess, TTime } from "@/common/type";
+import { useTimeStore } from "@/stores/time";
 import { request } from "@/utils/request";
 import { AxiosError } from "axios";
 import { ElMessage } from "element-plus";
 
-export const usePrice = () => {
-  const priceStore = usePriceStore();
+export const useTime = () => {
+  const timeStore = useTimeStore();
 
-  const getSinglePrice = async (id: number) => {
+  const getSingleTime = async (id: number) => {
     try {
-     
-      const response = await request.get(`/price/${id}`);
+      const response = await request.get(`/time/${id}`);
 
       const { data } = response.data as TResult;
 
-      priceStore.setSinglePrice(data);
+      timeStore.setSingleTime(data);
 
       return data;
     } catch (error) {
@@ -28,11 +27,11 @@ export const usePrice = () => {
     }
   };
 
-  const getPriceList = async () => {
+  const getTimeList = async () => {
     try {
-      const response = await request.get("/price");
+      const response = await request.get("/time");
 
-      priceStore.setPriceList(response.data);
+      timeStore.setTimeList(response.data);
 
       return true;
     } catch (error) {
@@ -46,9 +45,9 @@ export const usePrice = () => {
     }
   };
 
-  const updatePrice = async (payload: TPrice, id: number) => {
+  const updateTime = async (payload: TTime, id: number) => {
     try {
-      const response = await request.put(`/price/${id}`, payload);
+      const response = await request.put(`/time/${id}`, payload);
 
       const { message } = response.data as TSuccess;
 
@@ -66,9 +65,9 @@ export const usePrice = () => {
     }
   };
 
-  const deletePrice = async (id: number) => {
+  const deleteTime = async (id: number) => {
     try {
-      const response = await request.delete(`/price/${id}`);
+      const response = await request.delete(`/time/${id}`);
 
       const { message } = response.data as TSuccess;
 
@@ -86,9 +85,9 @@ export const usePrice = () => {
     }
   };
 
-  const createPrice = async (payload: TPrice) => {
+  const createTime = async (payload: TTime) => {
     try {
-      const response = await request.post("/price", payload);
+      const response = await request.post("/time", payload);
 
       const { message } = response.data as TResult;
 
@@ -107,10 +106,10 @@ export const usePrice = () => {
   };
 
   return {
-    getSinglePrice,
-    getPriceList,
-    updatePrice,
-    createPrice,
-    deletePrice,
+    getSingleTime,
+    getTimeList,
+    updateTime,
+    createTime,
+    deleteTime,
   };
 };

@@ -36,6 +36,11 @@ const sidebarList = [
     icon: "pi-comments",
   },
   {
+    name: "Thời gian",
+    route: "/time",
+    icon: "pi-comments",
+  },
+  {
     name: "Đăng xuất",
     route: "/login",
     icon: "pi-sign-out",

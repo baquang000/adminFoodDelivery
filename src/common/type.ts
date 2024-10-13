@@ -241,11 +241,18 @@ export type CreateFood = {
   star: string;
 };
 
-
 export type TPrice = {
-    id?: number;
-    price: string;
-    createdAt?: string;
-    updatedAt?: string;
-    deletedAt?: string;
-}
+  id?: number;
+  price: string;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
+};
+
+export type TTime = {
+  id?: number;
+  time: string;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
+};

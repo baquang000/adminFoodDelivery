@@ -1,23 +1,25 @@
 <script lang="ts" setup>
 import { ACTION_ENUM } from '@/common/enum';
-import type { TPrice } from '@/common/type';
-import { usePrice } from '@/composables/usePrice';
+import type { TTime } from '@/common/type';
+import { useTime } from '@/composables/useTime';
 import { useAppStore } from '@/stores/app';
-import { usePriceStore } from '@/stores/price';
+import { useTimeStore } from '@/stores/time';
 import type { FormInstance, FormRules } from 'element-plus';
 import { storeToRefs } from 'pinia';
 import { computed, onUnmounted, reactive, ref, watch } from 'vue';
 
 
+
+
 const appStore = useAppStore();
-const priceStore = usePriceStore();
+const timeStore = useTimeStore();
 
 const {
-    createPrice,
-    getPriceList,
-    updatePrice
-} = usePrice();
-const { singlePrice } = storeToRefs(priceStore);
+    createTime,
+    getTimeList,
+    updateTime
+} = useTime();
+const { singleTime } = storeToRefs(timeStore);
 
 const { actionType } = storeToRefs(appStore);
 
@@ -32,13 +34,13 @@ const handleCloseForm = () => {
     appStore.setIsShowOverlay(false);
 };
 
-const ruleForm = reactive<TPrice>({
-    price: "",
+const ruleForm = reactive<TTime>({
+    time: ""
 })
 
-const rules = reactive<FormRules<TPrice>>({
-    price: [
-        { required: true, message: 'Giá không được bỏ trống', trigger: ['change', 'blur'] },
+const rules = reactive<FormRules<TTime>>({
+    time: [
+        { required: true, message: 'Thời gian không được bỏ trống', trigger: ['change', 'blur'] },
     ],
 
 })
@@ -49,9 +51,9 @@ const handleSubmit = async () => {
     await ruleFormRef?.value?.validate(async (valid, fields) => {
         if (valid) {
             actionType.value === ACTION_ENUM.CREATE
-                ? await createPrice(ruleForm)
-                : await updatePrice(ruleForm, singlePrice.value.id as number);
-            await getPriceList();
+                ? await createTime(ruleForm)
+                : await updateTime(ruleForm, singleTime.value.id as number);
+            await getTimeList();
             handleCloseForm();
         } else {
             console.log('error submit!', fields)
@@ -61,16 +63,16 @@ const handleSubmit = async () => {
 
 
 watch(
-    () => singlePrice.value,
+    () => singleTime.value,
     () => {
-        ruleForm.price = singlePrice.value.price
+        ruleForm.time = singleTime.value.time
     }
 );
 
 
 onUnmounted(() => {
-    priceStore.setSinglePrice({
-        price: "",
+    timeStore.setSingleTime({
+        time: "",
     });
 
     appStore.setActionType(ACTION_ENUM.CREATE);
@@ -80,20 +82,20 @@ onUnmounted(() => {
 <template>
     <el-card class="time-form-container">
         <div class="top">
-            <h2>{{ actionText }} Giá</h2>
+            <h2>{{ actionText }} Thời gian</h2>
             <el-icon style="cursor: pointer; font-size: 16px" @click="handleCloseForm">
                 <CloseBold />
             </el-icon>
         </div>
         <el-form ref="ruleFormRef" :rules="rules" :model="ruleForm">
-            <el-form-item label="Giá" label-position="top" prop="price">
-                <el-input v-model="ruleForm.price" placeholder="Nhập giá" />
+            <el-form-item label="Thời gian" label-position="top" prop="time">
+                <el-input v-model="ruleForm.time" placeholder="Nhập thời gian" />
             </el-form-item>
             <div class="bottom">
                 <el-button type="info" @click="handleCloseForm">Hủy</el-button>
                 <el-button type="success" @click="handleSubmit">{{
                     actionType === ACTION_ENUM.CREATE ? "Thêm" : "Sửa"
-                }}</el-button>
+                    }}</el-button>
             </div>
         </el-form>
     </el-card>

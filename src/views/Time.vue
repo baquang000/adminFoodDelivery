@@ -1,47 +1,48 @@
 <script lang="ts" setup>
 import BaseTable from "@/base/BaseTable.vue";
-import PriceForm from '@/components/PriceForm.vue';
-import { usePrice } from '@/composables/usePrice';
-import { useAppStore } from '@/stores/app';
-import { usePriceStore } from '@/stores/price';
-import { exportToExcel } from '@/utils/export';
-import { storeToRefs } from 'pinia';
-import { computed, onMounted } from 'vue';
+import TimeForm from "@/components/TimeForm.vue";
+import { useTime } from "@/composables/useTime";
+import { useAppStore } from "@/stores/app";
+import { useTimeStore } from "@/stores/time";
+import { exportToExcel } from "@/utils/export";
+import { storeToRefs } from "pinia";
+import { computed, onMounted } from "vue";
 
 
-const priceStore = usePriceStore();
+
+const timeStore = useTimeStore();
 
 const appStore = useAppStore();
 
 const { isShowActionForm } = storeToRefs(appStore);
 
-const { priceList } = storeToRefs(priceStore);
+const { timeList } = storeToRefs(timeStore);
 
-const tableData = computed(() => priceList.value);
+const tableData = computed(() => timeList.value);
 
-const { getPriceList, getSinglePrice, deletePrice } = usePrice();
+const { getTimeList, getSingleTime, deleteTime } = useTime();
 
 const tableColumns = [
     { prop: "id", label: "#ID", width: "auto" },
-    { prop: "price", label: "Giá trị", width: "auto" },
+    { prop: "time", label: "Thời gian", width: "auto" },
 ];
 
 const handleEditData = (id: number) => {
-    getSinglePrice(id);
+    getSingleTime(id);
 };
 
 const handleDelete = async (id: number) => {
-    await deletePrice(id);
-    getPriceList();
+    await deleteTime(id);
+    getTimeList();
 };
 
 
 const handleExportFile = () => {
-    exportToExcel(priceList.value)
+    exportToExcel(timeList.value)
 }
 
 
-onMounted(() => getPriceList());
+onMounted(() => getTimeList());
 
 
 </script>
@@ -49,10 +50,10 @@ onMounted(() => getPriceList());
 <template>
     <div class="time-container">
         <div class="time-list">
-            <BaseTable :data="tableData" :columns="tableColumns" styleValue="height:700px" screen="Giá"
+            <BaseTable :data="tableData" :columns="tableColumns" styleValue="height:700px" screen="Thời gian"
                 @edit="handleEditData" @delete="handleDelete" @export="handleExportFile" />
         </div>
-        <PriceForm v-if="isShowActionForm" />
+        <TimeForm v-if="isShowActionForm" />
     </div>
 </template>
 
@@ -64,7 +65,7 @@ onMounted(() => getPriceList());
     flex-direction: column;
     align-items: center;
 
-    .price-featured {
+    .time-featured {
         width: 100%;
         display: flex;
         align-items: center;
